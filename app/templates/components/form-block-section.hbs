@@ -2,24 +2,20 @@
   <legend>{{model.title}}</legend>
   
   {{#if model.repeat}}
-    {{#each entries as |entry|}}
+    {{#each (get entry model.id) as |entry|}}
       <fieldset class="entry">
         {{#each model.children as |child|}}
-          {{#if child.type}}
-            {{component (concat "form-block-" child.type) model=child entry=entry}}
-          {{/if}}
+          {{component (concat "form-block-" child.type) model=child entry=(mut entry)}}
         {{/each}}
         <p class="remove"><button {{action "remove" entry}}>Remove</button></p>
       </fieldset>
     {{/each}}
 
-    {{#if entries}}
-      <p class="add"><button {{action "add"}}>Add</button></p>
-    {{/if}}
+    <p class="add"><button {{action "add"}}>Add</button></p>
   {{else}}
     {{#each model.children as |child|}}
       {{#if child.type}}
-        {{component (concat "form-block-" child.type) model=child entry=entry}}
+        {{component (concat "form-block-" child.type) model=child entry=(mut (get entry model.id))}}
       {{/if}}
     {{/each}}
   {{/if}}

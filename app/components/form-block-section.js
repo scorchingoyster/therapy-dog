@@ -3,20 +3,22 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   init() {
     this._super();
-    
-    this.set("entries", [Ember.Object.create()]);
   },
   
   actions: {
     add() {
-      this.get("entries").addObject(Ember.Object.create());
+      var entries = this.get("entry").get(this.get("model.id"));
+      
+      entries.addObject(Ember.Object.create());
     },
 
     remove(item) {
-      this.get("entries").removeObject(item);
+      var entries = this.get("entry").get(this.get("model.id"));
       
-      if (this.get("entries.length") == 0) {
-        this.get("entries").addObject(Ember.Object.create());
+      entries.removeObject(item);
+      
+      if (entries.get("length") === 0) {
+        entries.addObject(Ember.Object.create());
       }
     }
   }
