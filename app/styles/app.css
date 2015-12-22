@@ -30,7 +30,11 @@ body {
 #dump {
   background: #333;
   color: #fff;
+}
+
+#dump p {
   font-family: monaco, courier, monospace;
+  white-space: pre-wrap;
 }
 
 

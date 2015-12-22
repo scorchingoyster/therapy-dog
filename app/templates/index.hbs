@@ -18,7 +18,9 @@
   </div>
   
   <div id="dump">
-    {{dump}}
+    {{#each dump as |item|}}
+      <p>{{item}}</p>
+    {{/each}}
   </div>
   
 </div>

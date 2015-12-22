@@ -46,13 +46,14 @@ let SAMPLE = {
           "id": "issue",
           "type": "text",
           "label": "Issue"
-        },
-        {
-          "id": "embargo",
-          "type": "date",
-          "label": "Embargo Until"
         }
       ]
+    },
+    
+    {
+      "id": "embargo",
+      "type": "date",
+      "label": "Embargo Until"
     },
 
     {
@@ -80,6 +81,7 @@ let SAMPLE = {
                 "type": "path",
                 "parts": ["authors"]
               },
+              "variable": "author",
               "target": [
                 {
                   "type": "element",
