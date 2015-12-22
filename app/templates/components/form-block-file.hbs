@@ -1,0 +1,13 @@
+<p class="file {{if model.required "required" ""}}">
+  <label>{{model.label}}</label>
+  {{#if file}}
+    <span class="file-input">
+      <b>{{file.name}}</b> ({{file.size}} bytes)
+      <button class="clear" {{action "clear"}}>Clear</button>
+    </span>
+  {{else}}
+    <span class="file-input">
+      {{file-input select="select"}}
+    </span>
+  {{/if}}
+</p>

@@ -1,0 +1,121 @@
+/* basic styles */
+
+body {
+  margin: 16px;
+}
+
+
+/* add files button */
+
+.add-files {
+  position: relative;
+}
+  
+.add-files input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  opacity: 0;
+}
+
+
+/* fields */
+
+form p {
+  margin: 16px 0;
+}
+
+fieldset {
+  margin: 16px 0;
+  padding: 0;
+  border: none;
+}
+
+fieldset p {
+  margin-left: 16px;
+}
+
+fieldset.entry {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+legend {
+  margin: 16px 0 0 0;
+  padding: 0 0 8px 0;
+  border-bottom: 1px solid #ccc;
+  width: 100%;
+  font-weight: bold;
+}
+
+label {
+  display: block;
+  margin: 4px 0;
+}
+
+input, select {
+  display: block;
+  margin: 4px 0;
+}
+
+.file-input {
+  display: block;
+  margin: 4px 0;
+}
+
+.file-input b {
+  color: #333;
+}
+
+.file-input input {
+  margin: 0;
+  padding: 0;
+}
+
+.checkbox label, .checkbox input {
+  display: inline;
+}
+
+.add button {
+  border: none;
+  background: green;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.submit button {
+  border: none;
+  background: blue;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.remove button {
+  border: none;
+  background: gray;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.file-input button {
+  border: none;
+  background: gray;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.required label:after {
+  content: " *";
+  color: red;
+}

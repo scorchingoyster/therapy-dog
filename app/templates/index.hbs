@@ -1,0 +1,12 @@
+<h1>{{model.title}}</h1>
+<p>{{model.description}}</p>
+
+{{#each model.blocks as |block|}}
+  {{#if block.type}}
+    {{component (concat "form-block-" block.type) model=block entry=entry}}
+  {{/if}}
+{{/each}}
+
+<p class="submit">
+  <button>Submit</button>
+</p>
