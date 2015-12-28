@@ -7,7 +7,7 @@ export default Ember.Controller.extend({
       var dump = [];
       
       var entry = this.get("entry");
-      dump.push(JSON.stringify(entry))
+      dump.push(JSON.stringify(entry));
       
       var templates = this.get("model").templates;
       
