@@ -42,6 +42,73 @@ test("a path to something that doesn't exist should evalute to empty output", fu
   assert.deepEqual(new Arrow(template).evaluate(context), expected);
 });
 
+test("an arrow should evaluate the source, create a target for each item, and put evaluated children inside the target", function(assert) {
+  // names as |name| -> <name>
+  //   <firstName>
+  //     name.first
+  var template = [
+    {
+      type: "arrow",
+      source: {
+        type: "path",
+        parts: ["names"]
+      },
+      target: [
+        {
+          type: "element",
+          name: "name"
+        }
+      ],
+      variable: "name",
+      children: [
+        {
+          type: "element",
+          name: "namePart",
+          children: [
+            {
+              type: "path",
+              parts: ["name", "first"]
+            }
+          ]
+        }
+      ]
+    }
+  ];
+
+  var context = { names: [ { first: "abc" }, { first: "def" } ] };
+
+  var expected = [
+    {
+      type: "element",
+      name: "name",
+      attributes: {},
+      children: [
+        {
+          type: "element",
+          name: "namePart",
+          attributes: {},
+          children: ["abc"]
+        }
+      ]
+    },
+    {
+      type: "element",
+      name: "name",
+      attributes: {},
+      children: [
+        {
+          type: "element",
+          name: "namePart",
+          attributes: {},
+          children: ["def"]
+        }
+      ]
+    }
+  ];
+  
+  assert.deepEqual(new Arrow(template).evaluate(context), expected);
+});
+
 test("an arrow without children should just put the evaluated item inside the target", function(assert) {
   // role -> <role> <roleTerm>
   var template = [
