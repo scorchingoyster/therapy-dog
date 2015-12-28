@@ -65,6 +65,18 @@ let SAMPLE = {
   ],
   
   "templates": [
+    // <mods xmlns="http://www.loc.gov/mods/v3">
+    //   authors as |author| -> <name type="personal">
+    //     author.first -> <namePart type="given">
+    //     author.last -> <namePart type="family">
+    //     <role>
+    //       <roleTerm type="text" authority="marcrelator">
+    //         "Creator"
+    //   info.title -> <titleInfo> <title>
+    //   <relatedItem type="host">
+    //     <titleInfo>
+    //       info.publication -> <title>
+    //       info.issue -> <partName>
     {
       "format": "xml",
       "template": [
@@ -211,6 +223,8 @@ let SAMPLE = {
       ]
     },
     
+    // <accessControl xmlns="http://cdr.unc.edu/definitions/acl">
+    //   embargo -> @embargo-until
     {
       "format": "xml",
       "template": [
