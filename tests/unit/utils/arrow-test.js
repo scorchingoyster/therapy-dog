@@ -3,7 +3,7 @@ import { module, test } from 'qunit';
 
 module('Unit | Utility | arrow');
 
-test('it works', function(assert) {
+test('should evaluate a simple path', function(assert) {
   // x.y
   var template = [
     { type: "path", parts: ["x", "y"] }
