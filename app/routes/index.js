@@ -83,6 +83,7 @@ let SAMPLE = {
         {
           "type": "element",
           "name": "mods",
+          "compact": true,
           "attributes": {
             "xmlns": "http://www.loc.gov/mods/v3"
           },

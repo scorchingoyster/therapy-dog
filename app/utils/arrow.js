@@ -22,6 +22,12 @@ function evaluateElement(node, context) {
     element.children = evaluateBlock(node.children, context);
   }
   
+  if (node.compact) {
+    element.children = element.children.filter(c => c.keep);
+  }
+  
+  element.keep = node.keep || element.children.some(c => c.keep);
+  
   return [element];
 }
 
@@ -35,6 +41,12 @@ function evaluateAttribute(node, context) {
   if (node.children) {
     attribute.children = evaluateBlock(node.children, context);
   }
+  
+  if (node.compact) {
+    attribute.children = attribute.children.filter(c => c.keep);
+  }
+  
+  attribute.keep = node.keep || attribute.children.some(c => c.keep);
   
   return [attribute];
 }
@@ -73,6 +85,10 @@ function evaluateArrow(node, context) {
   
   list.forEach(function(item) {
     
+    if (item === "") {
+      return;
+    }
+
     // assemble the "target" and "inner" nodes.
     // here, <e1> is the "target" and <en> is the "inner":
     // 
@@ -94,10 +110,11 @@ function evaluateArrow(node, context) {
         target = r;
         inner = r;
       }
+      
+      return r;
     });
     
     if (target) {
-      
       result.push(target);
       
       // if the node has children, create a new context with the given variable
@@ -108,18 +125,19 @@ function evaluateArrow(node, context) {
       // containing the current item.
       
       if (node.children) {
-        
         var copy = extend({}, context);
         copy[node.variable] = item;
         
         inner.children = evaluateBlock(node.children, copy);
         
+        // set keep flag as in evaluateElement.
+        target.keep = inner.children.some(c => c.keep);
       } else {
-        
         inner.children = [item];
         
+        // since we are generating output from input, always set the keep flag.
+        target.keep = true;
       }
-      
     }
     
   });
@@ -210,13 +228,25 @@ function renderDocument(node) {
   return root;
 }
 
+function stripEvaluationMetadata(block) {
+  block.forEach(function(node) {
+    delete node.keep;
+    if (node.children) {
+      stripEvaluationMetadata(node.children);
+    }
+  });
+}
+
 class Arrow {
   constructor(template) {
     this.template = template;
   }
   
   evaluate(context) {
-    return evaluateBlock(this.template, context);
+    var result = evaluateBlock(this.template, context);
+    stripEvaluationMetadata(result);
+    
+    return result;
   }
   
   render(context) {
