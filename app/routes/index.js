@@ -46,6 +46,16 @@ let SAMPLE = {
           "id": "issue",
           "type": "text",
           "label": "Issue"
+        },
+        {
+          "id": "version",
+          "type": "select",
+          "label": "Version",
+          "options": [
+            "Preprint",
+            "Postprint",
+            "Publisher"
+          ]
         }
       ]
     },
@@ -73,6 +83,7 @@ let SAMPLE = {
     //       <roleTerm type="text" authority="marcrelator">
     //         "Creator"
     //   info.title -> <titleInfo> <title>
+    //   info.version -> <originInfo> <edition>
     //   <relatedItem type="host">
     //     <titleInfo>
     //       info.publication -> <title>
@@ -174,6 +185,24 @@ let SAMPLE = {
                 {
                   "type": "element",
                   "name": "title"
+                }
+              ]
+            },
+            
+            {
+              "type": "arrow",
+              "source": {
+                "type": "path",
+                "parts": ["info", "version"]
+              },
+              "target": [
+                {
+                  "type": "element",
+                  "name": "originInfo"
+                },
+                {
+                  "type": "element",
+                  "name": "edition"
                 }
               ]
             },
