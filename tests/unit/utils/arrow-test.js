@@ -459,6 +459,10 @@ test("string children work with compact elements", function(assert) {
         {
           type: "path",
           parts: ["x"]
+        },
+        {
+          type: "literal",
+          value: "456"
         }
       ]
     }
@@ -509,6 +513,9 @@ test("for a compact element, the result of evaluating a path is implicitly kept"
 
   var context = { x: "123" };
 
+  // <stuff>
+  //   <a>
+  //     "123"
   var expected = [
     {
       type: "element",
