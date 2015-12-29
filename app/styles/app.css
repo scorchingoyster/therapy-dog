@@ -55,6 +55,13 @@ body {
 }
 
 
+/* form */
+
+#form h1 {
+  margin: 16px 0;
+}
+
+
 /* add files button */
 
 .add-files {
