@@ -40,12 +40,14 @@ let SAMPLE = {
         {
           "id": "publication",
           "type": "text",
-          "label": "Publication"
+          "label": "Publication",
+          "placeholder": "i.e., Name of journal"
         },
         {
           "id": "issue",
           "type": "text",
-          "label": "Issue"
+          "label": "Issue",
+          "placeholder": "e.g., Volume 11, Issue 2"
         },
         {
           "id": "version",
