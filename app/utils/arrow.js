@@ -14,6 +14,8 @@ function evaluateElement(node, context) {
   var element = {
     type: "element",
     name: String(node.name),
+    compact: node.compact,
+    keep: node.keep,
     attributes: extend({}, node.attributes),
     children: []
   };
@@ -22,12 +24,6 @@ function evaluateElement(node, context) {
     element.children = evaluateBlock(node.children, context);
   }
   
-  if (node.compact) {
-    element.children = element.children.filter(c => c.keep);
-  }
-  
-  element.keep = node.keep || element.children.some(c => c.keep);
-  
   return [element];
 }
 
@@ -35,6 +31,8 @@ function evaluateAttribute(node, context) {
   var attribute = {
     type: "attribute",
     name: String(node.name),
+    compact: node.compact,
+    keep: node.keep,
     children: []
   };
   
@@ -42,19 +40,14 @@ function evaluateAttribute(node, context) {
     attribute.children = evaluateBlock(node.children, context);
   }
   
-  if (node.compact) {
-    attribute.children = attribute.children.filter(c => c.keep);
-  }
-  
-  attribute.keep = node.keep || attribute.children.some(c => c.keep);
-  
   return [attribute];
 }
 
 function evaluateLiteral(node) {
   var literal = {
     type: "literal",
-    value: node.value
+    value: node.value,
+    keep: node.keep
   };
   
   return [literal];
@@ -134,14 +127,8 @@ function evaluateArrow(node, context) {
         copy[node.variable] = item.value;
         
         inner.children = evaluateBlock(node.children, copy);
-        
-        // set keep flag as in evaluateElement.
-        target.keep = inner.children.some(c => c.keep);
       } else {
         inner.children = [item];
-        
-        // since we are generating output from input, always set the keep flag.
-        target.keep = true;
       }
     }
     
@@ -237,9 +224,25 @@ function renderDocument(node) {
   return root;
 }
 
+function compactBlock(block) {
+  for (let i = 0; i < block.length; i++) {
+    let node = block[i];
+    
+    if (node.children) {
+      compactBlock(node.children);
+      node.keep = node.keep || node.children.some(c => c.keep);
+    }
+    
+    if (node.compact) {
+      node.children = node.children.filter(c => c.keep);
+    }
+  }
+}
+
 function stripEvaluationMetadata(block) {
   block.forEach(function(node) {
     delete node.keep;
+    delete node.compact;
     if (node.children) {
       stripEvaluationMetadata(node.children);
     }
@@ -253,6 +256,7 @@ class Arrow {
   
   evaluate(context) {
     var result = evaluateBlock(this.template, context);
+    compactBlock(result);
     stripEvaluationMetadata(result);
     
     return result;
