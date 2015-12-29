@@ -18,9 +18,27 @@
   </div>
   
   <div id="dump">
-    {{#each dump as |item|}}
-      <p>{{item}}</p>
-    {{/each}}
+    <h1>Form data</h1>
+    <p>{{json}}</p>
+    
+    <h1>Files</h1>
+    <ul>
+      {{#each files as |file|}}
+        <li>{{file.name}} ({{file.size}} bytes, {{file.type}})</li>
+      {{/each}}
+    </ul>
+    
+    <h1>Metadata</h1>
+    <dl>
+      {{#each dump as |item|}}
+        {{#if item.file}}
+          <dt>{{item.file.name}}</dt>
+        {{else}}
+          <dt class="deposit">Deposit</dt>
+        {{/if}}
+        <dd>{{item.metadata}}</dd>
+      {{/each}}
+    </dl>
   </div>
   
 </div>

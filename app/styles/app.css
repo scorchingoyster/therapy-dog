@@ -32,9 +32,28 @@ body {
   color: #fff;
 }
 
-#dump p {
+#dump h1 {
+  margin: 24px 0 16px;
+  font-size: 24px;
+}
+
+#dump dd, #dump p {
   font-family: monaco, courier, monospace;
   white-space: pre-wrap;
+}
+
+#dump dt {
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+#dump dt.deposit {
+  color: #999;
+  font-style: italic;
+}
+
+#dump dd {
+  margin: 0 0 24px 0;
 }
 
 

@@ -304,7 +304,6 @@ let SAMPLE = {
     // <mods xmlns="http://www.loc.gov/mods/v3"> (compact)
     //   description -> <abstract>
     {
-      "section": "files",
       "file": "supplemental",
       "block": [
         {

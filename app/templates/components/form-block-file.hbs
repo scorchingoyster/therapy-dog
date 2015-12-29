@@ -2,7 +2,7 @@
   <label>{{model.label}}</label>
   {{#if file}}
     <span class="file-input">
-      <b>{{file.name}}</b> ({{file.size}} bytes)
+      <b>{{file.name}}</b> ({{file.size}} bytes, {{file.type}})
       <button class="clear" {{action "clear"}}>Clear</button>
     </span>
   {{else}}
