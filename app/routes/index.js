@@ -77,7 +77,7 @@ let SAMPLE = {
   ],
   
   "templates": [
-    // <mods xmlns="http://www.loc.gov/mods/v3">
+    // <mods xmlns="http://www.loc.gov/mods/v3"> (compact)
     //   authors as |author| -> <name type="personal">
     //     author.first -> <namePart type="given">
     //     author.last -> <namePart type="family">
