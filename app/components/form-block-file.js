@@ -11,7 +11,8 @@ export default Ember.Component.extend({
       this.propertyWillChange("file");
       
       if (files.length > 0) {
-        this.get("entry").set(this.get("model.id"), files.item(0));
+        let file = files.item(0);
+        this.get("entry").set(this.get("model.id"), Ember.Object.create({ name: file.name, size: file.size, type: file.type, lastModifiedDate: file.lastModifiedDate }));
       } else {
         this.get("entry").set(this.get("model.id"), undefined);
       }

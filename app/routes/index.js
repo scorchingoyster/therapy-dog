@@ -73,6 +73,26 @@ let SAMPLE = {
       "type": "file",
       "label": "Article",
       "required": true
+    },
+
+    {
+      "id": "supplemental",
+      "type": "section",
+      "title": "Supplemental Files",
+      "children": [
+        {
+          "id": "supplemental1",
+          "type": "file"
+        },
+        {
+          "id": "supplemental2",
+          "type": "file"
+        },
+        {
+          "id": "supplemental3",
+          "type": "file"
+        }
+      ]
     }
   ],
   
