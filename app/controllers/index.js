@@ -1,6 +1,27 @@
 import Ember from 'ember';
 import Arrow from '../utils/arrow';
 
+function getContexts(context, id) {
+  if (id in context) {
+    var c = context[id];
+    
+    if (Array.isArray(c)) {
+      return c;
+    } else {
+      return [c];
+    }
+  } else {
+    for (id in context) {
+      if (context.hasOwnProperty(id)) {
+        var result = getContexts(context[id]);
+        if (Array.isArray(result)) {
+          return result;
+        }
+      }
+    }
+  }
+}
+
 export default Ember.Controller.extend({
   actions: {
     dump() {
@@ -11,10 +32,19 @@ export default Ember.Controller.extend({
       
       var templates = this.get("model").templates;
       
-      for (let i = 0; i < templates.length; i++) {
-        var result = new Arrow(templates[i].template).render(entry);
-        dump.push(result);
-      }
+      templates.forEach(template => {
+        if (template.section) {
+          let contexts = getContexts(entry, template.section);
+          
+          if (Array.isArray(contexts)) {
+            contexts.forEach(context => {
+              dump.push(new Arrow(template.block).render(context));
+            });
+          }
+        } else {
+          dump.push(new Arrow(template.block).render(entry));
+        }
+      });
       
       this.set("dump", dump);
     }

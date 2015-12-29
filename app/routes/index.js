@@ -76,21 +76,19 @@ let SAMPLE = {
     },
 
     {
-      "id": "supplemental",
+      "id": "files",
       "type": "section",
       "title": "Supplemental Files",
+      "repeat": true,
       "children": [
         {
-          "id": "supplemental1",
+          "id": "supplemental",
           "type": "file"
         },
         {
-          "id": "supplemental2",
-          "type": "file"
-        },
-        {
-          "id": "supplemental3",
-          "type": "file"
+          "id": "description",
+          "type": "text",
+          "label": "Description"
         }
       ]
     }
@@ -111,8 +109,7 @@ let SAMPLE = {
     //       info.publication -> <title>
     //       info.issue -> <partName>
     {
-      "format": "xml",
-      "template": [
+      "block": [
         {
           "type": "element",
           "name": "mods",
@@ -278,8 +275,7 @@ let SAMPLE = {
     // <accessControl xmlns="http://cdr.unc.edu/definitions/acl">
     //   embargo -> @embargo-until
     {
-      "format": "xml",
-      "template": [
+      "block": [
         {
           "type": "element",
           "name": "accessControl",
@@ -297,6 +293,38 @@ let SAMPLE = {
                 {
                   "type": "attribute",
                   "name": "embargo-until"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    
+    // <mods xmlns="http://www.loc.gov/mods/v3"> (compact)
+    //   description -> <abstract>
+    {
+      "section": "files",
+      "file": "supplemental",
+      "block": [
+        {
+          "type": "element",
+          "name": "mods",
+          "compact": true,
+          "attributes": {
+            "xmlns": "http://www.loc.gov/mods/v3"
+          },
+          "children": [
+            {
+              "type": "arrow",
+              "source": {
+                "type": "path",
+                "parts": ["description"]
+              },
+              "target": [
+                {
+                  "type": "element",
+                  "name": "abstract"
                 }
               ]
             }
