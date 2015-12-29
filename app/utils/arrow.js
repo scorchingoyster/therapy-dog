@@ -51,8 +51,13 @@ function evaluateAttribute(node, context) {
   return [attribute];
 }
 
-function evaluateString(node) {
-  return [String(node.value)];
+function evaluateLiteral(node) {
+  var literal = {
+    type: "literal",
+    value: node.value
+  };
+  
+  return [literal];
 }
 
 function evaluatePath(node, context) {
@@ -72,9 +77,9 @@ function evaluatePath(node, context) {
   if (typeof value === "undefined") {
     return [];
   } else if (Array.isArray(value)) {
-    return value;
+    return value.map(v => ({ type: "literal", value: v, keep: true }));
   } else {
-    return [value];
+    return [{ type: "literal", value: value, keep: true }];
   }
 }
 
@@ -85,7 +90,7 @@ function evaluateArrow(node, context) {
   
   list.forEach(function(item) {
     
-    if (item === "") {
+    if (item.value === "") {
       return;
     }
 
@@ -126,7 +131,7 @@ function evaluateArrow(node, context) {
       
       if (node.children) {
         var copy = extend({}, context);
-        copy[node.variable] = item;
+        copy[node.variable] = item.value;
         
         inner.children = evaluateBlock(node.children, copy);
         
@@ -153,8 +158,8 @@ function evaluateNode(node, context) {
     result = evaluateElement(node, context);
   } else if (node.type === "attribute") {
     result = evaluateAttribute(node, context);
-  } else if (node.type === "string") {
-    result = evaluateString(node, context);
+  } else if (node.type === "literal") {
+    result = evaluateLiteral(node, context);
   } else if (node.type === "path") {
     result = evaluatePath(node, context);
   } else if (node.type === "arrow") {
@@ -182,7 +187,11 @@ function renderAttribute(builder, node) {
   var value = [];
   
   for (let i = 0; i < node.children.length; i++) {
-    value.push(String(node.children[i]));
+    let child = node.children[i];
+    
+    if (child.type === "literal") {
+      value.push(String(child.value));
+    }
   }
   
   builder.att(node.name, value.join(""));
@@ -198,8 +207,8 @@ function renderElement(builder, node) {
       renderElement(element, child);
     } else if (child.type === "attribute") {
       renderAttribute(element, child);
-    } else {
-      element.txt(String(child));
+    } else if (child.type === "literal") {
+      element.txt(String(child.value));
     }
   }
 }

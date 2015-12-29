@@ -11,7 +11,7 @@ test('should evaluate a simple path', function(assert) {
 
   var context = { "x": { "y": "abc" } };
 
-  var expected = ["abc"];
+  var expected = [{ type: "literal", value: "abc" }];
   
   assert.deepEqual(new Arrow(template).evaluate(context), expected);
 });
@@ -24,7 +24,7 @@ test("should evaluate a path to an array of strings", function(assert) {
 
   var context = { "names": ["abc", "def"] };
 
-  var expected = ["abc", "def"];
+  var expected = [{ type: "literal", value: "abc" }, { type: "literal", value: "def" }];
   
   assert.deepEqual(new Arrow(template).evaluate(context), expected);
 });
@@ -87,7 +87,12 @@ test("an arrow should evaluate the source, create a target for each item, and pu
           type: "element",
           name: "namePart",
           attributes: {},
-          children: ["abc"]
+          children: [
+            {
+              type: "literal",
+              value: "abc"
+            }
+          ]
         }
       ]
     },
@@ -100,7 +105,12 @@ test("an arrow should evaluate the source, create a target for each item, and pu
           type: "element",
           name: "namePart",
           attributes: {},
-          children: ["def"]
+          children: [
+            {
+              type: "literal",
+              value: "def"
+            }
+          ]
         }
       ]
     }
@@ -143,7 +153,12 @@ test("an arrow without children should just put the evaluated item inside the ta
           type: "element",
           name: "roleTerm",
           attributes: {},
-          children: ["Author"]
+          children: [
+            {
+              type: "literal",
+              value: "Author"
+            }
+          ]
         }
       ]
     },
@@ -156,7 +171,12 @@ test("an arrow without children should just put the evaluated item inside the ta
           type: "element",
           name: "roleTerm",
           attributes: {},
-          children: ["Editor"]
+          children: [
+            {
+              type: "literal",
+              value: "Editor"
+            }
+          ]
         }
       ]
     }
@@ -229,7 +249,7 @@ test("for a compact element, should remove children implicitly not marked for ke
                   name: "roleTerm",
                   children: [
                     {
-                      type: "string",
+                      type: "literal",
                       value: "Creator"
                     }
                   ]
@@ -275,7 +295,7 @@ test("for a compact element, should not remove children explicitly marked for ke
           keep: true,
           children: [
             {
-              type: "string",
+              type: "literal",
               value: "(c) 2015"
             }
           ]
@@ -318,7 +338,12 @@ test("for a compact element, should not remove children explicitly marked for ke
           type: "element",
           name: "accessCondition",
           attributes: {},
-          children: ["(c) 2015"]
+          children: [
+            {
+              type: "literal",
+              value: "(c) 2015"
+            }
+          ]
         }
       ]
     }
@@ -362,7 +387,7 @@ test("for a compact element, a child is kept if at least one of its children are
               name: "displayLabel",
               children: [
                 {
-                  type: "string",
+                  type: "literal",
                   value: "Journal Title"
                 }
               ]
@@ -397,14 +422,20 @@ test("for a compact element, a child is kept if at least one of its children are
               name: "title",
               attributes: {},
               children: [
-                "Nature Reviews Socks"
+                {
+                  type: "literal",
+                  value: "Nature Reviews Socks"
+                }
               ]
             },
             {
               type: "attribute",
               name: "displayLabel",
               children: [
-                "Journal Title"
+                {
+                  type: "literal",
+                  value: "Journal Title"
+                }
               ]
             }
           ]
@@ -440,7 +471,12 @@ test("string children work with compact elements", function(assert) {
       type: "element",
       name: "stuff",
       attributes: {},
-      children: ["123"]
+      children: [
+        {
+          type: "literal",
+          value: "123"
+        }
+      ]
     }
   ];
   
@@ -483,7 +519,12 @@ test("for a compact element, the result of evaluating a path is implicitly kept"
           type: "element",
           name: "a",
           attributes: {},
-          children: ["123"]
+          children: [
+            {
+              type: "literal",
+              value: "123"
+            }
+          ]
         }
       ]
     }
@@ -541,7 +582,7 @@ test("for a compact element, an arrow with children is not necessarily kept", fu
                   name: "roleTerm",
                   children: [
                     {
-                      type: "string",
+                      type: "literal",
                       value: "Creator"
                     }
                   ]
@@ -618,7 +659,7 @@ test("for a compact element, an arrow with children is kept if one of its childr
                   name: "roleTerm",
                   children: [
                     {
-                      type: "string",
+                      type: "literal",
                       value: "Creator"
                     }
                   ]
@@ -655,7 +696,12 @@ test("for a compact element, an arrow with children is kept if one of its childr
               type: "element",
               name: "namePart",
               attributes: {},
-              children: ["Someone"]
+              children: [
+                {
+                  type: "literal",
+                  value: "Someone"
+                }
+              ]
             },
             {
               type: "element",
@@ -666,7 +712,12 @@ test("for a compact element, an arrow with children is kept if one of its childr
                   type: "element",
                   name: "roleTerm",
                   attributes: {},
-                  children: ["Creator"]
+                  children: [
+                    {
+                      type: "literal",
+                      value: "Creator"
+                    }
+                  ]
                 }
               ]
             }

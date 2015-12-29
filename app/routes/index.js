@@ -161,7 +161,7 @@ let SAMPLE = {
                       },
                       "children": [
                         {
-                          "type": "string",
+                          "type": "literal",
                           "value": "Creator"
                         }
                       ]
