@@ -96,18 +96,21 @@ let SAMPLE = {
   
   "templates": [
     // <mods xmlns="http://www.loc.gov/mods/v3"> (compact)
-    //   authors as |author| -> <name type="personal">
-    //     author.first -> <namePart type="given">
-    //     author.last -> <namePart type="family">
-    //     <role>
-    //       <roleTerm type="text" authority="marcrelator">
-    //         "Creator"
+    //   each authors as |author|
+    //     <name type="personal">
+    //       author.first -> <namePart type="given">
+    //       author.last -> <namePart type="family">
+    //       <role>
+    //         <roleTerm type="text" authority="marcrelator">
+    //           "Creator"
     //   info.title -> <titleInfo> <title>
     //   info.version -> <originInfo> <edition>
     //   <relatedItem type="host">
     //     <titleInfo>
     //       info.publication -> <title>
     //       info.issue -> <partName>
+    //   <accessCondition> (keep)
+    //     "Open Access, etc."
     {
       "block": [
         {
@@ -119,69 +122,69 @@ let SAMPLE = {
           },
           "children": [
             {
-              "type": "arrow",
+              "type": "each",
               "source": {
                 "type": "path",
                 "parts": ["authors"]
               },
               "variable": "author",
-              "target": [
+              "children": [
                 {
                   "type": "element",
                   "name": "name",
                   "attributes": {
                     "type": "personal"
-                  }
-                }
-              ],
-              "children": [
-                {
-                  "type": "arrow",
-                  "source": {
-                    "type": "path",
-                    "parts": ["author", "first"]
                   },
-                  "target": [
-                    {
-                      "type": "element",
-                      "name": "namePart",
-                      "attributes": {
-                        "type": "given"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "arrow",
-                  "source": {
-                    "type": "path",
-                    "parts": ["author", "last"]
-                  },
-                  "target": [
-                    {
-                      "type": "element",
-                      "name": "namePart",
-                      "attributes": {
-                        "type": "family"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "element",
-                  "name": "role",
                   "children": [
                     {
-                      "type": "element",
-                      "name": "roleTerm",
-                      "attributes": {
-                        "type": "text",
-                        "authority": "marcrelator"
+                      "type": "arrow",
+                      "source": {
+                        "type": "path",
+                        "parts": ["author", "first"]
                       },
+                      "target": [
+                        {
+                          "type": "element",
+                          "name": "namePart",
+                          "attributes": {
+                            "type": "given"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "arrow",
+                      "source": {
+                        "type": "path",
+                        "parts": ["author", "last"]
+                      },
+                      "target": [
+                        {
+                          "type": "element",
+                          "name": "namePart",
+                          "attributes": {
+                            "type": "family"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "element",
+                      "name": "role",
                       "children": [
                         {
-                          "type": "literal",
-                          "value": "Creator"
+                          "type": "element",
+                          "name": "roleTerm",
+                          "attributes": {
+                            "type": "text",
+                            "authority": "marcrelator"
+                          },
+                          "children": [
+                            {
+                              "type": "literal",
+                              "value": "Creator"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -264,6 +267,18 @@ let SAMPLE = {
                       ]
                     }
                   ]
+                }
+              ]
+            },
+            
+            {
+              "type": "element",
+              "name": "accessCondition",
+              "keep": true,
+              "children": [
+                {
+                  "type": "literal",
+                  "value": "Open Access, etc."
                 }
               ]
             }

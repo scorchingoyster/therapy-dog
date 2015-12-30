@@ -42,32 +42,38 @@ test("a path to something that doesn't exist should evalute to empty output", fu
   assert.deepEqual(new Arrow(template).evaluate(context), expected);
 });
 
-test("an arrow should evaluate the source, create a target for each item, and put evaluated children inside the target", function(assert) {
-  // names as |name| -> <name>
-  //   <firstName>
-  //     name.first
+test("each should evaluate the source, and create output for each item with the variable available in the context", function(assert) {
+  // each names as |name|
+  //   <name>
+  //     name.first -> <namePart type="given">
   var template = [
     {
-      type: "arrow",
+      type: "each",
       source: {
         type: "path",
         parts: ["names"]
       },
-      target: [
-        {
-          type: "element",
-          name: "name"
-        }
-      ],
       variable: "name",
       children: [
         {
           type: "element",
-          name: "namePart",
+          name: "name",
           children: [
             {
-              type: "path",
-              parts: ["name", "first"]
+              type: "arrow",
+              source: {
+                type: "path",
+                parts: ["name", "first"]
+              },
+              target: [
+                {
+                  type: "element",
+                  name: "namePart",
+                  attributes: {
+                    type: "given"
+                  }
+                }
+              ]
             }
           ]
         }
@@ -86,7 +92,9 @@ test("an arrow should evaluate the source, create a target for each item, and pu
         {
           type: "element",
           name: "namePart",
-          attributes: {},
+          attributes: {
+            type: "given"
+          },
           children: [
             {
               type: "literal",
@@ -104,7 +112,9 @@ test("an arrow should evaluate the source, create a target for each item, and pu
         {
           type: "element",
           name: "namePart",
-          attributes: {},
+          attributes: {
+            type: "given"
+          },
           children: [
             {
               type: "literal",
@@ -119,7 +129,7 @@ test("an arrow should evaluate the source, create a target for each item, and pu
   assert.deepEqual(new Arrow(template).evaluate(context), expected);
 });
 
-test("an arrow without children should just put the evaluated item inside the target", function(assert) {
+test("an arrow should put the evaluated item inside the target", function(assert) {
   // role -> <role> <roleTerm>
   var template = [
     {
@@ -540,13 +550,14 @@ test("for a compact element, the result of evaluating a path is implicitly kept"
   assert.deepEqual(new Arrow(template).evaluate(context), expected);
 });
 
-test("for a compact element, an arrow with children is not necessarily kept", function(assert) {
+test("for a compact element, the result of each with one item with blank values should not be kept", function(assert) {
   // <mods> (compact)
-  //   authors as |author| -> <name>
-  //     author.first -> <namePart>
-  //     <role>
-  //       <roleTerm>
-  //         "Creator"
+  //   each authors as |author|
+  //     <name>
+  //       author.first -> <namePart>
+  //       <role>
+  //         <roleTerm>
+  //           "Creator"
   var template = [
     {
       type: "element",
@@ -554,43 +565,43 @@ test("for a compact element, an arrow with children is not necessarily kept", fu
       compact: true,
       children: [
         {
-          type: "arrow",
+          type: "each",
           source: {
             type: "path",
             parts: ["authors"]
           },
-          target: [
-            {
-              type: "element",
-              name: "name"
-            }
-          ],
           variable: "author",
           children: [
             {
-              type: "arrow",
-              source: {
-                type: "path",
-                parts: ["author", "first"]
-              },
-              target: [
-                {
-                  type: "element",
-                  name: "namePart"
-                }
-              ]
-            },
-            {
               type: "element",
-              name: "role",
+              name: "name",
               children: [
                 {
+                  type: "arrow",
+                  source: {
+                    type: "path",
+                    parts: ["author", "first"]
+                  },
+                  target: [
+                    {
+                      type: "element",
+                      name: "namePart"
+                    }
+                  ]
+                },
+                {
                   type: "element",
-                  name: "roleTerm",
+                  name: "role",
                   children: [
                     {
-                      type: "literal",
-                      value: "Creator"
+                      type: "element",
+                      name: "roleTerm",
+                      children: [
+                        {
+                          type: "literal",
+                          value: "Creator"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -617,13 +628,14 @@ test("for a compact element, an arrow with children is not necessarily kept", fu
   assert.deepEqual(new Arrow(template).evaluate(context), expected);
 });
 
-test("for a compact element, an arrow with children is kept if one of its children is kept", function(assert) {
+test("for a compact element, the result of each is kept if one of its children is kept", function(assert) {
   // <mods> (compact)
-  //   authors as |author| -> <name>
-  //     author.first -> <namePart>
-  //     <role>
-  //       <roleTerm>
-  //         "Creator"
+  //   each authors as |author|
+  //     <name>
+  //       author.first -> <namePart>
+  //       <role>
+  //         <roleTerm>
+  //           "Creator"
   var template = [
     {
       type: "element",
@@ -631,43 +643,43 @@ test("for a compact element, an arrow with children is kept if one of its childr
       compact: true,
       children: [
         {
-          type: "arrow",
+          type: "each",
           source: {
             type: "path",
             parts: ["authors"]
           },
-          target: [
-            {
-              type: "element",
-              name: "name"
-            }
-          ],
           variable: "author",
           children: [
             {
-              type: "arrow",
-              source: {
-                type: "path",
-                parts: ["author", "first"]
-              },
-              target: [
-                {
-                  type: "element",
-                  name: "namePart"
-                }
-              ]
-            },
-            {
               type: "element",
-              name: "role",
+              name: "name",
               children: [
                 {
+                  type: "arrow",
+                  source: {
+                    type: "path",
+                    parts: ["author", "first"]
+                  },
+                  target: [
+                    {
+                      type: "element",
+                      name: "namePart"
+                    }
+                  ]
+                },
+                {
                   type: "element",
-                  name: "roleTerm",
+                  name: "role",
                   children: [
                     {
-                      type: "literal",
-                      value: "Creator"
+                      type: "element",
+                      name: "roleTerm",
+                      children: [
+                        {
+                          type: "literal",
+                          value: "Creator"
+                        }
+                      ]
                     }
                   ]
                 }

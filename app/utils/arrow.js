@@ -76,8 +76,25 @@ function evaluatePath(node, context) {
   }
 }
 
-function evaluateArrow(node, context) {
+function evaluateEach(node, context) {
+  var result = [];
+  var list = evaluateNode(node.source, context);
   
+  list.forEach(function(item) {
+    if (item.value === "") {
+      return;
+    }
+    
+    var copy = extend({}, context);
+    copy[node.variable] = item.value;
+    
+    result = result.concat(evaluateBlock(node.children, copy));
+  });
+  
+  return result;
+}
+
+function evaluateArrow(node, context) {
   var result = [];
   var list = evaluateNode(node.source, context);
   
@@ -91,9 +108,6 @@ function evaluateArrow(node, context) {
     // here, <e1> is the "target" and <en> is the "inner":
     // 
     //   xs -> <e1> ... <en>
-    //
-    //   xs as |x| -> <e1> ... <en>
-    //     c
   
     var target;
     var inner;
@@ -112,30 +126,11 @@ function evaluateArrow(node, context) {
       return r;
     });
     
-    if (target) {
-      result.push(target);
-      
-      // if the node has children, create a new context with the given variable
-      // referring to the current item. evaluate the children with that context,
-      // setting the inner node's children to be the result.
-      
-      // otherwise, just set the inner node's children to be the singleton array
-      // containing the current item.
-      
-      if (node.children) {
-        var copy = extend({}, context);
-        copy[node.variable] = item.value;
-        
-        inner.children = evaluateBlock(node.children, copy);
-      } else {
-        inner.children = [item];
-      }
-    }
-    
+    result.push(target);
+    inner.children = [item];
   });
   
   return result;
-  
 }
 
 function evaluateNode(node, context) {
@@ -149,6 +144,8 @@ function evaluateNode(node, context) {
     result = evaluateLiteral(node, context);
   } else if (node.type === "path") {
     result = evaluatePath(node, context);
+  } else if (node.type === "each") {
+    result = evaluateEach(node, context);
   } else if (node.type === "arrow") {
     result = evaluateArrow(node, context);
   }
