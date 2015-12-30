@@ -77,7 +77,7 @@ export default Ember.Controller.extend({
       
       // Files
       let form = this.get("model");
-      let blocks = getFileBlocks(form.blocks);
+      let blocks = getFileBlocks(form.get("blocks"));
       
       let files = [];
       blocks.forEach(b => {
@@ -87,7 +87,7 @@ export default Ember.Controller.extend({
       
       // Metadata
       let dump = [];
-      let templates = this.get("model").templates;
+      let templates = form.get("templates");
       
       templates.forEach(template => {
         if (template.file) {
