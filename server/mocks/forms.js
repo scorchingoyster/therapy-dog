@@ -5,8 +5,12 @@ var forms = {};
 
 glob(__dirname + "/forms/*.json", function(err, filenames) {
   filenames.forEach(function(filename) {
-    var id = path.basename(filename, ".json");
-    forms[id] = require(filename);
+    try {
+      var id = path.basename(filename, ".json");
+      forms[id] = require(filename);
+    } catch (err) {
+      console.error(err);
+    }
   })
 });
 
