@@ -1,0 +1,86 @@
+{
+  "title": "Art MFA",
+  
+  "blocks": [
+    {
+      "id": "art-1",
+      "type": "section",
+      "title": "Author Information",
+      "children": [
+        { "id": "art-2", "type": "text", "label": "First Name", "required": true },
+        { "id": "art-3", "type": "text", "label": "Last Name", "required": true },
+        { "id": "art-4", "type": "select", "label": "Graduation Semester", "options": ["Summer 2015", "Fall 2015"] }
+      ]
+    },
+      
+    {
+      "id": "art-5",
+      "type": "section",
+      "title": "Paper Information",
+      "children": [
+        { "id": "art-6", "type": "text", "label": "Title", "required": true },
+        { "id": "art-7", "type": "select", "label": "Date Submitted", "options": ["Summer 2015", "Fall 2015"] }
+      ]
+    },
+      
+    {
+      "id": "art-8",
+      "type": "section",
+      "title": "Chair of Thesis Committee",
+      "children": [
+        { "id": "art-9", "type": "text", "label": "First Name", "required": true },
+        { "id": "art-10", "type": "text", "label": "Last Name", "required": true }
+      ]
+    },
+      
+    {
+      "id": "art-11",
+      "type": "section",
+      "title": "Thesis Committee Members",
+      "repeat": true,
+      "children": [
+        { "id": "art-12", "type": "text", "label": "First Name", "required": true },
+        { "id": "art-13", "type": "text", "label": "Last Name", "required": true }
+      ]
+    },
+      
+    {
+      "id": "art-14",
+      "type": "select",
+      "label": "Access Conditions",
+      "options": [ "Unrestricted", "Restricted" ]
+    },
+    
+    {
+      "id": "art-15",
+      "type": "file",
+      "label": "Thesis",
+      "required": true
+    },
+    
+    {
+      "id": "art-16",
+      "type": "section",
+      "title": "Work Samples",
+      "repeat": true,
+      "multipleFilesBlock": "art-17",
+      "children": [
+        { "id": "art-17", "type": "file", "label": "Work Sample", "required": true },
+        { "id": "art-18", "type": "text", "label": "Title", "required": true },
+        { "id": "art-19", "type": "text", "label": "Medium/Materials", "required": true },
+        { "id": "art-20", "type": "text", "label": "Dimensions", "required": true },
+        { "id": "art-21", "type": "date", "label": "Year", "precision": "year", "required": true },
+        { "id": "art-22", "type": "text", "label": "Brief Narrative", "lines": 3 }
+      ]
+    },
+      
+    {
+      "id": "art-23",
+      "type": "section",
+      "title": "Copyright Statement",
+      "children": [
+        { "id": "art-24", "type": "checkbox", "label": "You are the owner of the copyright of your thesis, etc." }
+      ]
+    }
+  ]
+}
