@@ -19,8 +19,8 @@ function blankEntry(blocks) {
 }
 
 export default Ember.Route.extend({
-  model() {
-    return this.store.findRecord('form', 'sample');
+  model(params) {
+    return this.store.findRecord('form', params.form_id);
   },
   
   setupController(controller, model) {

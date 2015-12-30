@@ -6,6 +6,8 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
+  this.route('forms', { path: '/' });
+  this.route('form', { path: '/forms/:form_id' });
 });
 
 export default Router;

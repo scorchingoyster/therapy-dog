@@ -353,6 +353,25 @@ var FORMS = {
 module.exports = function(app) {
   var express = require('express');
   var formsRouter = express.Router();
+  
+  formsRouter.get('/', function(req, res) {
+    var data = [];
+    var id;
+    
+    for (id in FORMS) {
+      if (FORMS.hasOwnProperty(id)) {
+        data.push({
+          'type': 'form',
+          'id': id,
+          'attributes': FORMS[id]
+        });
+      }
+    }
+    
+    res.send({
+      'data': data
+    });
+  });
 
   formsRouter.get('/:id', function(req, res) {
     var attributes = FORMS[req.params.id];
