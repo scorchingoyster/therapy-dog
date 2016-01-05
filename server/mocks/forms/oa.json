@@ -1,5 +1,6 @@
 {
   "title": "Carolina Open Access",
+  "description": "The Carolina Digital Repository supports the UNC Open Access Policy. UNC faculty, or their delegates, and other members of the UNC scholarly community should use this form to deposit scholarly work into the UNC Scholarly Works for preservation and access. For help, contact us or view our help pages.",
 
   "blocks": [
     {
@@ -80,7 +81,8 @@
       "children": [
         {
           "id": "supplemental",
-          "type": "file"
+          "type": "file",
+          "label": "File"
         },
         {
           "id": "description",
