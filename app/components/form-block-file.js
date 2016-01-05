@@ -1,6 +1,10 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  classNames: ['block', 'file'],
+  classNameBindings: ['required'],
+  required: Ember.computed.alias('model.required'),
+  
   file: function() {
     return this.get("entry").get(this.get("model.id"));
   }.property(),

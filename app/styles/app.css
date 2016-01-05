@@ -1,197 +1,341 @@
 /* basic styles */
 
-body {
-  margin: 16px;
-}
-
 * {
   box-sizing: border-box;
+}
+
+
+/* form */
+
+#form.current {
+  display: block;
+}
+
+#form {
+  display: none;
+  width: 700px;
+  margin: 0 auto;
+}
+
+
+/* title and description */
+
+#form h1 {
+  margin: 16px 0;
+}
+
+#form p {
+  margin: 16px 0;
+}
+
+
+/* buttons */
+
+button {
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  background: #eee;
+  background: linear-gradient(#fff, #eee);
+  font-size: 14px;
+  padding: 6px 12px;
+  cursor: default;
+}
+
+
+/* blocks */
+
+#form > .block:first-of-type {
+  margin-top: 32px;
+}
+
+.block {
+  margin: 48px 0;
+}
+
+.block label {
+  display: block;
+  margin: 8px 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.block input {
+  display: block;
+  margin: 8px 0;
+  font-size: 16px;
+  padding: 4px;
+  width: 100%;
+}
+
+.block.required label:after {
+  color: red;
+  content: " *";
+}
+
+
+/* section blocks */
+
+.section h2 {
+  font-size: 18px;
+  margin: 16px 0;
+}
+
+
+/* blocks inside section blocks */
+
+.section .block {
+  margin: 16px 0;
+}
+
+.section .block label {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.section .block input {
+  margin: 8px 0;
+}
+
+
+/* repeating section blocks */
+
+.section.repeat .entry {
+  position: relative;
+  margin: 24px 0;
+  border-top: 1px solid #ddd;
+}
+
+.section.repeat .entry:first-of-type {
+  margin-top: 18px;
+}
+
+.section.repeat .block {
+  width: 500px;
+}
+
+.section.repeat .block:first-of-type {
+  margin-top: 18px;
+}
+
+.section.repeat .add {
+  border-top: 1px solid #ddd;
+}
+
+.section.repeat .add button {
+  margin: 24px 0;
+  margin-bottom: 0;
+  font-size: 16px;
+  padding: 8px 16px;
+}
+
+.section.repeat .remove button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 14px;
+  padding: 6px 12px;
+  margin: 24px 0;
+}
+
+
+/* file blocks */
+
+.block.file .upload {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+}
+
+.block.file .upload input[type='file'] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  margin: 0;
+  padding: 0;
 }
 
 
 /* debug */
 
 #debug {
-  display: flex;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  
+  padding: 24px;
+  text-align: center;
+  background: #eee;
+  background-image: -webkit-repeating-linear-gradient(-45deg, #eee, #eee 10px, #fff 10px, #fff 20px);
+  background-image: repeating-linear-gradient(-45deg, #eee, #eee 10px, #fff 10px, #fff 20px);
 }
 
-#form, #dump {
-  flex: 1 1 50%;
-  overflow: auto;
-  padding: 16px;
-}
-
-#dump {
+#debug button.current {
   background: #333;
   color: #fff;
+  border: 1px solid #000;
 }
 
-#dump h1 {
+
+/* output */
+
+#output.current {
+  display: block;
+}
+
+#output {
+  display: none;
+  margin: 16px;
+}
+
+#output h1 {
   margin: 24px 0 16px;
   font-size: 24px;
 }
 
-#dump dd, #dump p {
+#output dd, #output p {
   font-family: monaco, courier, monospace;
   white-space: pre-wrap;
 }
 
-#dump dt {
+#output dt {
   margin-top: 16px;
   margin-bottom: 8px;
+  font-weight: bold;
 }
 
-#dump dt.deposit {
+#output dt.deposit {
   color: #999;
-  font-style: italic;
 }
 
-#dump dd {
+#output dd {
   margin: 0 0 24px 0;
 }
 
 
-/* for debug, have the submit button stick to the bottom of the screen */
+/* templates */
 
-#form {
-  padding-bottom: 72px;
-}
-
-.submit {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  background: #eee;
-  width: 50%;
-  margin: 0;
-  padding: 16px;
-}
-
-
-/* form */
-
-#form h1 {
-  margin: 16px 0;
-}
-
-
-/* add files button */
-
-.add-files {
-  position: relative;
-}
-  
-.add-files input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  opacity: 0;
-}
-
-
-/* fields */
-
-form p {
-  margin: 16px 0;
-}
-
-fieldset {
-  margin: 16px 0;
-  padding: 0;
-  border: none;
-}
-
-fieldset p {
-  margin-left: 16px;
-}
-
-fieldset.entry {
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 0;
-  margin-top: 0;
-}
-
-legend {
-  margin: 16px 0 0 0;
-  padding: 0 0 8px 0;
-  border-bottom: 1px solid #ccc;
-  width: 100%;
-  font-weight: bold;
-}
-
-label {
+#templates.current {
   display: block;
-  margin: 4px 0;
 }
 
-input, select {
-  display: block;
-  margin: 4px 0;
+#templates {
+  display: none;
+  margin: 16px;
 }
 
-.file-input {
-  display: block;
-  margin: 4px 0;
+
+#templates .template-node > .children {
+  margin-left: 20px;
 }
 
-.file-input b {
-  color: #333;
+
+#templates .template-node > .line {
+  display: flex;
 }
 
-.file-input input {
-  margin: 0;
-  padding: 0;
-}
-
-.checkbox label, .checkbox input {
-  display: inline;
-}
-
-.add button {
-  border: none;
-  background: green;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 16px;
-}
-
-.submit button {
-  border: none;
+#templates .template-node > .line > .keep {
   background: blue;
   color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 16px;
+  margin-left: 5px;
 }
 
-.remove button {
-  border: none;
-  background: gray;
+#templates .template-node > .line > .compact {
+  background: orange;
   color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 16px;
+  margin-left: 5px;
 }
 
-.file-input button {
-  border: none;
-  background: gray;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 14px;
+
+#templates .template-node > .line > .spec {
+  display: flex;
 }
 
-.required label:after {
-  content: " *";
+
+#templates .template-node {
+  margin: 5px 0;
+}
+
+#templates .each-source > .template-node,
+#templates .arrow-target > .template-node,
+#templates .arrow-source > .template-node {
+  margin: 0;
+}
+
+
+#templates .attribute-at,
+#templates .attribute-name {
+  color: blue;
+  font-family: courier;
+}
+
+
+#templates .element-open,
+#templates .element-name,
+#templates .element-attribute-name,
+#templates .element-attribute-eq,
+#templates .element-attribute-value,
+#templates .element-close {
+  font-family: courier;
+}
+
+#templates .element-open,
+#templates .element-name,
+#templates .element-close {
+  color: green;
+}
+
+#templates .element-attribute {
+  display: flex;
+  margin-left: 5px;
+}
+
+#templates .element-attribute-name {
+  color: blue;
+}
+
+#templates .element-attribute-value {
+  color: red;
+}
+
+
+#templates .each-source {
+  margin: 0 5px;
+}
+
+#templates .each-variable {
+  margin: 0 5px;
+  background: #eee;
+}
+
+
+#templates .arrow-arrow {
+  margin-left: 5px;
+}
+
+#templates .arrow-target {
+  display: flex;
+}
+
+#templates .arrow-target .spec {
+  margin-left: 5px;
+}
+
+
+#templates .path-part {
+  background: #eee;
+}
+
+#templates .path-part:before {
+  content: "▸";
+  margin: 0 5px;
+}
+
+#templates .path-part:first-of-type:before {
+  content: "";
+  margin: 0;
+}
+
+
+#templates .literal-value {
   color: red;
 }

@@ -1,22 +1,24 @@
-<fieldset>
-  <legend>{{model.title}}</legend>
-  
-  {{#if model.repeat}}
-    {{#each (get entry model.id) as |entry|}}
-      <fieldset class="entry">
-        {{#each model.children as |child|}}
-          {{component (concat "form-block-" child.type) model=child entry=(mut entry)}}
-        {{/each}}
-        <p class="remove"><button {{action "remove" entry}}>Remove</button></p>
-      </fieldset>
-    {{/each}}
+<h2>{{model.title}}</h2>
 
-    <p class="add"><button {{action "add"}}>Add</button></p>
-  {{else}}
-    {{#each model.children as |child|}}
-      {{#if child.type}}
-        {{component (concat "form-block-" child.type) model=child entry=(mut (get entry model.id))}}
-      {{/if}}
-    {{/each}}
-  {{/if}}
-</fieldset>
+{{#if model.repeat}}
+  {{#each (get entry model.id) as |entry|}}
+    <div class="entry">
+      {{#each model.children as |child|}}
+        {{component (concat "form-block-" child.type) model=child entry=(mut entry)}}
+      {{/each}}
+      <div class="remove">
+        <button {{action "remove" entry}}>Remove</button>
+      </div>
+    </div>
+  {{/each}}
+
+  <div class="add">
+    <button {{action "add"}}>Add Another</button>
+  </div>
+{{else}}
+  {{#each model.children as |child|}}
+    {{#if child.type}}
+      {{component (concat "form-block-" child.type) model=child entry=(mut (get entry model.id))}}
+    {{/if}}
+  {{/each}}
+{{/if}}

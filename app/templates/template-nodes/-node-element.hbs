@@ -1,0 +1,10 @@
+<span class="element-open">&lt;</span>
+<span class="element-name">{{node.name}}</span>
+{{#each-in node.attributes as |name value|}}
+  <span class="element-attribute">
+    <span class="element-attribute-name">{{name}}</span>
+    <span class="element-attribute-eq">=</span>
+    <span class="element-attribute-value">"{{value}}"</span>
+  </span>
+{{/each-in}}
+<span class="element-close">&gt;</span>

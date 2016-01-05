@@ -68,8 +68,20 @@ function getFileBlocks(block) {
 }
 
 export default Ember.Controller.extend({
+  viewName: "form",
+  
   actions: {
-    dump() {
+    showForm() {
+      this.set("viewName", "form");
+    },
+    
+    showTemplates() {
+      this.set("viewName", "templates");
+    },
+    
+    showOutput() {
+      this.set("viewName", "output");
+      
       let entry = this.get("entry");
       
       // Form data

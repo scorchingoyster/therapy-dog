@@ -1,6 +1,10 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  classNames: ['block', 'section'],
+  classNameBindings: ['repeat'],
+  repeat: Ember.computed.alias('model.repeat'),
+  
   init() {
     this._super();
   },

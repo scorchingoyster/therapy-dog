@@ -1,13 +1,10 @@
-<p class="file {{if model.required "required" ""}}">
-  <label>{{model.label}}</label>
+<label>{{model.label}}</label>
+<div class="upload">
   {{#if file}}
-    <span class="file-input">
-      <b>{{file.name}}</b> ({{file.size}} bytes, {{file.type}})
-      <button class="clear" {{action "clear"}}>Clear</button>
-    </span>
+    {{file.name}}
+    <button {{action "clear"}}>Clear</button>
   {{else}}
-    <span class="file-input">
-      {{file-input select="select"}}
-    </span>
+    <button>Choose File…</button>
+    {{file-input select="select"}}
   {{/if}}
-</p>
+</div>

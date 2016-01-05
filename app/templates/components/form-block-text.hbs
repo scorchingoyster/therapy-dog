@@ -1,3 +1,2 @@
-<p class={{if model.required "required" ""}}>
-  <label>{{model.label}}</label> {{input value=(mut (get entry model.id)) type="text" placeholder=model.placeholder}}
-</p>
+<label>{{model.label}}</label>
+{{input value=(mut (get entry model.id)) type="text" placeholder=model.placeholder}}

@@ -1,0 +1,9 @@
+<span class="arrow-source">
+  {{template-node node=node.source}}
+</span>
+<span class="arrow-arrow">&rarr;</span>
+<span class="arrow-target">
+  {{#each node.target as |target|}}
+    {{template-node node=target}}
+  {{/each}}
+</span>
