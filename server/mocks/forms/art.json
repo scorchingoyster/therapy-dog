@@ -82,5 +82,7 @@
         { "id": "art-24", "type": "checkbox", "label": "You are the owner of the copyright of your thesis, etc." }
       ]
     }
-  ]
+  ],
+  
+  "templates": []
 }

@@ -25,7 +25,7 @@
     {
       "id": "subject-areas",
       "type": "section",
-      "label": "Subject Areas",
+      "title": "Subject Areas",
       "repeat": true,
       "children": [
         { "id": "subject-area", "type": "select", "label": "Subject Area", "required": true, "options": ["Arts", "Sciences"] }
@@ -35,7 +35,7 @@
     {
       "id": "primary-users",
       "type": "section",
-      "label": "Primary Users",
+      "title": "Primary Users",
       "repeat": true,
       "children": [
         { "id": "primary-user", "type": "select", "label": "Primary User", "options": ["Student", "Faculty"] }
@@ -58,7 +58,7 @@
     {
       "id": "license-and-conditions",
       "type": "section",
-      "label": "License and Conditions of Use",
+      "title": "License and Conditions of Use",
       "children": [
         { "id": "cc-license", "type": "select", "label": "Creative Commons License", "options": ["CC BY", "CC BY-NC"], "defaultValue": "CC BY", "required": true },
         { "id": "holder", "type": "text", "label": "License/Copyright Holder", "required": true }
@@ -77,5 +77,7 @@
         { "id": "supplemental-file", "type": "file", "label": "Supplemental File", "required": true }
       ]
     }
-  ]
+  ],
+  
+  "templates": []
 }
