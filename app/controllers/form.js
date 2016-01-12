@@ -39,7 +39,7 @@ function getValues(context, id) {
         let value = context[key];
         let type = Ember.typeOf(value);
         
-        if ("object" === type) {
+        if ("object" === type || "instance" === type) {
           result = result.concat(getValues(value, id));
         } else if ("array" === type) {
           value.forEach(v => {
