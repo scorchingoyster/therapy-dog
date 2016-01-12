@@ -6,8 +6,7 @@
     {
       "id": "authors",
       "type": "section",
-      "title": "Authors",
-      "repeat": true,
+      "title": "Author Information",
       "children": [
         {
           "id": "first",
@@ -17,6 +16,39 @@
         },
         {
           "id": "last",
+          "type": "text",
+          "label": "Last Name",
+          "required": true
+        },
+        {
+          "id": "department",
+          "type": "text",
+          "label": "Academic Department",
+          "required": true
+        },
+        {
+          "id": "status",
+          "type": "select",
+          "label": "Status",
+          "options": ["Faculty", "Student", "Staff", "Post-Doctoral"]
+        }
+      ]
+    },
+    
+    {
+      "id": "coauthors",
+      "type": "section",
+      "title": "Co-Authors",
+      "repeat": true,
+      "children": [
+        {
+          "id": "coauthor-first",
+          "type": "text",
+          "label": "First Name",
+          "required": true
+        },
+        {
+          "id": "coauthor-last",
           "type": "text",
           "label": "Last Name",
           "required": true
@@ -48,6 +80,17 @@
           "placeholder": "e.g., Volume 11, Issue 2"
         },
         {
+          "id": "pubdate",
+          "type": "text",
+          "label": "Publication Date"
+        },
+        {
+          "id": "keywords",
+          "type": "text",
+          "label": "Keywords",
+          "placeholder": "e.g., Cognition, 20th Century British Literature, Ovid, Morphology"
+        },
+        {
           "id": "version",
           "type": "select",
           "label": "Version",
@@ -59,11 +102,29 @@
         }
       ]
     },
-  
+    
     {
       "id": "embargo",
       "type": "date",
       "label": "Embargo Until"
+    },
+    
+    {
+      "id": "granting-agency-info",
+      "type": "section",
+      "title": "Granting Agency Information",
+      "children": [
+        {
+          "id": "granting-agency",
+          "type": "text",
+          "label": "Granting Agency"
+        },
+        {
+          "id": "additional-funding",
+          "type": "text",
+          "label": "Additional funding source(s) if applicable"
+        }
+      ]
     },
 
     {
@@ -77,17 +138,18 @@
       "id": "files",
       "type": "section",
       "title": "Supplemental Files",
-      "repeat": true,
       "children": [
         {
-          "id": "supplemental",
-          "type": "file",
-          "label": "File"
+          "id": "supplemental1",
+          "type": "file"
         },
         {
-          "id": "description",
-          "type": "text",
-          "label": "Description"
+          "id": "supplemental2",
+          "type": "file"
+        },
+        {
+          "id": "supplemental3",
+          "type": "file"
         }
       ]
     }
@@ -140,6 +202,108 @@
                       "source": {
                         "type": "path",
                         "parts": ["author", "last"]
+                      },
+                      "target": [
+                        {
+                          "type": "element",
+                          "name": "namePart",
+                          "attributes": {
+                            "type": "family"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "arrow",
+                      "source": {
+                        "type": "path",
+                        "parts": ["author", "department"]
+                      },
+                      "target": [
+                        {
+                          "type": "element",
+                          "name": "affiliation"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "element",
+                      "name": "role",
+                      "children": [
+                        {
+                          "type": "element",
+                          "name": "roleTerm",
+                          "attributes": {
+                            "type": "text",
+                            "authority": "marcrelator"
+                          },
+                          "children": [
+                            {
+                              "type": "literal",
+                              "value": "Creator"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "arrow",
+                  "source": {
+                    "type": "path",
+                    "parts": ["author", "status"]
+                  },
+                  "target": [
+                    {
+                      "type": "element",
+                      "name": "note",
+                      "attributes": {
+                        "type": "admin",
+                        "displayLabel": "Author Status"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            
+            {
+              "type": "each",
+              "source": {
+                "type": "path",
+                "parts": ["coauthors"]
+              },
+              "variable": "coauthor",
+              "children": [
+                {
+                  "type": "element",
+                  "name": "name",
+                  "attributes": {
+                    "type": "personal"
+                  },
+                  "children": [
+                    {
+                      "type": "arrow",
+                      "source": {
+                        "type": "path",
+                        "parts": ["coauthor", "first"]
+                      },
+                      "target": [
+                        {
+                          "type": "element",
+                          "name": "namePart",
+                          "attributes": {
+                            "type": "given"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "arrow",
+                      "source": {
+                        "type": "path",
+                        "parts": ["coauthor", "last"]
                       },
                       "target": [
                         {
@@ -211,6 +375,40 @@
                 }
               ]
             },
+            
+            {
+              "type": "arrow",
+              "source": {
+                "type": "path",
+                "parts": ["info", "pubdate"]
+              },
+              "target": [
+                {
+                  "type": "element",
+                  "name": "note",
+                  "attributes": {
+                    "displayLabel": "Publication Date"
+                  }
+                }
+              ]
+            },
+            
+            {
+              "type": "arrow",
+              "source": {
+                "type": "path",
+                "parts": ["info", "keywords"]
+              },
+              "target": [
+                {
+                  "type": "element",
+                  "name": "note",
+                  "attributes": {
+                    "displayLabel": "Keywords"
+                  }
+                }
+              ]
+            },
           
             {
               "type": "element",
@@ -253,6 +451,62 @@
                 }
               ]
             },
+            
+            {
+              "type": "element",
+              "name": "name",
+              "attributes": {
+                "type": "corporate"
+              },
+              "children": [
+                {
+                  "type": "arrow",
+                  "source": {
+                    "type": "path",
+                    "parts": ["granting-agency-info", "granting-agency"]
+                  },
+                  "target": [
+                    {
+                      "type": "element",
+                      "name": "displayForm"
+                    }
+                  ]
+                },
+                {
+                  "type": "element",
+                  "name": "role",
+                  "children": [
+                    {
+                      "type": "element",
+                      "name": "roleTerm",
+                      "children": [
+                        {
+                          "type": "literal",
+                          "value": "Funder"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            
+            {
+              "type": "arrow",
+              "source": {
+                "type": "path",
+                "parts": ["granting-agency-info", "additional-funding"]
+              },
+              "target": [
+                {
+                  "type": "element",
+                  "name": "note",
+                  "attributes": {
+                    "displayLabel": "Additional funding sources"
+                  }
+                }
+              ]
+            },
           
             {
               "type": "element",
@@ -289,35 +543,6 @@
                 {
                   "type": "attribute",
                   "name": "embargo-until"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-  
-    {
-      "file": "supplemental",
-      "block": [
-        {
-          "type": "element",
-          "name": "mods",
-          "compact": true,
-          "attributes": {
-            "xmlns": "http://www.loc.gov/mods/v3"
-          },
-          "children": [
-            {
-              "type": "arrow",
-              "source": {
-                "type": "path",
-                "parts": ["description"]
-              },
-              "target": [
-                {
-                  "type": "element",
-                  "name": "abstract"
                 }
               ]
             }
