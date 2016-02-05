@@ -8,6 +8,6 @@ export default Ember.Route.extend({
   setupController(controller, model) {
     this._super(controller, model);
     
-    controller.set("entry", model.blankEntry());
+    controller.set("value", Ember.Object.create());
   }
 });

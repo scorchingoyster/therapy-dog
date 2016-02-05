@@ -5,11 +5,50 @@
 }
 
 
+/* menu */
+
+#menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  font-size: 18px;
+  line-height: 18px;
+  background: #eee;
+  border-bottom: 1px solid #ccc;
+  z-index: 1;
+  height: 50px;
+}
+
+#menu a {
+  color: #666;
+  margin: 0 8px;
+  text-decoration: none;
+}
+
+#menu a.active {
+  color: #000;
+  font-weight: bold;
+}
+
+#menu .back {
+  position: absolute;
+  top: 16px;
+  left: 8px;
+}
+
+#menu .actions {
+  position: absolute;
+  top: 16px;
+  right: 8px;
+}
+
+
 /* form */
 
 #form {
   width: 700px;
-  margin: 30px auto;
+  margin: 83px auto 64px auto;
 }
 
 

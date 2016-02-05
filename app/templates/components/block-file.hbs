@@ -1,7 +1,7 @@
-<label>{{model.label}}</label>
+<label>{{block.label}}</label>
 <div class="upload">
-  {{#if file}}
-    {{file.name}}
+  {{#if value}}
+    {{value.name}}
     <button {{action "clear"}}>Clear</button>
   {{else}}
     <button>Choose File…</button>
