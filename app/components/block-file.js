@@ -6,21 +6,32 @@ export default Ember.Component.extend({
   required: Ember.computed.alias('block.required'),
   
   actions: {
-    select: function(files) {
+    select(files) {
       if (files.length > 0) {
-        let file = files.item(0);
-        this.set("value", Ember.Object.create({ name: file.name, size: file.size, type: file.type, lastModifiedDate: file.lastModifiedDate }));
-      } else {
-        this.set("value", null);
+        var formData = new FormData();
+        
+        var file = files[0];
+        formData.append('file', file, file.name);
+        
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'json';
+        
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            this.set('value', xhr.response);
+            this.set('progress', null);
+          }
+        };
+        
+        xhr.open('POST', '/api/uploads', true);
+        
+        xhr.send(formData);
       }
-      
-      this.get("onChange")(this.get("value"));
     },
-
-    clear: function() {
-      this.set("value", null);
-      
-      this.get("onChange")(this.get("value"));
+    
+    clear() {
+      this.set('value', null);
+      this.set('progress', null);
     }
   }
 });

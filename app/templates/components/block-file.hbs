@@ -1,10 +1,11 @@
 <label>{{block.label}}</label>
 <div class="upload">
   {{#if value}}
-    {{value.name}}
-    <button {{action "clear"}}>Clear</button>
+    {{value.name}} <button {{action "clear"}}>Clear</button>
+  {{else if progress}}
+    Uploading… ({{progress.loaded}}/{{progress.total}})
   {{else}}
     <button>Choose File…</button>
-    {{file-input select="select"}}
+    <input type="file" onchange={{action "select" value="target.files"}}>
   {{/if}}
 </div>
