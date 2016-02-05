@@ -18,7 +18,7 @@ export default Ember.Component.extend({
         
         xhr.onload = () => {
           if (xhr.status === 200) {
-            this.set('value', xhr.response);
+            this.get("onChange")(xhr.response);
             this.set('progress', null);
           }
         };
@@ -30,7 +30,7 @@ export default Ember.Component.extend({
     },
     
     clear() {
-      this.set('value', null);
+      this.get("onChange")(null);
       this.set('progress', null);
     }
   }
