@@ -1,10 +1,4 @@
-<div id="debug">
-  <button {{action "showForm"}} class={{if (eq viewName "form") "current" ""}}>Form</button>
-  <button {{action "showOutput"}} class={{if (eq viewName "output") "current" ""}}>Output</button>
-  <button {{action "showTemplates"}} class={{if (eq viewName "templates") "current" ""}}>Templates</button>
-</div>
-
-<div id="form" class={{if (eq viewName "form") "current" ""}}>
+<div id="form">
   <h1>{{model.title}}</h1>
   <p>{{model.description}}</p>
 
@@ -12,45 +6,5 @@
     {{#if block.type}}
       {{component (concat "form-block-" block.type) model=block entry=(mut entry)}}
     {{/if}}
-  {{/each}}
-</div>
-
-<div id="output" class={{if (eq viewName "output") "current" ""}}>
-  <h1>Form data</h1>
-  <p>{{json}}</p>
-  
-  <h1>Files</h1>
-  <ul>
-    {{#each files as |file|}}
-      <li>{{file.name}} ({{file.size}} bytes, {{file.type}})</li>
-    {{/each}}
-  </ul>
-  
-  <h1>Metadata</h1>
-  <dl>
-    {{#each dump as |item|}}
-      {{#if item.file}}
-        <dt>{{item.file.name}}</dt>
-      {{else}}
-        <dt class="deposit">Deposit</dt>
-      {{/if}}
-      <dd>{{item.metadata}}</dd>
-    {{/each}}
-  </dl>
-</div>
-
-<div id="templates" class={{if (eq viewName "templates") "current" ""}}>
-  {{#each model.templates as |template|}}
-    <h1>
-      {{#if template.file}}
-        {{template.file}}
-      {{else}}
-        <i>Deposit</i>
-      {{/if}}
-    </h1>
-  
-    {{#each template.block as |node|}}
-      {{template-node node=node}}
-    {{/each}}
   {{/each}}
 </div>
