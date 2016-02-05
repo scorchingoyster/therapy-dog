@@ -4,16 +4,17 @@
   </div>
   
   <div class="actions">
+    <a href="javascript:void(0)" {{action "deposit"}}>Deposit</a>
     <a href="javascript:void(0)" {{action "reset"}}>Reset</a>
     <a href="javascript:void(0)" {{action "dump"}}>Dump</a>
   </div>
 </div>
 
 <div id="form">
-  <h1>{{model.title}}</h1>
-  <p>{{model.description}}</p>
+  <h1>{{form.title}}</h1>
+  <p>{{form.description}}</p>
   
-  {{#each model.blocks as |block|}}
-    {{component (concat "block-" block.type) block=block value=(get value block.key) onChange=(action "updateValue" block.key)}}
+  {{#each form.blocks as |block|}}
+    {{component (concat "block-" block.type) block=block value=(get model block.key) onChange=(action "updateValue" block.key)}}
   {{/each}}
 </div>

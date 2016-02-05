@@ -7,7 +7,10 @@ const Router = Ember.Router.extend({
 
 Router.map(function() {
   this.route('forms', { path: '/' });
-  this.route('form', { path: '/forms/:form_id' });
+  this.route('deposit', { path: '/:form_id' }, function() {
+    this.route('form');
+    this.route('result');
+  });
 });
 
 export default Router;

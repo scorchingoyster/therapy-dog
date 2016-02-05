@@ -3,15 +3,15 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   actions: {
     updateValue(id, value) {
-      this.get('value').set(id, value);
+      this.get('model').set(id, value);
     },
     
     reset() {
-      this.set('value', Ember.Object.create());
+      this.set('model', Ember.Object.create());
     },
     
     dump() {
-      console.log(JSON.stringify(this.get('value')));
+      console.log(JSON.stringify(this.get('model')));
     }
   }
 });
