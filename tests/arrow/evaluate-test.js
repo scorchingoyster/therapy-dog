@@ -25,13 +25,6 @@ Doc.helpers = {
       type: 'echo',
       content: content.body()
     };
-  },
-  
-  capture: function(params, hash, context, content) {
-    return {
-      type: 'capture',
-      context: context
-    }
   }
 };
 
@@ -229,29 +222,38 @@ describe("Arrow evaluation", function() {
     assert.deepEqual(new Arrow(Doc, template).evaluate(data).nodes, expected);
   });
   
-  it("should provide a copy of the effective context to helpers", function() {
-    // with x as |y| {
-    //   capture
-    // }
-    var template = b.program([
-      b.call('with', [b.call('x')], b.hash(), ['y'], b.program([
-        b.call('capture')
-      ]))
-    ]);
-
-    var data = { x: "abc", y: "def" };
-
+  it.skip("should evaluate registered partial templates", function() {
+    // partial "inner" -> thing "blah"
+    var outer = new Arrow(Doc, b.program([
+      b.arrow(b.call("partial", [b.string("inner")]), [b.call("thing", [b.string("blah")])])
+    ]));
+    
+    // thing x
+    var inner = new Arrow(Doc, b.program([
+      b.call("thing", [b.call("x")])
+    ]));
+    
+    outer.registerPartial("inner", inner);
+    
+    var data = { x: "abc" };
+    
     var expected = [
       {
-        type: "capture",
-        context: {
-          x: { type: "data", value: "abc" },
-          y: { type: "data", value: "abc" }
-        }
+        type: "thing",
+        name: "blah",
+        stuff: false,
+        content: [
+          {
+            type: "thing",
+            name: "abc",
+            stuff: false,
+            content: []
+          }
+        ]
       }
     ];
-
-    assert.deepEqual(new Arrow(Doc, template).evaluate(data).nodes, expected);
+    
+    assert.deepEqual(outer.evaluate(data).nodes, expected);
   });
 
   it("an arrow should put list items inside nested instances of the target", function() {
