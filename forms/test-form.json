@@ -11,7 +11,7 @@
     },
     {
       "key": "author",
-      "type": "text",
+      "type": "section",
       "label": "Author",
       "children": [
         {
@@ -54,5 +54,5 @@
     }
   ],
   
-  "bundle": "item kind='Aggregate Work' label=title { link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#article'; metadata template='article'; item type='File' fragment='article' label=article.name { file content=article }; each supplemental as |supplemental| { item type='File' label=supplemental.file.name { file content=supplemental.file } } }"
+  "bundle": "item kind='Aggregate Work' label=title { link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#article'; metadata template='article'; item type='File' fragment='article' label=article.name { file content=article }; each supplemental as |supplemental| { if supplemental.file { item type='File' label=supplemental.file.name { file content=supplemental.file } } } }"
 }
