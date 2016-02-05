@@ -9,9 +9,9 @@ function blankEntry(blocks) {
 
     if (block.type === "section") {
       if (block.repeat) {
-        entry.set(block.id, [blankEntry(block.children)]);
+        entry.set(block.key, [blankEntry(block.children)]);
       } else {
-        entry.set(block.id, blankEntry(block.children));
+        entry.set(block.key, blankEntry(block.children));
       }
     }
   }

@@ -6,6 +6,6 @@ export default Ember.Component.extend({
   required: Ember.computed.alias('model.required'),
   
   change(event) {
-    this.get("entry").set(this.get("model.id"), event.target.value);
+    this.get("entry").set(this.get("model.key"), event.target.value);
   }
 });

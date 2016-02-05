@@ -6,7 +6,7 @@ export default Ember.Component.extend({
   required: Ember.computed.alias('model.required'),
   
   file: function() {
-    return this.get("entry").get(this.get("model.id"));
+    return this.get("entry").get(this.get("model.key"));
   }.property(),
 
   actions: {
@@ -16,9 +16,9 @@ export default Ember.Component.extend({
       
       if (files.length > 0) {
         let file = files.item(0);
-        this.get("entry").set(this.get("model.id"), Ember.Object.create({ name: file.name, size: file.size, type: file.type, lastModifiedDate: file.lastModifiedDate }));
+        this.get("entry").set(this.get("model.key"), Ember.Object.create({ name: file.name, size: file.size, type: file.type, lastModifiedDate: file.lastModifiedDate }));
       } else {
-        this.get("entry").set(this.get("model.id"), undefined);
+        this.get("entry").set(this.get("model.key"), undefined);
       }
       
       this.propertyDidChange("file");
@@ -27,7 +27,7 @@ export default Ember.Component.extend({
     clear: function() {
       this.propertyWillChange("file");
       
-      this.get("entry").set(this.get("model.id"), undefined);
+      this.get("entry").set(this.get("model.key"), undefined);
       
       this.propertyDidChange("file");
     }

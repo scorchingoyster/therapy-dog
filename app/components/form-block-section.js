@@ -11,13 +11,13 @@ export default Ember.Component.extend({
   
   actions: {
     add() {
-      var entries = this.get("entry").get(this.get("model.id"));
+      var entries = this.get("entry").get(this.get("model.key"));
       
       entries.addObject(Ember.Object.create());
     },
 
     remove(item) {
-      var entries = this.get("entry").get(this.get("model.id"));
+      var entries = this.get("entry").get(this.get("model.key"));
       
       entries.removeObject(item);
       

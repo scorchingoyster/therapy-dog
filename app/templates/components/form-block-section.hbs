@@ -1,7 +1,7 @@
-<h2>{{model.title}}</h2>
+<h2>{{model.label}}</h2>
 
 {{#if model.repeat}}
-  {{#each (get entry model.id) as |entry|}}
+  {{#each (get entry model.key) as |entry|}}
     <div class="entry">
       {{#each model.children as |child|}}
         {{component (concat "form-block-" child.type) model=child entry=(mut entry)}}
@@ -18,7 +18,7 @@
 {{else}}
   {{#each model.children as |child|}}
     {{#if child.type}}
-      {{component (concat "form-block-" child.type) model=child entry=(mut (get entry model.id))}}
+      {{component (concat "form-block-" child.type) model=child entry=(mut (get entry model.key))}}
     {{/if}}
   {{/each}}
 {{/if}}
