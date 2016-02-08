@@ -8,7 +8,8 @@ describe("Bundle generation", function() {
         { type: "file", key: "thesis" },
         { type: "text", key: "title" }
       ],
-      bundle: "item kind='File' label=title { file content=thesis }"
+      bundle: "item kind='File' label=title { file { thesis } }",
+      templates: []
     };
 
     var values = {
@@ -34,7 +35,7 @@ describe("Bundle generation", function() {
     
     var file = item.children[0];
     assert.ok(file.id);
-    assert.equal(file.content, values.thesis);
+    assert.deepEqual(file.content[0], values.thesis);
   });
 
   it("should generate a bundle for a form with a metadata template", function() {
@@ -43,7 +44,14 @@ describe("Bundle generation", function() {
         { type: "file", key: "thesis" },
         { type: "text", key: "title" }
       ],
-      bundle: "item kind='File' label=title { file content=thesis; metadata template='thesis' }"
+      bundle: "item kind='File' label=title { file { thesis }; metadata { partial 'thesis' } }",
+      templates: [
+        {
+          id: "thesis",
+          type: "xml",
+          template: "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { title -> (element 'titleInfo') (element 'title') }"
+        }
+      ]
     };
 
     var values = {
@@ -70,12 +78,11 @@ describe("Bundle generation", function() {
     
     var file = item.children[0];
     assert.ok(file.id);
-    assert.equal(file.content, values.thesis);
+    assert.equal(file.content[0], values.thesis);
     
     var metadata = item.children[1];
     assert.ok(metadata.id);
-    assert.equal(metadata.template, "thesis");
-    assert.deepEqual(metadata.data, values);
+    assert.equal(metadata.content.length, 1);
   });
   
   it("should generate a bundle for a form with an aggregate and a link", function() {
@@ -84,7 +91,8 @@ describe("Bundle generation", function() {
         { type: "file", key: "thesis" },
         { type: "text", key: "title" }
       ],
-      bundle: "item kind='Aggregate Work' { link rel='http://example.com/blah' href='#thesis'; item kind='File' fragment='thesis' { file content=thesis } }"
+      bundle: "item kind='Aggregate Work' { link rel='http://example.com/blah' href='#thesis'; item kind='File' fragment='thesis' { file { thesis } } }",
+      templates: []
     };
 
     var values = {

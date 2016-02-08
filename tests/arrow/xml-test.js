@@ -109,7 +109,7 @@ describe("XML doc", function() {
             attributes: {},
             keep: true,
             children: [
-              { type: "data", value: "Someone" }
+              "Someone"
             ]
           },
           {
@@ -157,7 +157,7 @@ describe("XML doc", function() {
             attributes: {},
             keep: true,
             children: [
-              { type: "data", value: "Someone" }
+              "Someone"
             ]
           }
         ]

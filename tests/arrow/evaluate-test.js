@@ -8,7 +8,7 @@ function Doc(nodes) {
 }
 
 Doc.helpers = {
-  thing: function(params, hash, context, content) {
+  thing: function(params, hash, content) {
     var name = unwrapData(params[0]);
     var stuff = unwrapData(hash.stuff);
     
@@ -20,7 +20,7 @@ Doc.helpers = {
     };
   },
   
-  echo: function(params, hash, context, content) {
+  echo: function(params, hash, content) {
     return {
       type: 'echo',
       content: content.body()
@@ -222,7 +222,7 @@ describe("Arrow evaluation", function() {
     assert.deepEqual(new Arrow(Doc, template).evaluate(data).nodes, expected);
   });
   
-  it.skip("should evaluate registered partial templates", function() {
+  it("should evaluate registered partial templates", function() {
     // partial "inner" -> thing "blah"
     var outer = new Arrow(Doc, b.program([
       b.arrow(b.call("partial", [b.string("inner")]), [b.call("thing", [b.string("blah")])])
@@ -243,12 +243,14 @@ describe("Arrow evaluation", function() {
         name: "blah",
         stuff: false,
         content: [
-          {
-            type: "thing",
-            name: "abc",
-            stuff: false,
-            content: []
-          }
+          new Doc([
+            {
+              type: "thing",
+              name: { type: "data", value: "abc" },
+              stuff: false,
+              content: []
+            }
+          ])
         ]
       }
     ];
