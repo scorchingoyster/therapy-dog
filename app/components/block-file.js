@@ -2,8 +2,11 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   classNames: ['block', 'file'],
-  classNameBindings: ['required'],
+  classNameBindings: ['required', 'invalid'],
   required: Ember.computed.alias('entry.block.required'),
+  invalid: Ember.computed('entry.errors', 'entry.attempted', function() {
+    return !Ember.isEmpty(this.get('entry.errors')) && this.get('entry.attempted');
+  }),
   
   actions: {
     select(files) {
