@@ -116,7 +116,7 @@ button {
   width: 100%;
 }
 
-.block.text.invalid input {
+.block.text.invalid > input {
   border: 1px solid #c00;
 }
 
