@@ -1,11 +1,18 @@
 import Ember from 'ember';
+import ObjectEntry from '../utils/object-entry';
 
 export default Ember.Route.extend({
   model(params) {
-    return Ember.Object.create({
-      form: this.store.findRecord('form', params.form_id),
-      value: Ember.Object.create()
+    let promise = this.store.findRecord('form', params.form_id).then(function(form) {
+      return Ember.Object.create({
+        form: form,
+        entry: ObjectEntry.create({ block: form })
+      });
     });
+    
+    let proxy = Ember.ObjectProxy.extend(Ember.PromiseProxyMixin).create({ promise });
+    
+    return proxy;
   },
   
   afterModel() {

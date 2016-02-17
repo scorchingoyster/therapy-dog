@@ -1,59 +1,42 @@
 import Ember from 'ember';
+import ObjectEntry from '../utils/object-entry';
 
 export default Ember.Component.extend({
   classNames: ['block', 'section'],
   classNameBindings: ['repeat'],
-  repeat: Ember.computed.alias('block.repeat'),
+  repeat: Ember.computed.alias('entry.block.repeat'),
   
-  normalizeValue() {
-    if (this.get("value") == null) {
-      if (this.get("block.repeat")) {
-        this.set("value", [Ember.Object.create()]);
-      } else {
-        this.set("value", Ember.Object.create());
+  didReceiveAttrs() {
+    this._super(...arguments);
+    
+    if (this.get('entry.block.repeat')) {
+      if (!this.get('entry.value')) {
+        this.set('entry.value', [this.createBlankEntry()]);
       }
-      
-      this.get("onChange")(this.get("value"));
     }
   },
   
-  init() {
-    this._super(...arguments);
-    
-    this.normalizeValue();
+  createBlankEntry() {
+    return ObjectEntry.create({
+      block: this.get('entry.block')
+    });
   },
   
-  valueChanged: Ember.observer('value', function() {
-    this.normalizeValue();
-  }),
-  
   actions: {
-    updateValue(key, value) {
-      this.get("value").set(key, value);
-      
-      this.get("onChange")(this.get("value"));
-    },
-    
-    updateItem(index, key, value) {
-      this.get("value").objectAt(index).set(key, value);
-      
-      this.get("onChange")(this.get("value"));
-    },
-    
-    addItem() {
-      this.get("value").pushObject(Ember.Object.create());
-      
-      this.get("onChange")(this.get("value"));
-    },
-    
-    removeItem(index) {
-      this.get("value").removeAt(index);
-      
-      if (this.get("value").length === 0) {
-        this.get("value").pushObject(Ember.Object.create());
+    add() {
+      if (this.get('entry.block.repeat')) {
+        this.get('entry.value').pushObject(this.createBlankEntry());
       }
-      
-      this.get("onChange")(this.get("value"));
+    },
+    
+    remove(entry) {
+      if (this.get('entry.block.repeat')) {
+        this.get('entry.value').removeObject(entry);
+        
+        if (this.get('entry.value.length') === 0) {
+          this.get('entry.value').pushObject(this.createBlankEntry());
+        }
+      }
     }
   }
 });

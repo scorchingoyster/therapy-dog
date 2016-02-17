@@ -2,10 +2,10 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   model() {
-    return this.modelFor('deposit').get('value');
+    return this.modelFor('deposit').get('entry');
   },
   
-  setupController(controller, model) {
+  setupController(controller) {
     this._super(...arguments);
     controller.set('form', this.modelFor('deposit').get('form'));
   },
@@ -14,7 +14,7 @@ export default Ember.Route.extend({
     deposit() {
       let payload = {
         form: this.modelFor('deposit').get('form.id'),
-        values: this.modelFor('deposit').get('value')
+        values: this.modelFor('deposit').get('entry').flatten()
       };
       
       let promise = $.ajax('/api/deposit', {

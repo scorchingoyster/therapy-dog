@@ -1,23 +1,19 @@
-<h2>{{block.label}}</h2>
+<h2>{{entry.block.label}}</h2>
 
-{{#if block.repeat}}
-  {{#each value as |item index|}}
-    <div class="entry">
-      {{#each block.children as |child|}}
-        {{component (concat "block-" child.type) block=child value=(get item child.key) onChange=(action "updateItem" index child.key)}}
-      {{/each}}
-      
+{{#if entry.block.repeat}}
+  {{#each entry.value as |item|}}
+    <div class="item">
+      {{object-entry entry=item}}
+    
       <div class="remove">
-        <button {{action "removeItem" index}}>Remove</button>
+        <button {{action "remove" item}}>Remove</button>
       </div>
     </div>
   {{/each}}
-
+  
   <div class="add">
-    <button {{action "addItem"}}>Add Another</button>
+    <button {{action "add"}}>Add Another</button>
   </div>
 {{else}}
-  {{#each block.children as |child|}}
-    {{component (concat "block-" child.type) block=child value=(get value child.key) onChange=(action "updateValue" child.key)}}
-  {{/each}}
+  {{object-entry entry=entry}}
 {{/if}}

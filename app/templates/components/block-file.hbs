@@ -1,7 +1,8 @@
-<label>{{block.label}}</label>
+<label>{{entry.block.label}}</label>
+
 <div class="upload">
-  {{#if value}}
-    {{value.name}} <button {{action "clear"}}>Clear</button>
+  {{#if entry.value}}
+    {{entry.value.name}} <button {{action "clear"}}>Clear</button>
   {{else if progress}}
     Uploading… ({{progress.loaded}}/{{progress.total}})
   {{else}}

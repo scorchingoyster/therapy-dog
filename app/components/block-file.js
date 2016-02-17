@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   classNames: ['block', 'file'],
   classNameBindings: ['required'],
-  required: Ember.computed.alias('block.required'),
+  required: Ember.computed.alias('entry.block.required'),
   
   actions: {
     select(files) {
@@ -18,7 +18,7 @@ export default Ember.Component.extend({
         
         xhr.onload = () => {
           if (xhr.status === 200) {
-            this.get("onChange")(xhr.response);
+            this.set('entry.value', xhr.response);
             this.set('progress', null);
           }
         };
@@ -30,7 +30,7 @@ export default Ember.Component.extend({
     },
     
     clear() {
-      this.get("onChange")(null);
+      this.set('entry.value', null);
       this.set('progress', null);
     }
   }

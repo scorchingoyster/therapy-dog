@@ -1,2 +1,5 @@
-<label>{{block.label}}</label>
-{{input value=value type="text" placeholder=block.placeholder change=(action "updateValue")}}
+<label>{{entry.block.label}}</label>
+
+{{input value=entry.value type="text" placeholder=block.placeholder}}
+
+{{entry-error-messages entry=entry}}

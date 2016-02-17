@@ -134,13 +134,13 @@ button {
 
 /* repeating section blocks */
 
-.section.repeat .entry {
+.section.repeat .item {
   position: relative;
   margin: 24px 0;
   border-top: 1px solid #ddd;
 }
 
-.section.repeat .entry:first-of-type {
+.section.repeat .item:first-of-type {
   margin-top: 18px;
 }
 
