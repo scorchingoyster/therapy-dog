@@ -93,7 +93,22 @@ button {
   font-weight: bold;
 }
 
-.block input {
+.block.required label:after {
+  color: red;
+  content: " *";
+}
+
+.block .errors {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+  color: #c00;
+}
+
+
+/* text blocks */
+
+.block.text input {
   display: block;
   margin: 8px 0;
   font-size: 16px;
@@ -101,9 +116,8 @@ button {
   width: 100%;
 }
 
-.block.required label:after {
-  color: red;
-  content: " *";
+.block.text.invalid input {
+  border: 1px solid #c00;
 }
 
 
