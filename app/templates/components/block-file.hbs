@@ -1,14 +1,53 @@
 <label>{{entry.block.label}}</label>
 
-<div class="upload">
-  {{#if entry.value}}
-    {{entry.value.name}} <button {{action "clear"}}>Clear</button>
-  {{else if progress}}
-    Uploading… ({{progress.loaded}}/{{progress.total}})
-  {{else}}
-    <button>Choose File…</button>
-    <input type="file" onchange={{action "select" value="target.files"}}>
-  {{/if}}
-</div>
+{{#if isEmpty}}
+
+  <div class="upload empty">
+    <div class="choose-file-wrapper">
+      <input type="file" onchange={{action "choose" value="target.files"}}>
+      Choose File…
+    </div>
+  </div>
+  
+{{else if isComplete}}
+
+  <div class="upload complete">
+    <div class="description">
+      <div class="main">{{entry.value.name}}</div>
+      <div class="detail">{{format-size entry.value.size}} {{entry.value.type}}</div>
+    </div>
+
+    <button {{action "remove"}}>Remove</button>
+  </div>
+
+{{else if isProgress}}
+
+  <div class="upload progress">
+    {{progress-bar ratio=progress.ratio}}
+  
+    <div class="description">
+      <div class="main">Uploading <b>{{file.name}}</b>…</div>
+      <div class="detail">{{format-size progress.loaded}} of {{format-size progress.total}}</div>
+    </div>
+
+    <button {{action "cancel"}}>Cancel</button>
+  </div>
+
+{{else if isError}}
+
+  <div class="upload error">
+    <div class="description">
+      <div class="main">An error occurred while uploading <b>{{file.name}}</b>.</div>
+    </div>
+  
+    <button {{action "retry"}}>Try Again</button>
+  
+    <div class="choose-file-wrapper">
+      <input type="file" onchange={{action "choose" value="target.files"}}>
+      Choose Another File…
+    </div>
+  </div>
+  
+{{/if}}
 
 {{entry-error-messages entry=entry}}
