@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import FocusEntryAction from '../mixins/focus-entry-action';
+import FocusEntryAction from 'therapy-dog/mixins/focus-entry-action';
 
 export default Ember.Component.extend(FocusEntryAction, {
   classNames: ['block', 'text'],

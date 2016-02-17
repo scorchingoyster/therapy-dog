@@ -1,7 +1,7 @@
 import Ember from 'ember';
-import ArrayEntry from '../utils/array-entry';
-import ObjectEntry from '../utils/object-entry';
-import ValueEntry from '../utils/value-entry';
+import ArrayEntry from 'therapy-dog/utils/array-entry';
+import ObjectEntry from 'therapy-dog/utils/object-entry';
+import ValueEntry from 'therapy-dog/utils/value-entry';
 
 export default Ember.Component.extend({
   didReceiveAttrs() {

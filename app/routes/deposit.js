@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import ObjectEntry from '../utils/object-entry';
+import ObjectEntry from 'therapy-dog/utils/object-entry';
 
 export default Ember.Route.extend({
   model(params) {
