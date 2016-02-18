@@ -1,14 +1,9 @@
-<div id="menu">
-  <div class="back">
-    {{link-to "← Forms" "forms"}}
-  </div>
-  
-  <div class="actions">
-    <a href="javascript:void(0)" {{action "deposit"}}>Deposit</a>
-    <a href="javascript:void(0)" {{action "reset"}}>Reset</a>
-    <a href="javascript:void(0)" {{action "validate"}}>Validate</a>
-    <a href="javascript:void(0)" {{action "dump"}}>Dump</a>
-  </div>
+<div id="debug">
+  {{link-to "Back to list of forms" "forms"}}
+  <button {{action "deposit"}}>Deposit</button>
+  <button {{action "reset"}}>Reset</button>
+  <button {{action "validate"}}>Validate</button>
+  <button {{action "dump"}}>Dump</button>
 </div>
 
 <div id="form">

@@ -5,42 +5,24 @@
 }
 
 
-/* menu */
+/* debug */
 
-#menu {
+#debug {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  font-size: 18px;
-  line-height: 18px;
-  background: #eee;
-  border-bottom: 1px solid #ccc;
+  background: yellow;
+  padding: 8px;
   z-index: 1;
-  height: 50px;
+  opacity: 0.3;
 }
 
-#menu a {
-  color: #666;
-  margin: 0 8px;
-  text-decoration: none;
+#debug:hover {
+  opacity: 1.0;
 }
 
-#menu a.active {
-  color: #000;
-  font-weight: bold;
-}
-
-#menu .back {
-  position: absolute;
-  top: 16px;
-  left: 8px;
-}
-
-#menu .actions {
-  position: absolute;
-  top: 16px;
-  right: 8px;
+#debug button {
+  font-size: 14px;
 }
 
 
@@ -48,7 +30,7 @@
 
 #form {
   width: 700px;
-  margin: 83px auto 64px auto;
+  margin: 64px auto 64px auto;
 }
 
 
@@ -65,7 +47,7 @@
 
 /* buttons */
 
-button {
+#form button {
   border-radius: 4px;
   border: 1px solid #bbb;
   background: #eee;
@@ -76,7 +58,7 @@ button {
   white-space: nowrap;
 }
 
-button:active {
+#form button:active {
   background: #eee;
 }
 
