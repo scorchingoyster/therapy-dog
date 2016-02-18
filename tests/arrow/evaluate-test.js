@@ -103,11 +103,11 @@ describe("Arrow evaluation", function() {
     var template = b.program([
       b.call('each', [b.call('list')], b.hash(), ['item', 'index'], b.program([
         b.call('index'),
-        b.call('item')
+        b.path(['item', 'letters'])
       ]))
     ]);
 
-    var data = { list: [ 'abc', 'def' ] };
+    var data = { list: [ { letters: 'abc' }, { letters: 'def' } ] };
 
     var expected = [
       0, { type: 'data', value: 'abc' },
