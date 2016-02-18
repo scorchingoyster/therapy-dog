@@ -149,9 +149,26 @@ button:active {
   font-size: 16px;
   padding: 4px;
   width: 100%;
+  border: 1px solid #ccc;
 }
 
 .block.text.invalid > input {
+  border: 1px solid #c00;
+}
+
+
+/* date blocks */
+
+.block.date input {
+  display: block;
+  margin: 8px 0;
+  font-size: 16px;
+  padding: 4px;
+  width: 150px;
+  border: 1px solid #ccc;
+}
+
+.block.date.invalid > input {
   border: 1px solid #c00;
 }
 

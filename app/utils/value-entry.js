@@ -8,6 +8,8 @@ export default Ember.Object.extend({
       return ['This field is required.'];
     } else if (block.get('type') === 'file' && block.get('required') && Ember.isBlank(value)) {
       return ['This file is required.'];
+    } else if (block.get('type') === 'date' && block.get('required') && Ember.isBlank(value)) {
+      return ['This field is required.'];
     } else {
       return [];
     }
