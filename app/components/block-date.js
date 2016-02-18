@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import FocusEntryAction from 'therapy-dog/mixins/focus-entry-action';
+/* globals $ */
 
 export default Ember.Component.extend(FocusEntryAction, {
   classNames: ['block', 'date'],

@@ -1,4 +1,5 @@
 import Ember from 'ember';
+/* globals $ */
 
 export default Ember.Route.extend({
   model() {
