@@ -1,3 +1,7 @@
 <div id="form">
-  <p>Status: <b>{{model.status}}</b></p>
+  {{#if (eq model.status "OK")}}
+    <p>Your deposit completed successfully.</p>
+  {{else}}
+    <p>There was an error submitting your deposit.</p>
+  {{/if}}
 </div>
