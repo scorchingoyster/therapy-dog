@@ -3,33 +3,43 @@
   
   "title": "Test Form",
   
-  "blocks": [
+  "children": [
     {
       "key": "title",
       "type": "text",
-      "label": "Title"
+      "label": "Title",
+      "required": true
     },
     {
-      "key": "author",
+      "key": "pubdate",
+      "type": "text",
+      "label": "Publication Date"
+    },
+    {
+      "key": "authors",
       "type": "section",
-      "label": "Author",
+      "label": "Authors",
+      "repeat": true,
       "children": [
         {
           "key": "first",
           "type": "text",
-          "label": "First Name"
+          "label": "First Name",
+          "required": true
         },
         {
           "key": "last",
           "type": "text",
-          "label": "Last Name"
+          "label": "Last Name",
+          "required": true
         }
       ]
     },
     {
       "key": "article",
       "type": "file",
-      "label": "Article"
+      "label": "Article",
+      "required": true
     },
     {
       "key": "supplemental",
@@ -54,5 +64,5 @@
     }
   ],
   
-  "bundle": "item kind='Aggregate Work' label=title { link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#article'; metadata template='article'; item type='File' fragment='article' label=article.name { file content=article }; each supplemental as |supplemental| { if supplemental.file { item type='File' label=supplemental.file.name { file content=supplemental.file } } } }"
+  "bundle": "item kind='Aggregate Work' label=title { link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#article'; metadata { partial 'article' }; item type='File' fragment='article' label=article.name { file { article } }; each supplemental as |supplemental| { if supplemental.file { item type='File' label=supplemental.file.name { file { supplemental.file } } } } }"
 }

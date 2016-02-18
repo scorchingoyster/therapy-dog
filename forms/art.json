@@ -1,7 +1,7 @@
 {
   "title": "Art MFA",
   
-  "blocks": [
+  "children": [
     {
       "key": "author",
       "type": "section",
@@ -84,7 +84,7 @@
     }
   ],
   
-  "bundle": "item kind='Aggregate Work' label=info.title { link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#thesis'; item type='File' fragment='thesis' label=info.title { file content=thesis }; each samples as |sample| { item type='File' label=sample.title { file content=sample.file } } }",
+  "bundle": "item kind='Aggregate Work' label=info.title { link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#thesis'; item type='File' fragment='thesis' label=info.title { file { thesis } }; each samples as |sample| { item type='File' label=sample.title { file { sample.file } } } }",
   
   "templates": []
 }
