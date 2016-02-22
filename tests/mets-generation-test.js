@@ -11,12 +11,12 @@ describe("METS generation", function() {
         { type: "file", key: "thesis" },
         { type: "text", key: "title" }
       ],
-      bundle: "item kind='File' label=title { file { thesis }; metadata { partial 'thesis' } }",
+      bundle: "item kind='File' label=title { file { thesis; } metadata { partial 'thesis'; } }",
       templates: [
         {
           id: "thesis",
           type: "xml",
-          template: "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { title -> (element 'titleInfo') (element 'title') }"
+          template: "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { title -> (element 'titleInfo') (element 'title'); }"
         }
       ]
     };
@@ -112,7 +112,7 @@ describe("METS generation", function() {
         { type: "file", key: "thesis" },
         { type: "text", key: "title" }
       ],
-      bundle: "item kind='Aggregate Work' label=title { link rel='http://example.com/blah' href='#thesis'; item kind='File' fragment='thesis' { file { thesis } } }",
+      bundle: "item kind='Aggregate Work' label=title { link rel='http://example.com/blah' href='#thesis'; item kind='File' fragment='thesis' { file { thesis; } } }",
       templates: []
     };
     

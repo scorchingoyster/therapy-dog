@@ -155,7 +155,7 @@
     }
   ],
 
-  "bundle": "item kind='Aggregate Work' label=info.title { link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#article'; item type='File' fragment='article' label=article.name { file { article } }; item type='File' label=supplemental.file1.name { file { supplemental.file1 } }; item type='File' label=supplemental.file2.name { file { supplemental.file2 } }; item type='File' label=supplemental.file3.name { file { supplemental.file3 } } }",
+  "bundle": "item kind='Aggregate Work' label=info.title { link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#article'; item type='File' fragment='article' label=article.name { file { article; } } item type='File' label=supplemental.file1.name { file { supplemental.file1; } } item type='File' label=supplemental.file2.name { file { supplemental.file2; } } item type='File' label=supplemental.file3.name { file { supplemental.file3; } } }",
   
   "templates": []
 }

@@ -72,19 +72,10 @@
         { "key": "year", "type": "date", "label": "Year", "precision": "year", "required": true },
         { "key": "narrative", "type": "text", "label": "Brief Narrative" }
       ]
-    },
-      
-    {
-      "key": "copyright",
-      "type": "section",
-      "label": "Copyright Statement",
-      "children": [
-        { "key": "agree", "type": "checkbox", "label": "You are the owner of the copyright of your thesis, etc." }
-      ]
     }
   ],
   
-  "bundle": "item kind='Aggregate Work' label=info.title { link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#thesis'; item type='File' fragment='thesis' label=info.title { file { thesis } }; each samples as |sample| { item type='File' label=sample.title { file { sample.file } } } }",
+  "bundle": "item kind='Aggregate Work' label=info.title { link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#thesis'; item type='File' fragment='thesis' label=info.title { file { thesis; } } each samples as |sample| { item type='File' label=sample.title { file { sample.file; } } } }",
   
   "templates": []
 }

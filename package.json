@@ -1,7 +1,10 @@
 {
+  "scripts": {
+    "test": "mocha --require source-map-support/register tests/*-test.js"
+  },
   "dependencies": {
     "archiver": "^0.21.0",
-    "arrow-templates": "file:///Users/daines/Desktop/arrow",
+    "arrow": "../arrow",
     "body-parser": "^1.14.2",
     "express": "^4.13.4",
     "glob": "^6.0.4",
@@ -10,6 +13,7 @@
     "multer": "^1.1.0",
     "promise": "^7.1.1",
     "request": "^2.69.0",
+    "source-map-support": "^0.4.0",
     "tmp": "0.0.28",
     "uuid": "^2.0.1",
     "xmlbuilder": "^4.2.1"

@@ -1,7 +1,7 @@
 {
-  "destination": "uuid:7cd4bca5-0de4-4dda-93ac-f6d328506760",
+  "destination": "uuid:f25fb4e8-fa1e-4d80-8729-d8932b2ad718",
   
-  "title": "Test Form",
+  "title": "Open Access Test",
   
   "children": [
     {
@@ -87,15 +87,15 @@
     {
       "id": "article",
       "type": "xml",
-      "template": "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { info.title -> (element 'titleInfo') (element 'title') ; info.pubdate -> (element 'originInfo') (element 'dateIssued'); info.keywords -> (element 'subject'); each authors as |author| { element 'name' { author.first -> element 'namePart' type='given'; author.last -> element 'namePart' type='family' } } }"
+      "template": "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { info.title -> (element 'titleInfo') (element 'title'); element 'originInfo' { info.pubdate -> element 'dateIssued'; info.version -> element 'edition'; } info.keywords -> (element 'note' displayLabel='Keywords'); each authors as |author| { element 'name' { author.first -> element 'namePart' type='given'; author.last -> element 'namePart' type='family'; } } }"
     },
     
     {
       "id": "supplemental",
       "type": "xml",
-      "template": "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { s.description -> element 'abstract' }"
+      "template": "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { s.description -> element 'abstract'; }"
     }
   ],
   
-  "bundle": "item kind='Aggregate Work' label=title { link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#article'; metadata { partial 'article' }; item type='File' fragment='article' label=article.name { file { article } }; each supplemental as |s| { if s.file { item type='File' label=s.file.name { metadata { partial 'supplemental' }; file { s.file } } } } }"
+  "bundle": "item kind='Aggregate Work' label=title { link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#article'; metadata { partial 'article'; } item type='File' fragment='article' label=article.name { file { article; } } each supplemental as |s| { if s.file { item type='File' label=s.file.name { metadata { partial 'supplemental'; } file { s.file; } } } } }"
 }
