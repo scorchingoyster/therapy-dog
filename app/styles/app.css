@@ -66,6 +66,12 @@
   background: #eee;
 }
 
+#form button:disabled {
+  border-color: #ccc;
+  background: #eee;
+  color: #bbb;
+}
+
 
 /* choose file "button" */
 
@@ -259,11 +265,11 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 10%;
   height: 100%;
   margin: 0;
   padding: 0;
   background: #eee;
+  transition: width 200ms;
 }
 
 .block.file .upload .description {

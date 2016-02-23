@@ -12,5 +12,7 @@
   
   {{object-entry entry=model}}
   
-  <p class="submit" {{action "deposit"}}><button>Submit Deposit</button></p>
+  <p class="submit" {{action "deposit"}}>
+    <button disabled={{if uploads.anyLoading "disabled" ""}}>Submit Deposit</button>
+  </p>
 </div>
