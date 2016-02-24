@@ -10,7 +10,7 @@ describe("METS generation", function() {
         { type: "file", key: "thesis" },
         { type: "text", key: "title" }
       ],
-      bundle: "item kind='File' label=title { file { thesis; } metadata { partial 'thesis'; } metadata { partial 'unpublished'; } }",
+      bundle: "item kind='File' label=title { file { thesis; } metadata kind='descriptive' { partial 'thesis'; } metadata kind='access-control' { partial 'unpublished'; } }",
       templates: [
         {
           id: "thesis",
@@ -118,6 +118,7 @@ describe("METS generation", function() {
       assert.equal(div.attr("TYPE").value(), "File");
       assert.equal(div.attr("LABEL").value(), "My Thesis");
       assert.equal(div.attr("DMDID").value(), bundle.children[0].children[1].id);
+      assert.equal(div.attr("AMDID").value(), bundle.children[0].children[2].id);
     
       var fptr = div.get("mets:fptr", { mets: "http://www.loc.gov/METS/" });
       assert.ok(fptr);
@@ -128,7 +129,7 @@ describe("METS generation", function() {
       var sections = doc.find("/mets:mets/*", { mets: "http://www.loc.gov/METS/" });
       var names = sections.map(function(s) { return s.name(); });
       
-      assert.deepEqual(["metsHdr", "amdSec", "dmdSec", "fileSec", "structMap"], names);
+      assert.deepEqual(["metsHdr", "dmdSec", "amdSec", "fileSec", "structMap"], names);
     });
   
   });
