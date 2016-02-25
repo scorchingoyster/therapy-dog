@@ -40,8 +40,6 @@ describe("METS generation", function() {
     var bundle = generateBundle(form, values);
     
     var xml = generateMets(form, bundle);
-    
-    console.log(xml);
   
     var doc = libxmljs.parseXml(xml);
   
@@ -111,7 +109,7 @@ describe("METS generation", function() {
       assert.equal(flocat.get("@xlink:href", { xlink: "http://www.w3.org/1999/xlink" }).value(), "abc");
     });
   
-    it("should generate a div element linked to the file element and the dmdSec element", function() {
+    it("should generate a div element linked to the file element and metadata elements", function() {
       var div = doc.get("/mets:mets/mets:structMap/mets:div", { mets: "http://www.loc.gov/METS/" });
       assert.ok(div);
       assert.equal(div.attr("ID").value(), bundle.children[0].id);
@@ -131,7 +129,51 @@ describe("METS generation", function() {
       
       assert.deepEqual(["metsHdr", "dmdSec", "amdSec", "fileSec", "structMap"], names);
     });
+  });
   
+  describe("with multiple access control metadata elements", function() {
+    var form = {
+      children: [],
+      bundle: "item kind='Folder' label='My Folder' { item kind='Folder' label='A' { metadata kind='access-control' { partial 'unpublished'; } } item kind='Folder' label='B' { metadata kind='access-control' { partial 'unpublished'; } } }",
+      templates: [
+        {
+          id: "unpublished",
+          type: "xml",
+          template: "element 'accessControl' xmlns='http://cdr.unc.edu/definitions/acl' published='false' {}"
+        }
+      ]
+    };
+    
+    var values = {};
+    
+    var bundle = generateBundle(form, values);
+    
+    var xml = generateMets(form, bundle);
+  
+    var doc = libxmljs.parseXml(xml);
+  
+    it("should generate an amdSec element", function() {
+      var amdSec = doc.find("/mets:mets/mets:amdSec", { mets: "http://www.loc.gov/METS/" });
+      assert.equal(amdSec.length, 1);
+      
+      var rightsMD = amdSec[0].find("mets:rightsMD", { mets: "http://www.loc.gov/METS/" });
+      assert.equal(rightsMD.length, 2);
+      assert.equal(rightsMD[0].attr("ID").value(), bundle.children[0].children[0].children[0].id);
+      assert.equal(rightsMD[1].attr("ID").value(), bundle.children[0].children[1].children[0].id);
+    });
+  
+    it("should generate div elements linked to the metadata elements", function() {
+      var inner = doc.find("/mets:mets/mets:structMap/mets:div/mets:div", { mets: "http://www.loc.gov/METS/" });
+      assert.equal(inner.length, 2);
+      
+      assert.equal(inner[0].attr("TYPE").value(), "Folder");
+      assert.equal(inner[0].attr("LABEL").value(), "A");
+      assert.equal(inner[0].attr("AMDID").value(), bundle.children[0].children[0].children[0].id);
+      
+      assert.equal(inner[1].attr("TYPE").value(), "Folder");
+      assert.equal(inner[1].attr("LABEL").value(), "B");
+      assert.equal(inner[1].attr("AMDID").value(), bundle.children[0].children[1].children[0].id);
+    });
   });
 
   describe("with links", function() {
