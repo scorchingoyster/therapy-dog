@@ -4,19 +4,23 @@ var generateMets = require("../lib/generate-mets");
 var generateBundle = require("../lib/generate-bundle");
 
 describe("METS generation", function() {
-  
   describe("with metadata and files", function() {
     var form = {
       blocks: [
         { type: "file", key: "thesis" },
         { type: "text", key: "title" }
       ],
-      bundle: "item kind='File' label=title { file { thesis; } metadata { partial 'thesis'; } }",
+      bundle: "item kind='File' label=title { file { thesis; } metadata kind='descriptive' { partial 'thesis'; } metadata kind='access-control' { partial 'unpublished'; } }",
       templates: [
         {
           id: "thesis",
           type: "xml",
           template: "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { title -> (element 'titleInfo') (element 'title'); }"
+        },
+        {
+          id: "unpublished",
+          type: "xml",
+          template: "element 'accessControl' xmlns='http://cdr.unc.edu/definitions/acl' published='false' {}"
         }
       ]
     };
@@ -77,6 +81,22 @@ describe("METS generation", function() {
       assert.equal(title.text(), "My Thesis");
     });
   
+    it("should generate an amdSec element", function() {
+      var amdSec = doc.get("/mets:mets/mets:amdSec", { mets: "http://www.loc.gov/METS/" });
+      assert.ok(amdSec);
+      
+      var rightsMD = amdSec.get("mets:rightsMD", { mets: "http://www.loc.gov/METS/" });
+      assert.equal(rightsMD.attr("ID").value(), bundle.children[0].children[2].id);
+    
+      var mdWrap = rightsMD.get("mets:mdWrap", { mets: "http://www.loc.gov/METS/" });
+      assert.ok(mdWrap);
+      assert.equal(mdWrap.attr("MDTYPE").value(), "OTHER");
+    
+      var accessControl = mdWrap.get("mets:xmlData/acl:accessControl", { mets: "http://www.loc.gov/METS/", acl: "http://cdr.unc.edu/definitions/acl" });
+      assert.ok(accessControl);
+      assert.equal(accessControl.attr("published").value(), "false");
+    });
+  
     it("should generate a file element", function() {
       var file = doc.get("/mets:mets/mets:fileSec/mets:fileGrp/mets:file", { mets: "http://www.loc.gov/METS/" });
       assert.ok(file);
@@ -98,10 +118,18 @@ describe("METS generation", function() {
       assert.equal(div.attr("TYPE").value(), "File");
       assert.equal(div.attr("LABEL").value(), "My Thesis");
       assert.equal(div.attr("DMDID").value(), bundle.children[0].children[1].id);
+      assert.equal(div.attr("AMDID").value(), bundle.children[0].children[2].id);
     
       var fptr = div.get("mets:fptr", { mets: "http://www.loc.gov/METS/" });
       assert.ok(fptr);
       assert.equal(fptr.attr("FILEID").value(), bundle.children[0].children[0].id);
+    });
+  
+    it("should generate sections in order", function() {
+      var sections = doc.find("/mets:mets/*", { mets: "http://www.loc.gov/METS/" });
+      var names = sections.map(function(s) { return s.name(); });
+      
+      assert.deepEqual(["metsHdr", "dmdSec", "amdSec", "fileSec", "structMap"], names);
     });
   
   });
