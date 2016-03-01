@@ -5,6 +5,6 @@ export default Ember.Component.extend({
   
   didRender() {
     this._super(...arguments);
-    this.$().css('width', (this.get('ratio') * 100) + '%');
+    this.$().css('width', (this.get('fraction') * 100) + '%');
   }
 });

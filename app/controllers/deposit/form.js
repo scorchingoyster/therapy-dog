@@ -3,8 +3,13 @@ import ObjectEntry from 'therapy-dog/utils/object-entry';
 
 export default Ember.Controller.extend({
   entryEvents: Ember.inject.service(),
+  uploads: Ember.inject.service(),
   
   validate() {
+    if (this.get('uploads.anyLoading')) {
+      return false;
+    }
+    
     let model = this.get('model');
     let firstBadEntry;
     
