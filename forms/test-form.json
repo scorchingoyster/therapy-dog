@@ -52,10 +52,10 @@
     {
       "key": "location",
       "label": "Publication Location",
-      "type": "radiobuttons",
+      "type": "radio",
       "options": [
         "Germany",
-        "Great Britian",
+        "Great Britain",
         "United States"
       ]
     },
