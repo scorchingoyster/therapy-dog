@@ -1,0 +1,7 @@
+<label>{{entry.block.label}}</label>
+
+{{#each entry.block.options as |option|}}
+  {{radio-button value=option groupValue=entry.value}} {{option}}
+{{/each}}
+
+{{entry-error-messages entry=entry}}
