@@ -50,6 +50,16 @@
       ]
     },
     {
+      "key": "location",
+      "label": "Publication Location",
+      "type": "radio",
+      "options": [
+        "Germany",
+        "Great Britain",
+        "United States"
+      ]
+    },
+    {
       "key": "authors",
       "type": "section",
       "label": "Authors",
@@ -94,12 +104,12 @@
       ]
     }
   ],
-  
+
   "templates": [
     {
       "id": "article",
       "type": "xml",
-      "template": "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { info.title -> (element 'titleInfo') (element 'title'); element 'originInfo' { info.pubdate -> element 'dateIssued'; info.version -> element 'edition'; } info.keywords -> (element 'note' displayLabel='Keywords'); element 'language' { languages -> element 'languageTerm' type='text'; } each authors as |author| { element 'name' { author.first -> element 'namePart' type='given'; author.last -> element 'namePart' type='family'; } } }"
+      "template": "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { info.title -> (element 'titleInfo') (element 'title'); element 'originInfo' { info.pubdate -> element 'dateIssued'; info.version -> element 'edition'; } element 'originInfo' eventType='publisher' { element 'place' { location -> element 'placeTerm' type='text'; } } info.keywords -> (element 'note' displayLabel='Keywords'); element 'language' { languages -> element 'languageTerm' type='text'; } each authors as |author| { element 'name' { author.first -> element 'namePart' type='given'; author.last -> element 'namePart' type='family'; } } }"
     },
 
     {
