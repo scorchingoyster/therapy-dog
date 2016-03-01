@@ -2,7 +2,7 @@ import Ember from 'ember';
 import FocusEntryAction from 'therapy-dog/mixins/focus-entry-action';
 
 export default Ember.Component.extend(FocusEntryAction, {
-  classNames: ['block', 'checkbox'],
+  classNames: ['block', 'checkboxes'],
   classNameBindings: ['required', 'invalid'],
   invalid: Ember.computed('entry.errors', 'entry.attempted', function() {
     return !Ember.isEmpty(this.get('entry.errors')) && this.get('entry.attempted');
