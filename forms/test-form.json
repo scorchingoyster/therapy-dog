@@ -38,6 +38,18 @@
       ]
     },
     {
+      "key": "languages",
+      "label": "Available Languages",
+      "type": "checkboxes",
+      "options": [
+        "English",
+        "French",
+        "German",
+        "Sanskrit",
+        "Urdu"
+      ]
+    },
+    {
       "key": "authors",
       "type": "section",
       "label": "Authors",
@@ -87,7 +99,7 @@
     {
       "id": "article",
       "type": "xml",
-      "template": "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { info.title -> (element 'titleInfo') (element 'title'); element 'originInfo' { info.pubdate -> element 'dateIssued'; info.version -> element 'edition'; } info.keywords -> (element 'note' displayLabel='Keywords'); each authors as |author| { element 'name' { author.first -> element 'namePart' type='given'; author.last -> element 'namePart' type='family'; } } }"
+      "template": "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { info.title -> (element 'titleInfo') (element 'title'); element 'originInfo' { info.pubdate -> element 'dateIssued'; info.version -> element 'edition'; } info.keywords -> (element 'note' displayLabel='Keywords'); element 'language' { languages -> element 'languageTerm' type='text'; } each authors as |author| { element 'name' { author.first -> element 'namePart' type='given'; author.last -> element 'namePart' type='family'; } } }"
     },
 
     {
@@ -95,7 +107,7 @@
       "type": "xml",
       "template": "element 'accessControl' xmlns='http://cdr.unc.edu/definitions/acl' published='false';"
     },
-    
+
     {
       "id": "supplemental",
       "type": "xml",
