@@ -1,7 +1,7 @@
-var Arrow = require('arrow-templates');
-var uuid = require('uuid');
+import Arrow from 'arrow';
+import uuid from 'uuid';
 
-module.exports = {
+export default {
   item: Arrow.helper(function(params, hash, body) {
     return {
       type: "item",

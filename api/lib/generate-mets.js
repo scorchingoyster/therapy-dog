@@ -1,4 +1,4 @@
-var xmlbuilder = require("xmlbuilder");
+import xmlbuilder from 'xmlbuilder';
 
 // metsHdr
 
@@ -263,7 +263,7 @@ function generateStructLink(mets, bundle) {
 
 // mets
 
-function generateMets(form, bundle) {
+export default function generateMets(form, bundle) {
   var mets = xmlbuilder.create('mets')
     .attribute("xmlns", "http://www.loc.gov/METS/")
     .attribute("xmlns:xlink", "http://www.w3.org/1999/xlink")
@@ -278,5 +278,3 @@ function generateMets(form, bundle) {
   
   return mets.end({ pretty: true });
 }
-
-module.exports = generateMets;

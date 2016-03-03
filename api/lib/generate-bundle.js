@@ -1,8 +1,8 @@
-var Arrow = require("arrow-templates");
-var XML = require("arrow-templates/documents/xml");
-var Bundle = require("./bundle");
+import Arrow from 'arrow';
+import XML from 'arrow/documents/xml';
+import Bundle from './bundle';
 
-function generateBundle(form, values) {
+export default function generateBundle(form, values) {
   var arrow = new Arrow(form.bundle, Bundle);
   
   form.templates.forEach(function(template) {
@@ -11,5 +11,3 @@ function generateBundle(form, values) {
   
   return arrow.evaluate(values);
 }
-
-module.exports = generateBundle;
