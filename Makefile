@@ -1,7 +1,7 @@
 .PHONY: build
 
 build:
-	rollup -c rollup.config.js
+	node_modules/.bin/rollup -c rollup.config.js
 
 run:
 	node_modules/.bin/nodemon --watch arrow/lib --watch api/lib --watch server.js --exec "make build && node build/server-bundle"
