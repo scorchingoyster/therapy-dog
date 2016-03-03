@@ -1,4 +1,4 @@
-var Arrow = require('arrow-templates');
+import Arrow from 'arrow';
 var uuid = require('uuid');
 
 module.exports = {

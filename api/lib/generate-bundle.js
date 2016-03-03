@@ -1,5 +1,5 @@
-var Arrow = require("arrow-templates");
-var XML = require("arrow-templates/documents/xml");
+import Arrow from 'arrow';
+import * as XML from 'arrow/documents/xml/helpers';
 var Bundle = require("./bundle");
 
 function generateBundle(form, values) {

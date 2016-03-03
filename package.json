@@ -1,11 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "test": "mocha --require source-map-support/register tests/*-test.js"
-  },
-  "devDependencies": {
-    "libxmljs": "^0.17.1",
-    "source-map-support": "^0.4.0"
+    "pretest": "rollup -c rollup.config.test.js",
+    "test": "mocha --require source-map-support/register build/test-bundle.js"
   },
   "dependencies": {
     "archiver": "^0.21.0",
@@ -20,5 +17,15 @@
     "tmp": "0.0.28",
     "uuid": "^2.0.1",
     "xmlbuilder": "^4.2.1"
+  },
+  "devDependencies": {
+    "babel-preset-es2015-rollup": "^1.1.1",
+    "libxmljs": "^0.17.1",
+    "mocha": "^2.4.5",
+    "rollup": "^0.25.4",
+    "rollup-plugin-babel": "^2.4.0",
+    "rollup-plugin-commonjs": "^2.2.1",
+    "rollup-plugin-multi-entry": "^1.1.0",
+    "source-map-support": "^0.4.0"
   }
 }
