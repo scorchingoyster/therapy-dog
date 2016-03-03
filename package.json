@@ -6,7 +6,6 @@
   },
   "dependencies": {
     "archiver": "^0.21.0",
-    "arrow-templates": "git+ssh://git@gitlab.lib.unc.edu:cdr/arrow-templates.git",
     "body-parser": "^1.14.2",
     "express": "^4.13.4",
     "glob": "^6.0.4",
