@@ -1,5 +1,5 @@
-var assert = require("assert");
-var generateBundle = require("../lib/generate-bundle");
+import assert from 'assert';
+import generateBundle from 'api/generate-bundle';
 
 describe("Bundle generation", function() {
   it("should generate a bundle for a form with just a file", function() {

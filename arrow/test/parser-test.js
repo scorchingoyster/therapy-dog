@@ -1,6 +1,6 @@
-import Arrow from '../lib/arrow';
-import b from '../lib/builders';
 import { deepEqual } from 'assert';
+import Arrow from 'arrow';
+import b from 'arrow/builders';
 
 function parse(input) {
   var arrow = new Arrow(input);
@@ -39,6 +39,12 @@ describe("Parser", () => {
         )
       ])
     );
+    
+    deepEqual(parse('test x.y `x` y'),
+      b.program([
+        b.call('test', [b.path(['x', 'y']), b.path(['x']), b.call('y')])
+      ])
+    );
 
     deepEqual(parse('test "no" x=1 y="yes";'),
       b.program([
@@ -49,7 +55,13 @@ describe("Parser", () => {
         )
       ])
     );
-
+    
+    deepEqual(parse('test a=x.y'),
+      b.program([
+        b.call('test', [], b.hash([b.pair('a', b.path(['x', 'y']))]))
+      ])
+    );
+    
     deepEqual(parse('element "blah" xmlns:xlink="http://www.w3.org/1999/xlink";'),
       b.program([
         b.call(
@@ -135,9 +147,15 @@ describe("Parser", () => {
       ])
     );
     
-    deepEqual(parse('`zap!`.`pow!`;'),
+    deepEqual(parse('`zap!`.`pow!`.blam;'),
       b.program([
-        b.path(['zap!', 'pow!'])
+        b.path(['zap!', 'pow!', 'blam'])
+      ])
+    );
+    
+    deepEqual(parse('`#ok`;'),
+      b.program([
+        b.path(['#ok'])
       ])
     );
   });

@@ -1,5 +1,5 @@
-import Arrow from '../lib/arrow';
-import b from '../lib/builders';
+import Arrow from 'arrow';
+import b from 'arrow/builders';
 import { deepEqual } from 'assert';
 import { registerTestHelpers } from './test-helpers';
 

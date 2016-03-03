@@ -1,4 +1,4 @@
-import Arrow from '../lib/arrow';
+import Arrow from 'arrow';
 
 export function registerTestHelpers(arrow) {
   arrow.registerHelper("repeat", Arrow.helper(function([count], hash, body) {

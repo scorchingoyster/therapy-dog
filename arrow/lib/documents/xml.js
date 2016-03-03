@@ -1,4 +1,4 @@
-import Arrow from '../arrow';
+import Arrow from '../main';
 import { XMLDocument, XMLElement, XMLAttribute } from './xml/model';
 
 function parseHash(hash) {

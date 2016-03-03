@@ -1,8 +1,8 @@
 import { deepEqual, equal } from 'assert';
 import Xmlbuilder from 'xmlbuilder';
-import Arrow from '../../lib/arrow';
-import XML from '../../lib/documents/xml';
-import b from '../../lib/builders';
+import Arrow from 'arrow';
+import XML from 'arrow/documents/xml';
+import b from 'arrow/builders';
 
 describe('XML document helpers', () => {
   it('should render a basic document', () => {

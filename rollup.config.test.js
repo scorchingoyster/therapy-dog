@@ -6,9 +6,10 @@ import packageResolver from './package-resolver';
 export default {
   entry: '{api,arrow}/test/**/*-test.js',
   plugins: [
-    babel(),
     packageResolver(['api', 'arrow']),
-    multiEntry()
+    babel(),
+    multiEntry(),
+    commonjs({ namedExports: { 'arrow/lib/parser.js': ['parse'] } })
   ],
   format: 'cjs',
   dest: 'build/test-bundle.js',

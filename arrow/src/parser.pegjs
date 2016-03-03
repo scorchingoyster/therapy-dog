@@ -68,11 +68,11 @@ CallInverse
   = ElseToken __ head:CallHead _ body:CallBody {
       return b.call(head.name, head.params, head.hash, body.locals, body.body, body.inverse);
     }
-  / 
-  ElseToken __ block:Block { return block; }
+  / ElseToken __ block:Block { return block; }
 
 Param
-  = name:Identifier !(_ "=" / _ PathSeparator) { return b.call(name); }
+  = name:Identifier !(_ "=" / PathSeparator) { return b.call(name); }
+  / Path
   / Literal
   / Subexpression
 
@@ -86,9 +86,10 @@ Block
   = "{" program:Program "}" { return program; }
 
 Path
-  = head:PathPart tail:(PathSeparator part:PathPart { return part; })* {
+  = head:PathPart tail:(PathSeparator part:PathPart { return part; })+ {
       return b.path([head].concat(tail));
     }
+  / "`" chars:PathPartCharacter+ "`" { return b.path([chars.join("")]); }
 
 PathPart
   = "`" chars:PathPartCharacter+ "`" { return chars.join(""); }

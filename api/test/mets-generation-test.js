@@ -1,7 +1,7 @@
-var assert = require("assert");
-var libxmljs = require("libxmljs");
-var generateMets = require("../lib/generate-mets");
-var generateBundle = require("../lib/generate-bundle");
+import assert from 'assert';
+import libxmljs from 'libxmljs';
+import generateMets from 'api/generate-mets';
+import generateBundle from 'api/generate-bundle';
 
 describe("METS generation", function() {
   describe("with metadata and files", function() {

@@ -1,6 +1,6 @@
-import Arrow from '../lib/arrow';
-import Context from '../lib/context';
-import b from '../lib/builders';
+import Arrow from 'arrow';
+import Context from 'arrow/context';
+import b from 'arrow/builders';
 import { deepEqual } from 'assert';
 import { registerTestHelpers } from './test-helpers';
 

@@ -1,4 +1,4 @@
-import Arrow from '../arrow';
+import Arrow from '../main';
 import { isEmpty } from '../utils';
 
 export default function(arrow) {
