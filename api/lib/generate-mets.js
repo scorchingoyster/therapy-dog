@@ -1,4 +1,5 @@
 import xmlbuilder from 'xmlbuilder';
+import { Link, Item, File, Metadata } from './bundle/model';
 
 // metsHdr
 
@@ -15,25 +16,9 @@ function generateMetsHdr(mets, bundle) {
 
 // dmdSec
 
-function collectMetadata(children) {
-  var result = [];
-  
-  children.forEach(function(child) {
-    if (child.type === "metadata") {
-      result.push(child);
-    }
-    
-    if (child.children) {
-      result = result.concat(collectMetadata(child.children));
-    }
-  });
-  
-  return result;
-}
-
 function generateDmdSec(mets, form, bundle) {
-  collectMetadata(bundle.children).forEach(function(metadata) {
-    if (metadata.kind === "descriptive") {
+  bundle.metadata.forEach(function(metadata) {
+    if (metadata.type === "descriptive") {
       var dmdSec =
       mets
         .element("dmdSec", { ID: metadata.id });
@@ -43,7 +28,7 @@ function generateDmdSec(mets, form, bundle) {
         .element("mdWrap", { MDTYPE: "MODS" })
           .element("xmlData");
 
-      metadata.content[0].render(xmlData);
+      metadata.contents.render(xmlData);
     }
   });
 }
@@ -51,8 +36,8 @@ function generateDmdSec(mets, form, bundle) {
 // amdSec
 
 function generateAmdSec(mets, bundle) {
-  var metadata = collectMetadata(bundle.children).filter(function(node) {
-    return node.kind === "access-control";
+  var metadata = bundle.metadata.filter(function(node) {
+    return node.type === "access-control";
   });
   
   if (metadata.length > 0) {
@@ -70,28 +55,12 @@ function generateAmdSec(mets, bundle) {
         .element("mdWrap", { MDTYPE: "OTHER" })
           .element("xmlData");
       
-      node.content[0].render(xmlData);
+      node.contents.render(xmlData);
     });
   }
 }
 
 // fileSec
-
-function collectFiles(children) {
-  var result = [];
-  
-  children.forEach(function(child) {
-    if (child.type === "file") {
-      result.push(child);
-    }
-    
-    if (child.children) {
-      result = result.concat(collectFiles(child.children));
-    }
-  });
-  
-  return result;
-}
 
 function generateFileSec(mets, bundle) {
   var fileGrp =
@@ -99,12 +68,10 @@ function generateFileSec(mets, bundle) {
     .element("fileSec")
       .element("fileGrp", { ID: "OBJECTS" });
 
-  collectFiles(bundle.children).forEach(function(file) {
-    var upload = file.content[0];
-    
+  bundle.files.forEach(function(file) {
     fileGrp
-      .element("file", { CHECKSUM: upload.hash, CHECKSUMTYPE: "MD5", ID: file.id, MIMETYPE: upload.type, SIZE: upload.size })
-        .element("FLocat", { "xlink:href": upload.id, LOCTYPE: "OTHER", USE: "STAGE" });
+      .element("file", { CHECKSUM: "fakechecksum", CHECKSUMTYPE: "MD5", ID: file.id, MIMETYPE: file.mimetype, SIZE: file.size })
+        .element("FLocat", { "xlink:href": file.id, LOCTYPE: "OTHER", USE: "STAGE" });
   });
 }
 
@@ -115,8 +82,8 @@ function generateItem(parent, node) {
   parent
     .element("div", { ID: node.id });
   
-  if (node.kind) {
-    div.attribute("TYPE", node.kind);
+  if (node.type) {
+    div.attribute("TYPE", node.type);
   }
   
   if (node.label) {
@@ -124,25 +91,25 @@ function generateItem(parent, node) {
   }
   
   node.children.forEach(function(child) {
-    if (child.type === "item") {
+    if (child instanceof Item) {
       generateItem(div, child);
-    } else if (child.type === "file") {
+    } else if (child instanceof File) {
       div.element("fptr", { FILEID: child.id });
     }
   });
 
   var metadata = node.children.filter(function(child) {
-    return child.type === "metadata";
+    return child instanceof Metadata;
   });
 
   var dmdIds = metadata.filter(function(node) {
-    return node.kind === "descriptive";
+    return node.type === "descriptive";
   }).map(function(node) {
     return node.id;
   });
 
   var amdIds = metadata.filter(function(node) {
-    return node.kind === "access-control";
+    return node.type === "access-control";
   }).map(function(node) {
     return node.id;
   });
@@ -161,94 +128,35 @@ function generateStructMap(mets, bundle) {
   mets
     .element("structMap");
 
-  bundle.children.forEach(function(node) {
-    if (node.type === "item") {
-      generateItem(structMap, node);
-    }
+  bundle.children.forEach(function(child) {
+    generateItem(structMap, child);
   });
 }
 
 // structLink
 
-function multimapPut(m, key, value) {
-  if (!m.hasOwnProperty(key)) {
-    m[key] = [];
-  }
-  m[key].push(value);
-}
-
-function multimapMerge(m1, m2) {
-  Object.keys(m2).forEach(function(key) {
-    if (m1.hasOwnProperty(key)) {
-      m1[key] = m1[key].concat(m2[key]);
-    } else {
-      m1[key] = m2[key];
-    }
-  });
-}
-
-function collectItemsByFragment(nodes) {
-  var result = {};
-  
-  nodes.forEach(function(node) {
-    if (node.type === "item" && node.fragment) {
-      multimapPut(result, node.fragment, node);
-    }
-    
-    if (node.children) {
-      multimapMerge(result, collectItemsByFragment(node.children));
-    }
-  });
-  
-  return result;
-}
-
-function collectItemsAndLinks(nodes) {
+function collectSmLinks(bundle) {
   var result = [];
-
-  nodes.forEach(function(node) {
-    if (node.type === "item") {
-      if (node.children) {
-        node.children.forEach(function(child) {
-          if (child.type === 'link') {
-            result.push({ item: node, link: child });
-          }
-        });
-
-        result = result.concat(collectItemsAndLinks(node.children));
+  
+  bundle.items.forEach(function(item) {
+    item.children.forEach(function(child) {
+      if (child instanceof Link) {
+        if (child.items) {
+          child.items.map(function(target) {
+            result.push({ arcrole: child.rel, from: "#" + item.id, to: "#" + target.id });
+          });
+        } else {
+          result.push({ arcrole: child.rel, from: "#" + item.id, to: child.href });
+        }
       }
-    }
-  });
-
-  return result;
-}
-
-function collectSmLinks(nodes) {
-  var itemsByFragment = collectItemsByFragment(nodes);
-  var itemsAndLinks = collectItemsAndLinks(nodes);
-
-  var result = [];
-
-  itemsAndLinks.forEach(function(pair) {
-    var link = pair.link;
-    var item = pair.item;
-
-    if (pair.link.href[0] === "#") {
-      var targets = itemsByFragment[pair.link.href.slice(1)];
-
-      return targets.map(function(target) {
-        result.push({ arcrole: link.rel, from: "#" + item.id, to: "#" + target.id });
-      });
-    } else {
-      result.push({ arcrole: link.rel, from: "#" + item.id, to: link.href });
-    }
+    });
   });
 
   return result;
 }
 
 function generateStructLink(mets, bundle) {
-  var smLinks = collectSmLinks(bundle.children);
+  var smLinks = collectSmLinks(bundle);
   
   if (smLinks.length > 0) {
     var structMap =

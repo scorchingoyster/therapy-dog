@@ -1,117 +1,287 @@
 import assert from 'assert';
 import generateBundle from 'api/generate-bundle';
+import { buildTestUpload } from './helpers';
 
 describe("Bundle generation", function() {
-  it("should generate a bundle for a form with just a file", function() {
-    var form = {
-      blocks: [
-        { type: "file", key: "thesis" },
-        { type: "text", key: "title" }
-      ],
-      bundle: "item kind='File' label=title { file { thesis; } }",
-      templates: []
-    };
+  describe("files", function() {
+    describe("with upload bodies", function() {
+      var form = {
+        bundle: 'item { thesis -> file }',
+        templates: []
+      };
+      
+      var buffer = new Buffer('lorem ipsum');
+      var thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
+      
+      var values = {
+        thesis: thesis
+      };
+  
+      var bundle = generateBundle(form, values);
+      var file = bundle.children[0].children[0];
+    
+      it("should set contents for an upload body", function() {
+        assert.ok(file.isUpload);
+        assert.equal(file.contents, thesis);
+      });
+  
+      it("should set mimetype to the upload's type if not given", function() {
+        assert.equal(file.mimetype, 'application/pdf');
+      });
+  
+      it("should set name to the upload's name if not given", function() {
+        assert.equal(file.name, 'thesis.pdf');
+      });
+  
+      it("should set size for uploads", function() {
+        assert.equal(file.size, buffer.length);
+      });
+  
+      it("should calculate hash digests for uploads", function() {
+        return file.getHashDigest('md5', 'hex').then(function(digest) {
+          assert.equal(digest, '80a751fde577028640c419000e33eba6');
+        });
+      });
+    });
 
-    var values = {
-      thesis: {
-        id: "abc",
-        name: "thesis.pdf",
-        type: "application/pdf",
-        hash: "def",
-        size: 456
-      },
-      title: "My Thesis"
-    };
+    describe("with literal bodies", function() {
+      var form = {
+        bundle: 'item { file { "lorem ipsum" } }',
+        templates: []
+      };
+  
+      var bundle = generateBundle(form, {});
+      var file = bundle.children[0].children[0];
+      
+      it("should set contents to a buffer for a literal body", function() {
+        assert.ok(file.isBuffer);
+        assert.equal(file.contents.toString(), 'lorem ipsum');
+      });
+  
+      it("should set mimetype for a literal body to 'text/plain' if not given", function() {
+        assert.equal(file.mimetype, 'text/plain');
+      });
+  
+      it("should set name to 'untitled.txt' for a literal body if not given", function() {
+        assert.equal(file.name, 'untitled.txt');
+      });
+  
+      it("should set size for literal bodies", function() {
+        assert.equal(file.size, 11);
+      });
+  
+      it("should calculate hash digests for literal bodies", function() {
+        return file.getHashDigest('md5', 'hex').then(function(digest) {
+          assert.equal(digest, '80a751fde577028640c419000e33eba6');
+        });
+      });
+    });
     
-    var bundle = generateBundle(form, values);
-    
-    assert.equal(bundle.children.length, 1);
-    
-    var item = bundle.children[0];
-    assert.ok(item.id);
-    assert.equal(item.kind, "File");
-    assert.equal(item.label, "My Thesis");
-    assert.equal(item.children.length, 1);
-    
-    var file = item.children[0];
-    assert.ok(file.id);
-    assert.deepEqual(file.content[0], values.thesis);
+    it("should set contents to a zero-length buffer for an empty literal body", function() {
+      var form = {
+        bundle: 'item { file }',
+        templates: []
+      };
+  
+      var bundle = generateBundle(form, {});
+      var file = bundle.children[0].children[0];
+      
+      assert.ok(file.isBuffer);
+      assert.equal(file.contents.toString(), '');
+    });
+
+    describe("with overridden mimetype and name", function() {
+      var form = {
+        bundle: 'item { file name="stuff.md" mimetype="text/markdown" { "# lorem ipsum" } }',
+        templates: []
+      };
+  
+      var bundle = generateBundle(form, {});
+      var file = bundle.children[0].children[0];
+      
+      it("should set mimetype if given", function() {
+        assert.equal(file.mimetype, 'text/markdown');
+      });
+  
+      it("should set name if given", function() {
+        assert.equal(file.name, 'stuff.md');
+      });
+    });
+  
+    it("should throw an error if body is invalid", function() {
+      var form = {
+        bundle: 'item { file { "hello"; file } }',
+        templates: []
+      };
+  
+      assert.throws(function() {
+        generateBundle(form, {});
+      });
+    });
   });
-
-  it("should generate a bundle for a form with a metadata template", function() {
+  
+  describe("metadata", function() {
     var form = {
-      blocks: [
-        { type: "file", key: "thesis" },
-        { type: "text", key: "title" }
-      ],
-      bundle: "item kind='File' label=title { file { thesis; } metadata { partial 'thesis'; } }",
+      bundle: 'item { partial "thesis" -> metadata type="descriptive" }',
       templates: [
         {
-          id: "thesis",
-          type: "xml",
-          template: "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { title -> (element 'titleInfo') (element 'title'); }"
+          id: 'thesis',
+          type: 'xml',
+          template: 'element "info" { title -> element "title" }'
         }
       ]
     };
 
     var values = {
-      thesis: {
-        type: "upload",
-        id: "abc",
-        name: "thesis.pdf",
-        type: "application/pdf",
-        hash: "def",
-        size: 456
-      },
       title: "My Thesis"
     };
-    
+
     var bundle = generateBundle(form, values);
+    var metadata = bundle.children[0].children[0];
+      
+    it("should set contents for an Arrow XML partial body", function() {
+      assert.ok(metadata.isXML);
+      assert.equal(metadata.contents.name, 'info');
+    });
     
-    assert.equal(bundle.children.length, 1);
-    
-    var item = bundle.children[0];
-    assert.ok(item.id);
-    assert.equal(item.kind, "File");
-    assert.equal(item.label, "My Thesis");
-    assert.equal(item.children.length, 2);
-    
-    var file = item.children[0];
-    assert.ok(file.id);
-    assert.equal(file.content[0], values.thesis);
-    
-    var metadata = item.children[1];
-    assert.ok(metadata.id);
-    assert.equal(metadata.content.length, 1);
+    it("should set the type property", function() {
+      assert.equal(metadata.type, 'descriptive');
+    });
+
+    it("should throw an error if body is invalid", function() {
+      var form = {
+        bundle: 'item { metadata { "hello!" } }',
+        templates: []
+      };
+  
+      assert.throws(function() {
+        generateBundle(form, {});
+      });
+    });
   });
   
-  it("should generate a bundle for a form with an aggregate and a link", function() {
+  describe("items", function() {
     var form = {
-      blocks: [
-        { type: "file", key: "thesis" },
-        { type: "text", key: "title" }
-      ],
-      bundle: "item kind='Aggregate Work' { link rel='http://example.com/blah' href='#thesis'; item kind='File' fragment='thesis' { file { thesis; } } }",
-      templates: []
+      bundle: 'item label="A" type="Folder" { link rel="http://example.com/" href="#b"; item fragment="b" label="B" type="File"; item label="C" type="File" }',
+      templates: [
+        {
+          id: 'thesis',
+          type: 'xml',
+          template: 'element "info" { title -> element "title" }'
+        }
+      ]
     };
 
     var values = {
-      thesis: {
-        type: "upload",
-        id: "abc",
-        name: "thesis.pdf",
-        type: "application/pdf",
-        hash: "def",
-        size: 456
-      },
       title: "My Thesis"
     };
-    
+
     var bundle = generateBundle(form, values);
     
-    var item = bundle.children[0];
-    var link = item.children[0];
-    assert.equal(link.rel, 'http://example.com/blah');
-    assert.equal(link.href, '#thesis');
+    it("should set the label property", function() {
+      assert.equal(bundle.children[0].label, 'A');
+    });
+      
+    it("should set the type property", function() {
+      assert.equal(bundle.children[0].type, 'Folder');
+      assert.equal(bundle.children[0].children[1].type, 'File');
+    });
+    
+    it("should throw an error if body is invalid", function() {
+      var form = {
+        bundle: 'item { "hello!" }',
+        templates: []
+      };
+  
+      assert.throws(function() {
+        generateBundle(form, {});
+      });
+    });
+  });
+  
+  describe("links", function() {
+    it("should resolve fragments to item references", function() {
+      var form = {
+        bundle: 'item { link rel="x" href="#a"; item fragment="a" }',
+        templates: []
+      };
+
+      var bundle = generateBundle(form, {});
+    
+      assert.equal(bundle.links.length, 1);
+      assert.equal(bundle.links[0].items.length, 1);
+      assert.equal(bundle.links[0].items[0], bundle.children[0].children[1]);
+      assert.equal(bundle.children[0].children[0].items[0], bundle.children[0].children[1]);
+    });
+    
+    it("should resolve fragments to nothing if an item can't be found", function() {
+      var form = {
+        bundle: 'item { link rel="y" href="#b"; item fragment="a" }',
+        templates: []
+      };
+
+      var bundle = generateBundle(form, {});
+    
+      assert.equal(bundle.links.length, 1);
+      assert.equal(bundle.links[0].items.length, 0);
+    });
+    
+    it("should resolve fragments to multiple items", function() {
+      var form = {
+        bundle: 'item { link rel="x" href="#stuff"; item fragment="stuff" label="a" } item fragment="stuff" label="b"',
+        templates: []
+      };
+
+      var bundle = generateBundle(form, {});
+      assert.equal(bundle.links.length, 1);
+      assert.equal(bundle.links[0].items[0], bundle.children[0].children[1]);
+      assert.equal(bundle.links[0].items[1], bundle.children[1]);
+    });
+    
+    it("should leave other href values intact", function() {
+      var form = {
+        bundle: 'item { link rel="x" href="http://whatever" }',
+        templates: []
+      };
+
+      var bundle = generateBundle(form, {});
+    
+      assert.equal(bundle.links.length, 1);
+      assert.equal(bundle.links[0].items, null);
+      assert.equal(bundle.links[0].href, 'http://whatever');
+    });
+  });
+  
+  describe("documents", function() {
+    it("should make all files, items, metadata, and links available as a flattened array", function() {
+      var form = {
+        bundle: 'item { link rel="x" href="#a"; item { file { "xyz" }; partial "stuff" -> metadata } }',
+        templates: [
+          {
+            id: 'stuff',
+            type: 'xml',
+            template: 'element "blah";'
+          }
+        ]
+      };
+
+      var bundle = generateBundle(form, {});
+    
+      assert.equal(bundle.files.length, 1);
+      assert.equal(bundle.items.length, 2);
+      assert.equal(bundle.metadata.length, 1);
+      assert.equal(bundle.links.length, 1);
+    });
+    
+    it("should throw an error if any of document children are not items", function() {
+      var form = {
+        bundle: 'link rel="x" href="http://whatever"',
+        templates: []
+      };
+  
+      assert.throws(function() {
+        generateBundle(form, {});
+      });
+    });
   });
 });

@@ -11,9 +11,9 @@ class PackageResolver {
       let name = this.names[i];
       
       if (file === name) {
-        return path.join(name, 'lib', 'main.js');
+        return path.resolve(path.join(name, 'lib', 'main.js'));
       } else if (file.startsWith(name + '/')) {
-        return path.join(name, 'lib', file.slice((name + '/').length) + '.js');
+        return path.resolve(path.join(name, 'lib', file.slice((name + '/').length) + '.js'));
       }
     }
   }

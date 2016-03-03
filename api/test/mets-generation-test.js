@@ -2,6 +2,7 @@ import assert from 'assert';
 import libxmljs from 'libxmljs';
 import generateMets from 'api/generate-mets';
 import generateBundle from 'api/generate-bundle';
+import { buildTestUpload } from './helpers';
 
 describe("METS generation", function() {
   describe("with metadata and files", function() {
@@ -10,7 +11,7 @@ describe("METS generation", function() {
         { type: "file", key: "thesis" },
         { type: "text", key: "title" }
       ],
-      bundle: "item kind='File' label=title { file { thesis; } metadata kind='descriptive' { partial 'thesis'; } metadata kind='access-control' { partial 'unpublished'; } }",
+      bundle: "item type='File' label=title { file { thesis; }; metadata type='descriptive' { partial 'thesis'; }; metadata type='access-control' { partial 'unpublished'; } }",
       templates: [
         {
           id: "thesis",
@@ -25,23 +26,19 @@ describe("METS generation", function() {
       ]
     };
     
+    var buffer = new Buffer('lorem ipsum');
+    var thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
+    
     var values = {
-      thesis: {
-        type: "upload",
-        id: "abc",
-        name: "thesis.pdf",
-        type: "application/pdf",
-        hash: "def",
-        size: 456
-      },
+      thesis: thesis,
       title: "My Thesis"
     };
     
     var bundle = generateBundle(form, values);
-    
     var xml = generateMets(form, bundle);
-  
     var doc = libxmljs.parseXml(xml);
+
+    console.log(xml);
   
     it("should generate a mets element with the correct profile", function() {
       var mets = doc.get("/mets:mets", { mets: "http://www.loc.gov/METS/" });
@@ -100,9 +97,9 @@ describe("METS generation", function() {
       assert.ok(file);
       assert.equal(file.attr("ID").value(), bundle.children[0].children[0].id);
       assert.equal(file.attr("MIMETYPE").value(), "application/pdf");
-      assert.equal(file.attr("CHECKSUM").value(), "def");
+      assert.equal(file.attr("CHECKSUM").value(), "80a751fde577028640c419000e33eba6");
       assert.equal(file.attr("CHECKSUMTYPE").value(), "MD5");
-      assert.equal(file.attr("SIZE").value(), "456");
+      assert.equal(file.attr("SIZE").value(), "11");
     
       var flocat = file.get("mets:FLocat", { mets: "http://www.loc.gov/METS/" });
       assert.ok(flocat);
@@ -134,7 +131,7 @@ describe("METS generation", function() {
   describe("with multiple access control metadata elements", function() {
     var form = {
       children: [],
-      bundle: "item kind='Folder' label='My Folder' { item kind='Folder' label='A' { metadata kind='access-control' { partial 'unpublished'; } } item kind='Folder' label='B' { metadata kind='access-control' { partial 'unpublished'; } } }",
+      bundle: "item type='Folder' label='My Folder' { item type='Folder' label='A' { metadata type='access-control' { partial 'unpublished'; } }; item type='Folder' label='B' { metadata type='access-control' { partial 'unpublished'; } } }",
       templates: [
         {
           id: "unpublished",
@@ -147,9 +144,7 @@ describe("METS generation", function() {
     var values = {};
     
     var bundle = generateBundle(form, values);
-    
     var xml = generateMets(form, bundle);
-  
     var doc = libxmljs.parseXml(xml);
   
     it("should generate an amdSec element", function() {
@@ -179,28 +174,18 @@ describe("METS generation", function() {
   describe("with links", function() {
     var form = {
       blocks: [
-        { type: "file", key: "thesis" },
         { type: "text", key: "title" }
       ],
-      bundle: "item kind='Aggregate Work' label=title { link rel='http://example.com/blah' href='#thesis'; item kind='File' fragment='thesis' { file { thesis; } } }",
+      bundle: "item kind='Aggregate Work' label=title { link rel='http://example.com/blah' href='#thesis'; item kind='File' fragment='thesis' }",
       templates: []
     };
     
     var values = {
-      thesis: {
-        type: "upload",
-        id: "abc",
-        name: "thesis.pdf",
-        type: "application/pdf",
-        hash: "def",
-        size: 456
-      },
       title: "My Thesis"
     };
   
     var bundle = generateBundle(form, values);
     var xml = generateMets(form, bundle);
-  
     var doc = libxmljs.parseXml(xml);
   
     it("should generate a structLink element with a link from the Aggregate Work div to the File div", function() {
@@ -210,7 +195,39 @@ describe("METS generation", function() {
       assert.equal(smLink.get("@xlink:from", { xlink: "http://www.w3.org/1999/xlink" }).value(), "#" + bundle.children[0].id);
       assert.equal(smLink.get("@xlink:to", { xlink: "http://www.w3.org/1999/xlink" }).value(), "#" + bundle.children[0].children[1].id);
     });
+  });
   
+  describe("with literal file contents", function() {
+    var form = {
+      bundle: "item kind='File' { file type='text/plain' { agreement.terms; '\\n'; agreement.date; '\\n'; agreement.agent; '\\n'; } }",
+      templates: []
+    };
+
+    var values = {
+      agreement: {
+        terms: "You agree to the terms, etc.",
+        date: "2016-01-01",
+        agent: "someone"
+      }
+    };
+
+    var bundle = generateBundle(form, values);
+    var xml = generateMets(form, bundle);
+    var doc = libxmljs.parseXml(xml);
+
+    it("should generate a file element", function() {
+      var file = doc.get("/mets:mets/mets:fileSec/mets:fileGrp/mets:file", { mets: "http://www.loc.gov/METS/" });
+      assert.ok(file);
+      assert.equal(file.attr("ID").value(), bundle.children[0].children[0].id);
+      assert.equal(file.attr("MIMETYPE").value(), "text/plain");
+      assert.equal(file.attr("CHECKSUM").value(), "3257dcd83a3042bdae7b3700c196769a");
+      assert.equal(file.attr("CHECKSUMTYPE").value(), "MD5");
+      assert.equal(file.attr("SIZE").value(), "48");
+
+      var flocat = file.get("mets:FLocat", { mets: "http://www.loc.gov/METS/" });
+      assert.ok(flocat);
+      assert.equal(flocat.get("@xlink:href", { xlink: "http://www.w3.org/1999/xlink" }).value(), bundle.children[0].children[0].content.id);
+    });
   });
 
 });
