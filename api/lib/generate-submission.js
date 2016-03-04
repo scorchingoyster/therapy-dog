@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+import fs from 'fs';
 import xmlbuilder from 'xmlbuilder';
 import { Link, Item, File, Metadata } from './bundle/model';
 
@@ -62,7 +64,7 @@ function generateAmdSec(mets, bundle) {
 
 // fileSec
 
-function generateFileSec(mets, bundle) {
+function generateFileSec(mets, bundle, locations, checksums) {
   var fileGrp =
   mets
     .element("fileSec")
@@ -70,8 +72,8 @@ function generateFileSec(mets, bundle) {
 
   bundle.files.forEach(function(file) {
     fileGrp
-      .element("file", { CHECKSUM: "fakechecksum", CHECKSUMTYPE: "MD5", ID: file.id, MIMETYPE: file.mimetype, SIZE: file.size })
-        .element("FLocat", { "xlink:href": file.id, LOCTYPE: "OTHER", USE: "STAGE" });
+      .element("file", { CHECKSUM: checksums[file.id], CHECKSUMTYPE: "MD5", ID: file.id, MIMETYPE: file.mimetype, SIZE: file.size })
+        .element("FLocat", { "xlink:href": locations[file.id], LOCTYPE: "OTHER", USE: "STAGE" });
   });
 }
 
@@ -108,7 +110,7 @@ function generateItem(parent, node) {
     return node.id;
   });
 
-  var amdIds = metadata.filter(function(node) {
+  var admIds = metadata.filter(function(node) {
     return node.type === "access-control";
   }).map(function(node) {
     return node.id;
@@ -118,8 +120,8 @@ function generateItem(parent, node) {
     div.attribute("DMDID", dmdIds.join(" "));
   }
 
-  if (amdIds.length > 0) {
-    div.attribute("AMDID", amdIds.join(" "));
+  if (admIds.length > 0) {
+    div.attribute("ADMID", admIds.join(" "));
   }
 }
 
@@ -169,20 +171,67 @@ function generateStructLink(mets, bundle) {
   }
 }
 
-// mets
-
-export default function generateMets(form, bundle) {
-  var mets = xmlbuilder.create('mets')
-    .attribute("xmlns", "http://www.loc.gov/METS/")
-    .attribute("xmlns:xlink", "http://www.w3.org/1999/xlink")
-    .attribute("PROFILE", "http://cdr.unc.edu/METS/profiles/Simple");
+export default function generateSubmission(form, bundle) {
+  // Build a hash of file locations (just the file id right now) by file id.
+  // This is where we'd assign staging URLs if we wanted to refer to files outside of the submission proper.
+  var fileLocations = bundle.files.reduce(function(obj, file) {
+    obj[file.id] = file.id;
+    return obj;
+  }, {});
   
-  generateMetsHdr(mets, bundle);
-  generateDmdSec(mets, form, bundle);
-  generateAmdSec(mets, bundle);
-  generateFileSec(mets, bundle);
-  generateStructMap(mets, bundle);
-  generateStructLink(mets, bundle);
+  // Build an array of promises which calculate the checksum for each file.
+  var checksums = bundle.files.map(function(file) {
+    return new Promise(function(resolve, reject) {
+      var hash = crypto.createHash('md5');
+      
+      if (file.isUpload) {
+        var input = fs.createReadStream(file.contents.path);
+        input.on('end', function() {
+          hash.end();
+          resolve(hash.read().toString('hex'));
+        });
+        input.pipe(hash);
+      } else {
+        hash.update(file.contents);
+        resolve(hash.digest('hex'));
+      }
+    });
+  });
   
-  return mets.end({ pretty: true });
+  // Calculate all of the checksums, and then proceed with generating METS.
+  return Promise.all(checksums)
+  .then(function(checksums) {
+    // Build a hash of checksums by file id.
+    var fileChecksums = bundle.files.reduce(function(obj, file, index) {
+      obj[file.id] = checksums[index];
+      return obj;
+    }, {});
+    
+    var mets = xmlbuilder.create('mets')
+      .attribute("xmlns", "http://www.loc.gov/METS/")
+      .attribute("xmlns:xlink", "http://www.w3.org/1999/xlink")
+      .attribute("PROFILE", "http://cdr.unc.edu/METS/profiles/Simple");
+  
+    generateMetsHdr(mets, bundle);
+    generateDmdSec(mets, form, bundle);
+    generateAmdSec(mets, bundle);
+    generateFileSec(mets, bundle, fileLocations, fileChecksums);
+    generateStructMap(mets, bundle);
+    generateStructLink(mets, bundle);
+  
+    // Build the submission. The name of the METS XML will be "mets.xml", and the rest of the files will be named by their ID.
+    var submission = {
+      "mets.xml": new Buffer(mets.end({ pretty: true }))
+    };
+  
+    bundle.files.forEach(function(file) {
+      if (file.isUpload) {
+        submission[file.id] = file.contents.path;
+      } else {
+        submission[file.id] = file.contents;
+      }
+    });
+  
+    return submission;
+  });
 }

@@ -6,8 +6,7 @@ var fs = require('fs');
 var inspect = require('util').inspect;
 var Promise = require('promise');
 var generateBundle = require("./generate-bundle");
-var generateMets = require("./generate-mets");
-var generateZip = require("./generate-zip");
+var generateSubmission = require("./generate-submission");
 var submitZip = require("./submit-zip");
 var Upload = require("./upload");
 
@@ -127,12 +126,17 @@ module.exports = function(app) {
     var bundle = generateBundle(form, values);
     console.log(inspect(bundle, { depth: null }));
     
-    var mets = generateMets(form, bundle);
-    console.log(mets);
-    
-    generateZip(form, bundle, mets)
-    .then(function(zip) {
-      return submitZip(form, zip);
+    generateSubmission(form, bundle)
+    .then(function(submission) {
+      Object.keys(submission).forEach(function(name) {
+        if (submission[name] instanceof Buffer) {
+          console.log(name, submission[name].toString());
+        } else {
+          console.log(name, submission[name]);
+        }
+      });
+      
+      return submitZip(form, submission);
     })
     .then(function(result) {
       res.send(result).end();
