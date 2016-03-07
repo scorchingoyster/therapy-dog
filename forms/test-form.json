@@ -50,6 +50,24 @@
       ]
     },
     {
+      "key": "publisher",
+      "label": "Publisher",
+      "type": "text",
+      "options": [
+        "Crown",
+        "Doubleday",
+        "Gale",
+        "InfoTrac",
+        "Knopf",
+        "Pandora",
+        "Picador",
+        "ProQuest",
+        "Random House Science",
+        "Science Direct",
+        "Springer"
+      ]
+    },
+    {
       "key": "location",
       "label": "Publication Location",
       "type": "radio",
@@ -109,7 +127,7 @@
     {
       "id": "article",
       "type": "xml",
-      "template": "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { info.title -> (element 'titleInfo') (element 'title'); element 'originInfo' { info.pubdate -> element 'dateIssued'; info.version -> element 'edition'; } element 'originInfo' eventType='publisher' { element 'place' { location -> element 'placeTerm' type='text'; } } info.keywords -> (element 'note' displayLabel='Keywords'); element 'language' { languages -> element 'languageTerm' type='text'; } each authors as |author| { element 'name' { author.first -> element 'namePart' type='given'; author.last -> element 'namePart' type='family'; } } }"
+      "template": "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { info.title -> (element 'titleInfo') (element 'title'); element 'originInfo' { info.pubdate -> element 'dateIssued'; info.version -> element 'edition'; } element 'originInfo' eventType='publisher' { publisher -> element 'publisher'; element 'place' { location -> element 'placeTerm' type='text'; } } info.keywords -> (element 'note' displayLabel='Keywords'); element 'language' { languages -> element 'languageTerm' type='text'; } each authors as |author| { element 'name' { author.first -> element 'namePart' type='given'; author.last -> element 'namePart' type='family'; } } }"
     },
 
     {
