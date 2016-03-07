@@ -53,7 +53,7 @@
       "key": "publisher",
       "label": "Publisher",
       "type": "text",
-      "type-ahead": [
+      "options": [
         "Crown",
         "Doubleday",
         "Gale",
