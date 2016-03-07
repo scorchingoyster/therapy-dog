@@ -25,7 +25,10 @@ export default Ember.Component.extend(FocusEntryAction, {
   },
   
   focusOut: function() {
-    this.set('entry.attempted', true);
+    // If the date picker is still visible, the user hasn't attempted to enter a value yet.
+    if (!$.datepicker._datepickerShowing) {
+      this.set('entry.attempted', true);
+    }
   },
   
   actions: {
