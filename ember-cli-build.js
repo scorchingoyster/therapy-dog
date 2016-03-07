@@ -26,6 +26,7 @@ module.exports = function(defaults) {
   
   app.import(path.join(app.bowerDirectory, 'jquery-ui/jquery-ui.js'));
   app.import(path.join(app.bowerDirectory, 'jquery-ui/ui/datepicker.js'));
+  app.import(path.join(app.bowerDirectory, 'jquery-ui/ui/autocomplete.js'));
   app.import(path.join(app.bowerDirectory, 'jquery-ui/themes/base/jquery-ui.css'));
   
   var imagesDir = path.join(app.bowerDirectory, 'jquery-ui/themes/base/images');
