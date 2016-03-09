@@ -12,7 +12,11 @@
   {{/each}}
   
   <div class="add">
-    <button {{action "add"}}>Add Another</button>
+    {{#if entry.value}}
+      <button {{action "add"}}>Add Another</button>
+    {{else}}
+      <button {{action "add"}}>Add</button>
+    {{/if}}
   </div>
 {{else}}
   {{object-entry entry=entry}}

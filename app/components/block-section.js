@@ -35,10 +35,6 @@ export default Ember.Component.extend({
     remove(entry) {
       if (this.get('entry.block.repeat')) {
         this.get('entry.value').removeObject(entry);
-        
-        if (this.get('entry.value.length') === 0) {
-          this.get('entry.value').pushObject(this.createBlankEntry());
-        }
       }
     }
   }
