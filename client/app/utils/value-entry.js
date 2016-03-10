@@ -1,18 +1,30 @@
 import Ember from 'ember';
 
-export default Ember.Object.extend({
-  errors: Ember.computed('block', 'value', function() {
-    var block = this.get('block'), value = this.get('value');
-
-    if (block.get('type') === 'text' && block.get('required') && Ember.isBlank(value)) {
-      return ['This field is required.'];
-    } else if (block.get('type') === 'file' && block.get('required') && Ember.isBlank(value)) {
-      return ['This file is required.'];
-    } else if (block.get('type') === 'date' && block.get('required') && Ember.isBlank(value)) {
-      return ['This field is required.'];
-    } else {
-      return [];
+export default Ember.Object.extend(Ember.Validations.Mixin, {
+  init() {
+    let validations = this.get('block.validations');
+    
+    if (validations && validations.format) {
+      if (Ember.typeOf(validations.format) === 'string') {
+        validations.format = new RegExp(validations.format);
+      } else if (Ember.typeOf(validations.format.with) === 'string') {
+        validations.format.with = new RegExp(validations.format.with);
+      }
     }
+    
+    if (validations) {
+      this.validations = { value: validations };
+    }
+    
+    this._super(...arguments);
+  },
+  
+  required: Ember.computed('block.validations', function() {
+    return Ember.isPresent(this.get('block.validations.presence'));
+  }),
+  
+  invalid: Ember.computed('isValid', 'attempted', function() {
+    return !this.get('isValid') && this.get('attempted');
   }),
   
   flatten() {

@@ -1,8 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Object.extend({
-  errors: Ember.computed(function() {
-    return [];
+  isValid: Ember.computed(function() {
+    return true;
   }),
   
   flatten() {

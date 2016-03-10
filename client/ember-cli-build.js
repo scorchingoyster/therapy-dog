@@ -24,6 +24,8 @@ module.exports = function(defaults) {
   
   app.import('vendor/normalize.css');
   
+  app.import(path.join(app.bowerDirectory, 'ember-validations/index.js'));
+  
   app.import(path.join(app.bowerDirectory, 'jquery-ui/jquery-ui.js'));
   app.import(path.join(app.bowerDirectory, 'jquery-ui/ui/datepicker.js'));
   app.import(path.join(app.bowerDirectory, 'jquery-ui/ui/autocomplete.js'));
