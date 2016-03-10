@@ -26,8 +26,6 @@ function makeZip(submission) {
       });
       
       Object.keys(submission).forEach(function(name) {
-        console.log(submission[name]);
-        
         if (submission[name] instanceof Buffer) {
           archive.append(submission[name], { name: name });
         } else {
