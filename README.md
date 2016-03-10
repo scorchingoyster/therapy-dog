@@ -1,6 +1,6 @@
 # Therapy Dog (Deposit Forms)
 
-This is an Node.js and Ember application that provides:
+This is a Node.js and Ember application that provides:
 
   - flexible forms for collecting files and metadata,
   - an expression language for mapping form input to MODS and other XML schemas, and
