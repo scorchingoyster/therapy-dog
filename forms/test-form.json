@@ -133,7 +133,7 @@
     {
       "id": "access",
       "type": "xml",
-      "template": "element 'accessControl' xmlns='http://cdr.unc.edu/definitions/acl' published='false';"
+      "template": "element 'acl:accessControl' xmlns:acl='http://cdr.unc.edu/definitions/acl' acl:published='false';"
     },
 
     {
@@ -143,5 +143,5 @@
     }
   ],
   
-  "bundle": "item kind='Aggregate Work' label=title { link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#article'; metadata kind='descriptive' { partial 'article'; } metadata kind='access-control' { partial 'access'; } item type='File' fragment='article' label=article.name { file { article; } } each supplemental as |s| { if s.file { item type='File' label=s.file.name { metadata { partial 'supplemental'; } file { s.file; } } } } }"
+  "bundle": "item type='Aggregate Work' label=info.title { link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#article'; metadata type='descriptive' { partial 'article'; } metadata type='access-control' { partial 'access'; } item type='File' fragment='article' label=article.name { file { article; } } each supplemental as |s| { if s.file { item type='File' label=s.file.name { metadata { partial 'supplemental'; } file { s.file; } } } } }"
 }

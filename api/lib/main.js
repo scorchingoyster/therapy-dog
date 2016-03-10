@@ -6,9 +6,9 @@ var fs = require('fs');
 var inspect = require('util').inspect;
 var Promise = require('promise');
 var generateBundle = require("./generate-bundle");
-var generateMets = require("./generate-mets");
-var generateZip = require("./generate-zip");
+var generateSubmission = require("./generate-submission");
 var submitZip = require("./submit-zip");
+var Upload = require("./upload");
 
 var forms = {};
 glob(__dirname + "/../forms/*.json", function(err, filenames) {
@@ -74,20 +74,6 @@ function getValues(blocks, values) {
   return result;
 }
 
-function getHash(path) {
-  return new Promise(function(resolve, reject) {
-    var hash = crypto.createHash('md5');
-    var input = fs.createReadStream(path);
-
-    input.on('end', function() {
-      hash.end();
-      resolve(hash.read().toString('hex'));
-    });
-
-    input.pipe(hash);
-  });
-}
-
 module.exports = function(app) {
   var express = require('express');
   var multer = require('multer');
@@ -140,12 +126,17 @@ module.exports = function(app) {
     var bundle = generateBundle(form, values);
     console.log(inspect(bundle, { depth: null }));
     
-    var mets = generateMets(form, bundle);
-    console.log(mets);
-    
-    generateZip(form, bundle, mets)
-    .then(function(zip) {
-      return submitZip(form, zip);
+    generateSubmission(form, bundle)
+    .then(function(submission) {
+      Object.keys(submission).forEach(function(name) {
+        if (submission[name] instanceof Buffer) {
+          console.log(name, submission[name].toString());
+        } else {
+          console.log(name, submission[name]);
+        }
+      });
+      
+      return submitZip(form, submission);
     })
     .then(function(result) {
       res.send(result).end();
@@ -157,27 +148,21 @@ module.exports = function(app) {
   });
   
   router.post('/uploads', upload.single('file'), function(req, res) {
-    // FIXME: really generate the hash on upload?
-    getHash(req.file.path)
-    .then(function(hash) {
-      var upload = {
-        id: req.file.filename,
-        name: req.file.originalname,
-        type: req.file.mimetype,
-        size: req.file.size,
-        hash: hash,
-        path: req.file.path
-      };
-  
-      uploads[upload.id] = upload;
+    var upload = new Upload({
+      id: req.file.filename,
+      name: req.file.originalname,
+      type: req.file.mimetype,
+      size: req.file.size,
+      path: req.file.path
+    });
+    
+    uploads[upload.id] = upload;
 
-      res.send({
-        id: upload.id,
-        name: upload.name,
-        type: upload.type,
-        size: upload.size,
-        hash: upload.hash
-      });
+    res.send({
+      id: upload.id,
+      name: upload.name,
+      type: upload.type,
+      size: upload.size
     });
   });
 

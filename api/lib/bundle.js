@@ -1,47 +1,24 @@
 import Arrow from 'arrow';
-import uuid from 'uuid';
+import { Item, File, Link, Metadata, Bundle } from './bundle/model';
 
 export default {
   item: Arrow.helper(function(params, hash, body) {
-    return {
-      type: "item",
-      id: "_" + uuid.v4(),
-      kind: hash.kind,
-      label: hash.label,
-      fragment: hash.fragment,
-      children: body()
-    };
+    return new Item(body(), hash);
   }),
 
   file: Arrow.helper(function(params, hash, body) {
-    return {
-      type: "file",
-      id: "_" + uuid.v4(),
-      content: body()
-    }
+    return new File(body(), hash);
   }),
 
   link: Arrow.helper(function(params, hash, body) {
-    return {
-      type: "link",
-      rel: hash.rel,
-      href: hash.href
-    }
+    return new Link(hash);
   }),
 
   metadata: Arrow.helper(function(params, hash, body) {
-    return {
-      type: "metadata",
-      kind: hash.kind,
-      id: "_" + uuid.v4(),
-      content: body()
-    }
+    return new Metadata(body(), hash);
   }),
   
   document: Arrow.helper(function(params, hash, body) {
-    return {
-      type: "bundle",
-      children: body()
-    };
+    return new Bundle(body());
   })
 };
