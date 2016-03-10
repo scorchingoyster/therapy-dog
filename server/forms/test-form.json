@@ -1,0 +1,147 @@
+{
+  "destination": "uuid:1ad37aeb-900e-4db9-b231-0f7291eab03",
+  
+  "title": "Open Access Test",
+  
+  "children": [
+    {
+      "key": "info",
+      "type": "section",
+      "label": "Article Information",
+      "children": [
+        {
+          "key": "title",
+          "type": "text",
+          "label": "Title",
+          "required": true
+        },
+        {
+          "key": "keywords",
+          "type": "text",
+          "label": "Keywords"
+        },
+        {
+          "key": "pubdate",
+          "type": "date",
+          "label": "Publication Date"
+        },
+        {
+          "key": "version",
+          "type": "select",
+          "label": "Version",
+          "options": [
+            "Preprint",
+            "Postprint",
+            "Publisher"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "languages",
+      "label": "Available Languages",
+      "type": "checkboxes",
+      "options": [
+        "English",
+        "French",
+        "German",
+        "Sanskrit",
+        "Urdu"
+      ]
+    },
+    {
+      "key": "publisher",
+      "label": "Publisher",
+      "type": "text",
+      "options": [
+        "Crown",
+        "Doubleday",
+        "Gale",
+        "InfoTrac",
+        "Knopf",
+        "Pandora",
+        "Picador",
+        "ProQuest",
+        "Random House Science",
+        "Science Direct",
+        "Springer"
+      ]
+    },
+    {
+      "key": "location",
+      "label": "Publication Location",
+      "type": "radio",
+      "options": [
+        "Germany",
+        "Great Britain",
+        "United States"
+      ]
+    },
+    {
+      "key": "authors",
+      "type": "section",
+      "label": "Authors",
+      "repeat": true,
+      "children": [
+        {
+          "key": "first",
+          "type": "text",
+          "label": "First Name",
+          "required": true
+        },
+        {
+          "key": "last",
+          "type": "text",
+          "label": "Last Name",
+          "required": true
+        }
+      ]
+    },
+    {
+      "key": "article",
+      "type": "file",
+      "label": "Article",
+      "required": true
+    },
+    {
+      "key": "supplemental",
+      "label": "Supplemental Files",
+      "type": "section",
+      "repeat": true,
+      "children": [
+        {
+          "key": "file",
+          "type": "file",
+          "label": "File"
+        },
+        {
+          "key": "description",
+          "type": "text",
+          "label": "Description"
+        }
+      ]
+    }
+  ],
+
+  "templates": [
+    {
+      "id": "article",
+      "type": "xml",
+      "template": "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { info.title -> (element 'titleInfo') (element 'title'); element 'originInfo' { info.pubdate -> element 'dateIssued'; info.version -> element 'edition'; } element 'originInfo' eventType='publisher' { publisher -> element 'publisher'; element 'place' { location -> element 'placeTerm' type='text'; } } info.keywords -> (element 'note' displayLabel='Keywords'); element 'language' { languages -> element 'languageTerm' type='text'; } each authors as |author| { element 'name' { author.first -> element 'namePart' type='given'; author.last -> element 'namePart' type='family'; } } }"
+    },
+
+    {
+      "id": "access",
+      "type": "xml",
+      "template": "element 'acl:accessControl' xmlns:acl='http://cdr.unc.edu/definitions/acl' acl:published='false';"
+    },
+
+    {
+      "id": "supplemental",
+      "type": "xml",
+      "template": "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { s.description -> element 'abstract'; }"
+    }
+  ],
+  
+  "bundle": "item type='Aggregate Work' label=info.title { link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#article'; metadata type='descriptive' { partial 'article'; } metadata type='access-control' { partial 'access'; } item type='File' fragment='article' label=article.name { file { article; } } each supplemental as |s| { if s.file { item type='File' label=s.file.name { metadata { partial 'supplemental'; } file { s.file; } } } } }"
+}
