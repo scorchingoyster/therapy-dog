@@ -1,0 +1,18 @@
+<div id="debug">
+  {{link-to "Back to list of forms" "forms"}}
+  <button {{action "deposit"}}>Deposit</button>
+  <button {{action "reset"}}>Reset</button>
+  <button {{action "validate"}}>Validate</button>
+  <button {{action "dump"}}>Dump</button>
+</div>
+
+<div id="form">
+  <h1>{{form.title}}</h1>
+  <p>{{form.description}}</p>
+  
+  {{object-entry entry=model}}
+  
+  <p class="submit" {{action "deposit"}}>
+    <button disabled={{if uploads.anyLoading "disabled" ""}}>Submit Deposit</button>
+  </p>
+</div>

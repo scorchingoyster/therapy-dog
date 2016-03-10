@@ -1,0 +1,296 @@
+/* basic styles */
+
+* {
+  box-sizing: border-box;
+}
+
+
+/* debug */
+
+#debug {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: yellow;
+  padding: 8px;
+  z-index: 1;
+  opacity: 0.3;
+}
+
+#debug:hover {
+  opacity: 1.0;
+}
+
+#debug button {
+  font-size: 14px;
+}
+
+
+/* form */
+
+#form {
+  width: 700px;
+  margin: 64px auto 64px auto;
+}
+
+.submit {
+  text-align: center;
+}
+
+
+/* title and description */
+
+#form h1 {
+  margin: 16px 0;
+}
+
+#form p {
+  margin: 16px 0;
+}
+
+
+/* buttons */
+
+#form button {
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  background: #eee;
+  background: linear-gradient(#fff, #eee);
+  font-size: 16px;
+  padding: 6px 12px;
+  cursor: default;
+  white-space: nowrap;
+}
+
+#form button:active {
+  background: #eee;
+}
+
+#form button:disabled {
+  border-color: #ccc;
+  background: #eee;
+  color: #bbb;
+}
+
+
+/* choose file "button" */
+
+.choose-file-wrapper {
+  position: relative;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  background: #eee;
+  background: linear-gradient(#fff, #eee);
+  font-size: 16px;
+  padding: 6px 12px;
+  cursor: default;
+  white-space: nowrap;
+}
+
+.choose-file-wrapper:active {
+  background: #eee;
+}
+
+.choose-file-wrapper input[type='file'] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* blocks */
+
+#form > .block:first-of-type {
+  margin-top: 32px;
+}
+
+.block {
+  margin: 48px 0;
+}
+
+.block label {
+  display: block;
+  margin: 8px 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.block.required label:after {
+  color: red;
+  content: " *";
+}
+
+.block .errors {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+  color: #c00;
+}
+
+
+/* text blocks */
+
+.block.text input {
+  display: block;
+  margin: 8px 0;
+  font-size: 16px;
+  padding: 4px;
+  width: 100%;
+  border: 1px solid #ccc;
+}
+
+.block.text.invalid > input {
+  border: 1px solid #c00;
+}
+
+
+/* date blocks */
+
+.block.date input {
+  display: block;
+  margin: 8px 0;
+  font-size: 16px;
+  padding: 4px;
+  width: 150px;
+  border: 1px solid #ccc;
+}
+
+.block.date.invalid > input {
+  border: 1px solid #c00;
+}
+
+
+/* section blocks */
+
+.section h2 {
+  font-size: 18px;
+  margin: 16px 0;
+}
+
+
+/* blocks inside section blocks */
+
+.section .block {
+  margin: 16px 0;
+}
+
+.section .block label {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.section .block input {
+  margin: 8px 0;
+}
+
+
+/* repeating section blocks */
+
+.section.repeat .item {
+  position: relative;
+  margin: 24px 0;
+  border-top: 1px solid #ddd;
+}
+
+.section.repeat .item:first-of-type {
+  margin-top: 18px;
+}
+
+.section.repeat .block {
+  width: 500px;
+}
+
+.section.repeat .block:first-of-type {
+  margin-top: 18px;
+}
+
+.section.repeat .add {
+  margin-top: 18px;
+  border-top: 1px solid #ddd;
+}
+
+.section.repeat .add button {
+  margin: 24px 0;
+  margin-bottom: 0;
+  font-size: 16px;
+  padding: 8px 16px;
+}
+
+.section.repeat .remove button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 14px;
+  padding: 6px 12px;
+  margin: 24px 0;
+}
+
+
+/* file blocks */
+
+.block.file.multiple label {
+  margin-bottom: 9px;
+}
+
+.block.file.multiple .upload,
+.block.file.multiple .new-upload {
+  margin: -1px 0 0 0;
+}
+
+.block.file .upload,
+.block.file .new-upload {
+  position: relative;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  display: flex;
+  padding: 4px;
+  
+  align-content: center;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.block.file.invalid .upload,
+.block.file.invalid .new-upload {
+  border: 1px solid #c00;
+}
+
+.block.file .upload .progress-bar {
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #eee;
+  transition: width 200ms;
+}
+
+.block.file .upload .description {
+  flex: 1 1 auto;
+  margin: 4px;
+}
+
+.block.file .upload .description .main {
+  line-height: 16px;
+}
+
+.block.file .upload .description .detail {
+  line-height: 16px;
+  font-size: 14px;
+  color: #666;
+}
+
+.block.file .upload button,
+.block.file .upload .choose-file-wrapper,
+.block.file .new-upload .choose-file-wrapper {
+  margin: 4px;
+  flex: 0 0 auto;
+}

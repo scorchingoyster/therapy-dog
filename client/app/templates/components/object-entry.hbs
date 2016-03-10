@@ -1,0 +1,3 @@
+{{#each entries as |entry|}}
+  {{component (concat "block-" entry.block.type) entry=entry}}
+{{/each}}

@@ -1,0 +1,9 @@
+<label>{{entry.block.label}}</label>
+
+<select onchange={{action "change" value="target.value"}}>
+  {{#each entry.block.options as |option|}}
+    <option selected={{if (eq entry.value option) "selected" ""}}>{{option}}</option>
+  {{/each}}
+</select>
+
+{{entry-error-messages entry=entry}}

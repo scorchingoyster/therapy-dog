@@ -1,0 +1,7 @@
+<label>{{entry.block.label}}</label>
+
+{{#each entry.block.options as |option|}}
+  {{check-box value=option groupValue=entry.value}} {{option}}
+{{/each}}
+
+{{entry-error-messages entry=entry}}
