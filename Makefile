@@ -18,6 +18,9 @@ run-server: ## Run the API server in development mode
 run-client: ## Run the client in development mode
 	cd client && ember server
 
+test-server: ## Run the API server tests
+	cd server && npm test
+
 deps: ## Install dependencies for the client and API server
 	cd server && npm install
 	cd client && npm install && bower install
