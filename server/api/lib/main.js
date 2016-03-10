@@ -11,16 +11,19 @@ var submitZip = require("./submit-zip");
 var Upload = require("./upload");
 
 var forms = {};
-glob(__dirname + "/../forms/*.json", function(err, filenames) {
-  filenames.forEach(function(filename) {
-    try {
-      var id = path.basename(filename, ".json");
-      forms[id] = require(filename);
-    } catch (err) {
-      console.error(err);
-    }
-  })
-});
+
+function loadForms(directory) {
+  glob(path.join(directory, "*.json"), function(err, filenames) {
+    filenames.forEach(function(filename) {
+      try {
+        var id = path.basename(filename, ".json");
+        forms[id] = require(filename);
+      } catch (err) {
+        console.error(err);
+      }
+    })
+  });
+}
 
 function getForm(id) {
   if (forms.hasOwnProperty(id)) {
@@ -77,6 +80,8 @@ function getValues(blocks, values) {
 module.exports = function(app, config) {
   var express = require('express');
   var multer = require('multer');
+  
+  loadForms(config.formsDirectory);
   
   var upload = multer({ dest: config.uploadsDirectory });
   var router = express.Router();
@@ -170,6 +175,6 @@ module.exports = function(app, config) {
     });
   });
 
-  app.use('/', require('body-parser').json());
-  app.use('/', router);
+  app.use('/api', require('body-parser').json());
+  app.use('/api', router);
 };
