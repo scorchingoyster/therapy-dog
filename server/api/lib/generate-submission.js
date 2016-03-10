@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import xmlbuilder from 'xmlbuilder';
+import Promise from 'promise';
 import { Link, Item, File, Metadata } from './bundle/model';
 
 // metsHdr

@@ -1,5 +1,6 @@
 var fs = require('fs');
 var request = require('request');
+var Promise = require('promise');
 var archiver = require('archiver');
 var tmp = require('tmp');
 
