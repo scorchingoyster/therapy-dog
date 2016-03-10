@@ -40,21 +40,22 @@ function makeZip(submission) {
   });
 }
 
-function postZip(form, zipFile) {
+function postZip(form, zipFile, config) {
   return new Promise(function(resolve, reject) {
     var body = fs.readFileSync(zipFile);
-
-    request.post('https://localhost:8443/services/sword/collection/' + form.destination, {
+    
+    request.post(form.destination, {
       strictSSL: false,
       body: body,
+      baseUrl: config.baseUrl,
       headers: {
         'Packaging': 'http://cdr.unc.edu/METS/profiles/Simple',
         'Content-Disposition': 'attachment; filename=package.zip',
         'Content-Type': 'application/zip'
       },
       auth: {
-        username: 'depositforms',
-        password: 'depositforms',
+        username: config.username,
+        password: config.password,
         sendImmediately: true
       }
     }, function(err, response, body) {
@@ -67,10 +68,10 @@ function postZip(form, zipFile) {
   });
 }
 
-function submitZip(form, submission) {
+function submitZip(form, submission, config) {
   return makeZip(submission)
   .then(function(zipFile) {
-    return postZip(form, zipFile);
+    return postZip(form, zipFile, config);
   });
 }
 

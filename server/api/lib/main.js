@@ -74,11 +74,11 @@ function getValues(blocks, values) {
   return result;
 }
 
-module.exports = function(app) {
+module.exports = function(app, config) {
   var express = require('express');
   var multer = require('multer');
   
-  var upload = multer({ dest: 'uploads/' });
+  var upload = multer({ dest: config.uploadsDirectory });
   var router = express.Router();
   
   router.get('/forms', function(req, res) {
@@ -136,7 +136,11 @@ module.exports = function(app) {
         }
       });
       
-      return submitZip(form, submission);
+      return submitZip(form, submission, {
+        baseUrl: config.depositBaseUrl,
+        username: config.depositUsername,
+        password: config.depositPassword
+      });
     })
     .then(function(result) {
       res.send(result).end();

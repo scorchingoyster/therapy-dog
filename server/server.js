@@ -1,12 +1,14 @@
-import fs from 'fs';
-import express from 'express';
-import morgan from 'morgan';
-import api from 'api';
+var express = require('express');
+var morgan = require('morgan');
+var config = require('./config');
 
-let app = express();
+var app = express();
+
 app.use(morgan('dev'));
-api(app);
 
-let ipaddress = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
-let port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
-app.listen(port, ipaddress);
+var api = require('./build/bundle');
+api(app, config);
+
+app.listen(config.port, config.host, function() {
+  console.log('Server started on %s:%d', config.host, config.port);
+});
