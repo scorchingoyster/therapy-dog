@@ -10,8 +10,8 @@ module.exports = function(app) {
     console.error(err, req.url);
   });
 
-  app.use(proxyPath, function(req, res, next){
-    // include root path in proxied request
+  app.use(proxyPath, function(req, res, next) {
+    req.url = proxyPath + '/' + req.url;
     proxy.web(req, res, { target: 'http://127.0.0.1:3000/' });
   });
 };
