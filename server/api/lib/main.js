@@ -11,8 +11,9 @@ var submitZip = require("./submit-zip");
 var Upload = require("./upload");
 
 var forms = {};
+var vocabularies = {};
 
-function loadForms(directory) {
+function loadForms(directory, forms) {
   glob(path.join(directory, "*.json"), function(err, filenames) {
     filenames.forEach(function(filename) {
       try {
@@ -21,8 +22,30 @@ function loadForms(directory) {
       } catch (err) {
         console.error(err);
       }
-    })
+    });
   });
+}
+
+function loadVocabularies(attributes) {
+  attributes.children.forEach(function(d) {
+    if (d.children !== undefined) {
+      d.children.forEach(function(a) {
+        generateVocabulary(a);
+      });
+    } else {
+      generateVocabulary(d);
+    }
+  });
+
+  return attributes;
+}
+
+function generateVocabulary(block) {
+  if (typeof block.options === "string") {
+    block.options = vocabularies[block.options];
+  }
+
+  return block;
 }
 
 function getForm(id) {
@@ -81,7 +104,8 @@ module.exports = function(app, config) {
   var express = require('express');
   var multer = require('multer');
   
-  loadForms(config.formsDirectory);
+  loadForms(config.formsDirectory, forms);
+  loadForms(config.vocabulariesDirectory, vocabularies);
   
   var upload = multer({ dest: config.uploadsDirectory });
   var router = express.Router();
@@ -107,13 +131,13 @@ module.exports = function(app, config) {
 
   router.get('/forms/:id', function(req, res) {
     var attributes = forms[req.params.id];
-    
+
     if (attributes) {
       res.send({
         'data': {
           'type': 'form',
           'id': req.params.id,
-          'attributes': attributes
+          'attributes': loadVocabularies(attributes)
         }
       });
     } else {
