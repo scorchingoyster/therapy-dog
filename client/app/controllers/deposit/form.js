@@ -16,7 +16,7 @@ export default Ember.Controller.extend({
     model.forEach(function(entry) {
       entry.set("attempted", true);
       
-      if (entry.get("errors.length") > 0 && !firstBadEntry) {
+      if (!entry.get("isValid") && !firstBadEntry) {
         firstBadEntry = entry;
       }
     });

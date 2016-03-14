@@ -13,7 +13,9 @@
           "key": "title",
           "type": "text",
           "label": "Title",
-          "required": true
+          "validations": {
+            "presence": true
+          }
         },
         {
           "key": "keywords",
@@ -36,6 +38,14 @@
           ]
         }
       ]
+    },
+    {
+      "key": "serial",
+      "type": "text",
+      "label": "Serial Number",
+      "validations": {
+        "format": { "with": "^[A-Z]{2}-\\d{3}$", "message": "must be a valid serial number (for example, AA-123)", "allowBlank": true }
+      }
     },
     {
       "key": "languages",
@@ -87,13 +97,17 @@
           "key": "first",
           "type": "text",
           "label": "First Name",
-          "required": true
+          "validations": {
+            "presence": true
+          }
         },
         {
           "key": "last",
           "type": "text",
           "label": "Last Name",
-          "required": true
+          "validations": {
+            "presence": true
+          }
         }
       ]
     },
@@ -101,7 +115,9 @@
       "key": "article",
       "type": "file",
       "label": "Article",
-      "required": true
+      "validations": {
+        "presence": true
+      }
     },
     {
       "key": "supplemental",

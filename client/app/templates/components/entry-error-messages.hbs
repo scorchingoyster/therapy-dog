@@ -1,7 +1,7 @@
 <ul class="errors">
   {{#if entry.attempted}}
-    {{#each entry.errors as |error|}}
-      <li>{{error}}</li>
+    {{#each entry.errors.value as |error|}}
+      <li>{{entry.block.label}} {{error}}.</li>
     {{/each}}
   {{/if}}
 </ul>
