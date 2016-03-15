@@ -5,6 +5,7 @@ module.exports = {
   port: 3000,
   uploadsDirectory: path.join(__dirname, 'uploads'),
   formsDirectory: path.join(__dirname, 'forms'),
+  vocabulariesDirectory: path.join(__dirname, 'vocabularies'),
   depositBaseUrl: 'https://localhost:8443/services/sword/collection/',
   depositUsername: 'depositforms',
   depositPassword: 'depositforms'
