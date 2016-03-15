@@ -10,37 +10,38 @@ var generateSubmission = require("./generate-submission");
 var submitZip = require("./submit-zip");
 var Upload = require("./upload");
 
-var forms = {};
-var vocabularies = {};
+function loadJson(directory) {
+  var fileList = {};
 
-function loadJson(directory, jsonType) {
   glob(path.join(directory, "*.json"), function(err, filenames) {
-    filenames.forEach(function(filename) {
+    filenames.map(function(filename) {
       try {
         var id = path.basename(filename, ".json");
-        jsonType[id] = require(filename);
+        fileList[id] = require(filename);
       } catch (err) {
         console.error(err);
       }
     });
   });
+
+  return fileList;
 }
 
-function generateVocabularies(attributes) {
+function generateVocabularies(attributes, vocabularies) {
   attributes.children.forEach(function(d) {
     if (d.children !== undefined) {
       d.children.forEach(function(a) {
-        generateVocabularyOptions(a);
+        generateVocabularyOptions(a, vocabularies);
       });
     } else {
-      generateVocabularyOptions(d);
+      generateVocabularyOptions(d, vocabularies);
     }
   });
 
   return attributes;
 }
 
-function generateVocabularyOptions(block) {
+function generateVocabularyOptions(block, vocabularies) {
   if (typeof block.options === "string") {
     block.options = vocabularies[block.options];
   }
@@ -104,8 +105,8 @@ module.exports = function(app, config) {
   var express = require('express');
   var multer = require('multer');
   
-  loadJson(config.formsDirectory, forms);
-  loadJson(config.vocabulariesDirectory, vocabularies);
+  var forms = loadJson(config.formsDirectory);
+  var vocabularies = loadJson(config.vocabulariesDirectory);
   
   var upload = multer({ dest: config.uploadsDirectory });
   var router = express.Router();
@@ -137,7 +138,7 @@ module.exports = function(app, config) {
         'data': {
           'type': 'form',
           'id': req.params.id,
-          'attributes': generateVocabularies(attributes)
+          'attributes': generateVocabularies(attributes, vocabularies)
         }
       });
     } else {
