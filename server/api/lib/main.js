@@ -14,7 +14,7 @@ function loadJson(directory) {
   var fileList = {};
 
   glob(path.join(directory, "*.json"), function(err, filenames) {
-    filenames.map(function(filename) {
+    filenames.forEach(function(filename) {
       try {
         var id = path.basename(filename, ".json");
         fileList[id] = require(filename);
