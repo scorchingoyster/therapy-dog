@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import fs from 'fs';
 import xmlbuilder from 'xmlbuilder';
 import Promise from 'promise';
-import { Link, Item, File, Metadata } from './bundle/model';
+import { Link, Item, File, Metadata } from '../bundle/model';
 
 // metsHdr
 
@@ -19,7 +19,7 @@ function generateMetsHdr(mets, bundle) {
 
 // dmdSec
 
-function generateDmdSec(mets, form, bundle) {
+function generateDmdSec(mets, bundle) {
   bundle.metadata.forEach(function(metadata) {
     if (metadata.type === "descriptive") {
       var dmdSec =
@@ -186,7 +186,7 @@ export default function generateSubmission(form, bundle) {
       var hash = crypto.createHash('md5');
       
       if (file.isUpload) {
-        var input = fs.createReadStream(file.contents.path);
+        var input = fs.createReadStream(file.contents.attributes.path);
         input.on('end', function() {
           hash.end();
           resolve(hash.read().toString('hex'));
@@ -214,7 +214,7 @@ export default function generateSubmission(form, bundle) {
       .attribute("PROFILE", "http://cdr.unc.edu/METS/profiles/Simple");
   
     generateMetsHdr(mets, bundle);
-    generateDmdSec(mets, form, bundle);
+    generateDmdSec(mets, bundle);
     generateAmdSec(mets, bundle);
     generateFileSec(mets, bundle, fileLocations, fileChecksums);
     generateStructMap(mets, bundle);
@@ -227,7 +227,7 @@ export default function generateSubmission(form, bundle) {
   
     bundle.files.forEach(function(file) {
       if (file.isUpload) {
-        submission[file.id] = file.contents.path;
+        submission[file.id] = file.contents.attributes.path;
       } else {
         submission[file.id] = file.contents;
       }

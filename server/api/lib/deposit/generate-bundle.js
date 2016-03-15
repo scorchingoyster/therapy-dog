@@ -1,11 +1,11 @@
 import Arrow from 'arrow';
 import XML from 'arrow/documents/xml';
-import Bundle from './bundle';
+import Bundle from '../bundle/index';
 
 export default function generateBundle(form, values) {
-  var arrow = new Arrow(form.bundle, Bundle);
+  var arrow = new Arrow(form.attributes.bundle, Bundle);
   
-  form.templates.forEach(function(template) {
+  form.attributes.templates.forEach(function(template) {
     arrow.registerPartial(template.id, new Arrow(template.template, XML));
   });
   

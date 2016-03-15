@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import uuid from 'uuid';
-import Upload from '../upload';
+import Upload from '../models/upload';
 import { XMLElement } from 'arrow/documents/xml/model';
 import { inspect } from 'util';
 
@@ -55,7 +55,7 @@ export class File {
       return this._name;
     } else {
       if (this.isUpload) {
-        return this.contents.name;
+        return this.contents.attributes.name;
       } else {
         return 'untitled.txt';
       }
@@ -67,7 +67,7 @@ export class File {
       return this._mimetype;
     } else {
       if (this.isUpload) {
-        return this.contents.type;
+        return this.contents.attributes.type;
       } else {
         return 'text/plain';
       }
@@ -76,7 +76,7 @@ export class File {
   
   get size() {
     if (this.isUpload) {
-      return this.contents.size;
+      return this.contents.attributes.size;
     } else {
       return this.contents.length;
     }
@@ -84,7 +84,7 @@ export class File {
   
   getHashDigest(algorithm, encoding) {
     if (this.isUpload) {
-      var path = this.contents.path;
+      var path = this.contents.attributes.path;
   
       return new Promise(function(resolve, reject) {
         var hash = crypto.createHash(algorithm);

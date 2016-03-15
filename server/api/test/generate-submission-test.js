@@ -1,12 +1,13 @@
 import assert from 'assert';
 import libxmljs from 'libxmljs';
-import generateSubmission from 'api/generate-submission';
-import generateBundle from 'api/generate-bundle';
+import Form from 'api/models/form';
+import generateSubmission from 'api/deposit/generate-submission';
+import generateBundle from 'api/deposit/generate-bundle';
 import { buildTestUpload } from './helpers';
 
 describe("Submission generation", function() {
   describe("with metadata and files", function() {
-    var form = {
+    var form = new Form('test', {
       blocks: [
         { type: "file", key: "thesis" },
         { type: "text", key: "title" }
@@ -24,7 +25,7 @@ describe("Submission generation", function() {
           template: "element 'accessControl' xmlns='http://cdr.unc.edu/definitions/acl' published='false' {}"
         }
       ]
-    };
+    });
     
     var buffer = new Buffer('lorem ipsum');
     var thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
@@ -43,7 +44,7 @@ describe("Submission generation", function() {
     it("should contain METS XML as a Buffer, and the upload's path", function() {
       return submission.then(function(submission) {
         assert.ok(submission["mets.xml"] instanceof Buffer);
-        assert.equal(submission[bundle.files[0].id], bundle.files[0].contents.path);
+        assert.equal(submission[bundle.files[0].id], bundle.files[0].contents.attributes.path);
       });
     });
   
@@ -150,7 +151,7 @@ describe("Submission generation", function() {
   });
   
   describe("with multiple access control metadata elements", function() {
-    var form = {
+    var form = new Form('test', {
       children: [],
       bundle: "item type='Folder' label='My Folder' { item type='Folder' label='A' { metadata type='access-control' { partial 'unpublished'; } }; item type='Folder' label='B' { metadata type='access-control' { partial 'unpublished'; } } }",
       templates: [
@@ -160,7 +161,7 @@ describe("Submission generation", function() {
           template: "element 'accessControl' xmlns='http://cdr.unc.edu/definitions/acl' published='false' {}"
         }
       ]
-    };
+    });
 
     var values = {};
 
@@ -199,13 +200,13 @@ describe("Submission generation", function() {
   });
 
   describe("with links", function() {
-    var form = {
+    var form = new Form('test', {
       blocks: [
         { type: "text", key: "title" }
       ],
       bundle: "item kind='Aggregate Work' label=title { link rel='http://example.com/blah' href='#thesis'; item kind='File' fragment='thesis' }",
       templates: []
-    };
+    });
 
     var values = {
       title: "My Thesis"
@@ -229,10 +230,10 @@ describe("Submission generation", function() {
   });
 
   describe("with literal file contents", function() {
-    var form = {
+    var form = new Form('test', {
       bundle: "item kind='File' { file { agreement.terms; '\\n'; agreement.date; '\\n'; agreement.agent; '\\n'; } }",
       templates: []
-    };
+    });
 
     var values = {
       agreement: {

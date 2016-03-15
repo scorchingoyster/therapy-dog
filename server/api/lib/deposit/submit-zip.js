@@ -38,22 +38,22 @@ function makeZip(submission) {
   });
 }
 
-function postZip(form, zipFile, config) {
+function postZip(form, zipFile) {
   return new Promise(function(resolve, reject) {
     var body = fs.readFileSync(zipFile);
     
-    request.post(form.destination, {
+    request.post(form.attributes.destination, {
       strictSSL: false,
       body: body,
-      baseUrl: config.baseUrl,
+      baseUrl: process.env.DEPOSIT_BASE_URL,
       headers: {
         'Packaging': 'http://cdr.unc.edu/METS/profiles/Simple',
         'Content-Disposition': 'attachment; filename=package.zip',
         'Content-Type': 'application/zip'
       },
       auth: {
-        username: config.username,
-        password: config.password,
+        username: process.env.DEPOSIT_USERNAME,
+        password: process.env.DEPOSIT_PASSWORD,
         sendImmediately: true
       }
     }, function(err, response, body) {
@@ -66,10 +66,10 @@ function postZip(form, zipFile, config) {
   });
 }
 
-function submitZip(form, submission, config) {
+function submitZip(form, submission) {
   return makeZip(submission)
   .then(function(zipFile) {
-    return postZip(form, zipFile, config);
+    return postZip(form, zipFile);
   });
 }
 

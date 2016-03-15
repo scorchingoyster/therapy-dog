@@ -3,3 +3,4 @@
 /build
 forms/*.json
 vocabularies/*.json
+/.env
