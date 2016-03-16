@@ -1,4 +1,5 @@
 var Form = require('../models/form');
+var FormNotFoundError = require('../errors').FormNotFoundError;
 
 exports.index = function(req, res) {
   Form.findAll()
@@ -12,20 +13,28 @@ exports.index = function(req, res) {
   })
   .catch(function(err) {
     console.error(err.stack);
-    res.send({ errors: [{ detail: err.message }] });
+    res.status(500).send({ errors: [{ title: 'Internal server error' }] });
   });
 }
 
 exports.show = function(req, res) {
   Form.findById(req.params.id)
   .then(function(form) {
-    return form.getResourceObject();
+    if (form) {
+      return form.getResourceObject();
+    } else {
+      throw new FormNotFoundError('Couldn\'t find form "' + req.params.id + '"', { id: req.params.id });
+    }
   })
   .then(function(resourceObject) {
     res.send({ data: resourceObject });
   })
   .catch(function(err) {
-    console.error(err.stack);
-    res.status(500).send({ errors: [{ detail: err.message }] });
+    if (err instanceof FormNotFoundError) {
+      res.status(404).send({ errors: [{ title: 'Form not found' }] })
+    } else {
+      console.error(err.stack);
+      res.status(500).send({ errors: [{ title: 'Internal server error' }] });
+    }
   });
 }

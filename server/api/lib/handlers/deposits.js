@@ -44,6 +44,6 @@ exports.create = function(req, res) {
   })
   .catch(function(err) {
     console.error(err.stack);
-    res.status(500).send({ errors: [{ detail: err.message }] });
+    res.status(500).send({ errors: [{ title: "Internal server error" }] });
   });
 }

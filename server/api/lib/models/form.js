@@ -3,6 +3,8 @@ var path = require('path');
 var glob = require('glob');
 var Upload = require('./upload');
 var Vocabulary = require('./vocabulary');
+var VocabularyNotFoundError = require('../errors').VocabularyNotFoundError;
+var UploadNotFoundError = require('../errors').UploadNotFoundError;
 
 var FORMS = {};
 
@@ -44,7 +46,11 @@ function resolveVocabularies(blocks) {
       });
     } else if (typeof block.options === 'string') {
       return Vocabulary.findById(block.options).then(function(vocabulary) {
-        return Object.assign({}, block, { options: vocabulary.terms });
+        if (vocabulary) {
+          return Object.assign({}, block, { options: vocabulary.terms });
+        } else {
+          throw new VocabularyNotFoundError('Couldn\'t find vocabulary "' + block.options + '"', { id: block.options });
+        }
       });
     } else {
       return Promise.resolve(block);
@@ -145,7 +151,12 @@ Form.prototype.transformValues = function(values) {
       return value;
     } else if (block.type === "file") {
       // FIXME: we'd prefer to accept just an id.
-      return Upload.findById(value.id);
+      var upload = Upload.findById(value.id);
+      if (upload) {
+        return upload;
+      } else {
+        throw new UploadNotFoundError('Couldn\'t find upload "' + value.id + '"', { id: value.id });
+      }
     }
   });
 }
