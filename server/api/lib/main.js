@@ -49,7 +49,7 @@ function generateVocabularyOptions(block, vocabularies) {
   return block;
 }
 
-function getForm(id) {
+function getForm(forms, id) {
   if (forms.hasOwnProperty(id)) {
     return forms[id];
   }
@@ -148,7 +148,7 @@ module.exports = function(app, config) {
 
   router.post('/deposit', function(req, res) {
     var deposit = req.body;
-    var form = getForm(deposit.form);
+    var form = getForm(forms, deposit.form);
     
     var values = getValues(form.children, deposit.values);
     console.log(inspect(values, { depth: null }));
