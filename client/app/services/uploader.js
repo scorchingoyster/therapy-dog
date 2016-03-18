@@ -24,17 +24,21 @@ const Upload = Ember.Object.extend(Ember.Evented, {
       this.set('progress', Ember.Object.create({ loaded, total, fraction }));
     };
     
-    this.xhr.upload.onerror = () => {
+    this.xhr.upload.onerror = (e) => {
       this.trigger('error');
+      this.set('error', true);
       this.set('loading', false);
     };
     
     this.xhr.onload = () => {
       if (this.xhr.status === 200) {
-        this.trigger('complete', { ...this.xhr.response.data.attributes, id: this.xhr.response.data.id } );
+        let response = { ...this.xhr.response.data.attributes, id: this.xhr.response.data.id };
+        this.trigger('complete', response);
+        this.set('response', response);
         this.set('loading', false);
       } else {
         this.trigger('error');
+        this.set('error', true);
         this.set('loading', false);
       }
     };
@@ -94,7 +98,7 @@ const Upload = Ember.Object.extend(Ember.Evented, {
 });
 
 /**
-  @class UploadsService
+  @class UploaderService
 */
 export default Ember.Service.extend({
   init() {
@@ -116,12 +120,16 @@ export default Ember.Service.extend({
     @param {File} file
     @return {Upload} The Upload instance representing the attempt to upload this file.
   */
-  upload(file) {
-    let upload = Upload.create({ _file: file, name: file.name });
+  upload: function(file) {
+    let upload = Upload.create({
+      _file: file,
+      name: file.name,
+      size: file.size
+    });
+
     upload._start();
-    
     this.get('uploads').pushObject(upload);
-    
+
     return upload;
   },
   
