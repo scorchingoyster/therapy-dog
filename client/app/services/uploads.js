@@ -31,7 +31,7 @@ const Upload = Ember.Object.extend(Ember.Evented, {
     
     this.xhr.onload = () => {
       if (this.xhr.status === 200) {
-        this.trigger('complete', this.xhr.response);
+        this.trigger('complete', { ...this.xhr.response.data.attributes, id: this.xhr.response.data.id } );
         this.set('loading', false);
       } else {
         this.trigger('error');

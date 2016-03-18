@@ -1,14 +1,14 @@
+require('dotenv').config();
+require('source-map-support').install();
+
 var express = require('express');
 var morgan = require('morgan');
-var config = require('./config');
+var api = require('./build/bundle');
 
 var app = express();
-
 app.use(morgan('dev'));
+app.use('/api', api);
 
-var api = require('./build/bundle');
-api(app, config);
-
-app.listen(config.port, config.host, function() {
-  console.log('Server started on %s:%d', config.host, config.port);
+app.listen(process.env.PORT, process.env.HOST, function() {
+  console.log('Server started on %s:%d', process.env.HOST, process.env.PORT);
 });

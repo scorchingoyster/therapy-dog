@@ -1,14 +1,15 @@
 import assert from 'assert';
-import generateBundle from 'api/generate-bundle';
+import Form from 'api/models/form';
+import generateBundle from 'api/deposit/generate-bundle';
 import { buildTestUpload } from './helpers';
 
 describe("Bundle generation", function() {
   describe("files", function() {
     describe("with upload bodies", function() {
-      var form = {
+      var form = new Form('test', {
         bundle: 'item { thesis -> file }',
         templates: []
-      };
+      });
       
       var buffer = new Buffer('lorem ipsum');
       var thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
@@ -45,10 +46,10 @@ describe("Bundle generation", function() {
     });
 
     describe("with literal bodies", function() {
-      var form = {
+      var form = new Form('test', {
         bundle: 'item { file { "lorem ipsum" } }',
         templates: []
-      };
+      });
   
       var bundle = generateBundle(form, {});
       var file = bundle.children[0].children[0];
@@ -78,10 +79,10 @@ describe("Bundle generation", function() {
     });
     
     it("should set contents to a zero-length buffer for an empty literal body", function() {
-      var form = {
+      var form = new Form('test', {
         bundle: 'item { file }',
         templates: []
-      };
+      });
   
       var bundle = generateBundle(form, {});
       var file = bundle.children[0].children[0];
@@ -91,10 +92,10 @@ describe("Bundle generation", function() {
     });
 
     describe("with overridden mimetype and name", function() {
-      var form = {
+      var form = new Form('test', {
         bundle: 'item { file name="stuff.md" mimetype="text/markdown" { "# lorem ipsum" } }',
         templates: []
-      };
+      });
   
       var bundle = generateBundle(form, {});
       var file = bundle.children[0].children[0];
@@ -109,10 +110,10 @@ describe("Bundle generation", function() {
     });
   
     it("should throw an error if body is invalid", function() {
-      var form = {
+      var form = new Form('test', {
         bundle: 'item { file { "hello"; file } }',
         templates: []
-      };
+      });
   
       assert.throws(function() {
         generateBundle(form, {});
@@ -121,7 +122,7 @@ describe("Bundle generation", function() {
   });
   
   describe("metadata", function() {
-    var form = {
+    var form = new Form('test', {
       bundle: 'item { partial "thesis" -> metadata type="descriptive" }',
       templates: [
         {
@@ -130,7 +131,7 @@ describe("Bundle generation", function() {
           template: 'element "info" { title -> element "title" }'
         }
       ]
-    };
+    });
 
     var values = {
       title: "My Thesis"
@@ -149,10 +150,10 @@ describe("Bundle generation", function() {
     });
 
     it("should throw an error if body is invalid", function() {
-      var form = {
+      var form = new Form('test', {
         bundle: 'item { metadata { "hello!" } }',
         templates: []
-      };
+      });
   
       assert.throws(function() {
         generateBundle(form, {});
@@ -161,7 +162,7 @@ describe("Bundle generation", function() {
   });
   
   describe("items", function() {
-    var form = {
+    var form = new Form('test', {
       bundle: 'item label="A" type="Folder" { link rel="http://example.com/" href="#b"; item fragment="b" label="B" type="File"; item label="C" type="File" }',
       templates: [
         {
@@ -170,7 +171,7 @@ describe("Bundle generation", function() {
           template: 'element "info" { title -> element "title" }'
         }
       ]
-    };
+    });
 
     var values = {
       title: "My Thesis"
@@ -201,10 +202,10 @@ describe("Bundle generation", function() {
   
   describe("links", function() {
     it("should resolve fragments to item references", function() {
-      var form = {
+      var form = new Form('test', {
         bundle: 'item { link rel="x" href="#a"; item fragment="a" }',
         templates: []
-      };
+      });
 
       var bundle = generateBundle(form, {});
     
@@ -215,10 +216,10 @@ describe("Bundle generation", function() {
     });
     
     it("should resolve fragments to nothing if an item can't be found", function() {
-      var form = {
+      var form = new Form('test', {
         bundle: 'item { link rel="y" href="#b"; item fragment="a" }',
         templates: []
-      };
+      });
 
       var bundle = generateBundle(form, {});
     
@@ -227,10 +228,10 @@ describe("Bundle generation", function() {
     });
     
     it("should resolve fragments to multiple items", function() {
-      var form = {
+      var form = new Form('test', {
         bundle: 'item { link rel="x" href="#stuff"; item fragment="stuff" label="a" } item fragment="stuff" label="b"',
         templates: []
-      };
+      });
 
       var bundle = generateBundle(form, {});
       assert.equal(bundle.links.length, 1);
@@ -239,10 +240,10 @@ describe("Bundle generation", function() {
     });
     
     it("should leave other href values intact", function() {
-      var form = {
+      var form = new Form('test', {
         bundle: 'item { link rel="x" href="http://whatever" }',
         templates: []
-      };
+      });
 
       var bundle = generateBundle(form, {});
     
@@ -254,7 +255,7 @@ describe("Bundle generation", function() {
   
   describe("documents", function() {
     it("should make all files, items, metadata, and links available as a flattened array", function() {
-      var form = {
+      var form = new Form('test', {
         bundle: 'item { link rel="x" href="#a"; item { file { "xyz" }; partial "stuff" -> metadata } }',
         templates: [
           {
@@ -263,7 +264,7 @@ describe("Bundle generation", function() {
             template: 'element "blah";'
           }
         ]
-      };
+      });
 
       var bundle = generateBundle(form, {});
     
@@ -274,10 +275,10 @@ describe("Bundle generation", function() {
     });
     
     it("should throw an error if any of document children are not items", function() {
-      var form = {
+      var form = new Form('test', {
         bundle: 'link rel="x" href="http://whatever"',
         templates: []
-      };
+      });
   
       assert.throws(function() {
         generateBundle(form, {});

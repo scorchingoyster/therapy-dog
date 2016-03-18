@@ -1,5 +1,5 @@
 import Arrow from 'arrow';
-import { Item, File, Link, Metadata, Bundle } from './bundle/model';
+import { Item, File, Link, Metadata, Bundle } from './model';
 
 export default {
   item: Arrow.helper(function(params, hash, body) {

@@ -18,7 +18,7 @@ export default Ember.Route.extend({
         values: this.modelFor('deposit').get('entry').flatten()
       };
       
-      let promise = $.ajax('/api/deposit', {
+      let promise = $.ajax('/api/deposits', {
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(payload)
