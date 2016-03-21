@@ -6,7 +6,7 @@ export default Ember.Controller.extend({
   uploader: Ember.inject.service(),
   
   validate() {
-    if (this.get('uploads.anyLoading')) {
+    if (this.get('uploader.anyLoading')) {
       return false;
     }
     

@@ -11,13 +11,13 @@ export default Ember.Component.extend(FocusEntryAction, {
   classNameBindings: ['required', 'invalid', 'multiple'],
   required: Ember.computed.alias('entry.required'),
   invalid: Ember.computed.alias('entry.invalid'),
+  isMultiple: Ember.computed.alias('entry.block.multiple'),
   
   focusOut: function() {
     this.set('entry.attempted', true);
   },
   
   uploader: Ember.inject.service(),
-  state: 'empty',
 
   didReceiveAttrs() {
     this._super(...arguments);
@@ -30,7 +30,7 @@ export default Ember.Component.extend(FocusEntryAction, {
   },
 
   acceptsNewUpload: Ember.computed('uploader.length', 'multiple', function() {
-      var count = this.get("uploader.length"), multiple = this.get("entry.block.multiple");
+      let count = this.get("uploader.length"), multiple = this.get("entry.block.multiple");
 
       if (!multiple && count > 0) {
         return false;
@@ -41,15 +41,15 @@ export default Ember.Component.extend(FocusEntryAction, {
 
   actions: {
     choose: function(fileList) {
-      if (this.get('state') === 'empty' && fileList.length > 0) {
-        var uploader = this.get('uploader');
-        var isMultiple = this.get('entry.block.multiple');
+      if (fileList.length > 0) {
+        let uploader = this.get('uploader');
+        let isMultiple = this.get('entry.block.multiple');
 
-        for (var i = 0; i < fileList.length; i++) {
-          var upload = uploader.upload(fileList[i]);
+        for (let i = 0; i < fileList.length; i++) {
+          let upload = uploader.upload(fileList[i]);
 
           upload.on('complete', (response) => {
-            if(isMultiple) {
+            if (isMultiple) {
               this.get('entry.value').pushObject(response);
             } else {
               this.set('entry.value', response);
@@ -75,7 +75,7 @@ export default Ember.Component.extend(FocusEntryAction, {
     },
 
     remove(upload) {
-       if(this.get('entry.block.multiple')) {
+       if (this.get('entry.block.multiple')) {
          this.get('entry.value').removeObject(upload.response);
        } else {
          this.set('entry.value', null);

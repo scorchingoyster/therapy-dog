@@ -31,10 +31,18 @@
 
       <button {{action "retry" upload}}>Try Again</button>
 
-      <div class="choose-file-wrapper">
-        <input type="file" onchange={{action "choose" value="target.files"}}>
-        Choose Another File…
-      </div>
+      {{#if isMultiple}}
+
+        <button {{action "remove" upload}}>Remove</button>
+
+      {{else}}
+
+        <div class="choose-file-wrapper">
+          <input type="file" onchange={{action "choose" value="target.files"}}>
+          Choose Another File…
+        </div>
+
+      {{/if}}
     </div>
 
   {{/if}}
@@ -45,8 +53,8 @@
 
   <div class="new-upload">
     <div class="choose-file-wrapper">
-      <input type="file" onchange={{action "choose" value="target.files"}} multiple={{if entry.block.multiple "multiple" ""}}>
-        {{#if entry.block.multiple}}
+      <input type="file" onchange={{action "choose" value="target.files"}} multiple={{if isMultiple "multiple" ""}}>
+        {{#if isMultiple}}
           Choose Files…
         {{else}}
           Choose File…
