@@ -1,20 +1,7 @@
-import Arrow from 'arrow';
 import Context from 'arrow/context';
-import b from 'arrow/builders';
 import { deepEqual } from 'assert';
-import { registerTestHelpers } from './test-helpers';
 
-describe('Paths', () => {
-  it('should evaluate a path', () => {
-    let arrow = new Arrow('x.y;');
-    registerTestHelpers(arrow);
-
-    let actual = arrow.evaluate({ x: { y: 123 } });
-    let expected = [123];
-  
-    deepEqual(actual, expected);
-  });
-  
+describe('Contexts', () => {
   it('should retrieve paths from a context', () => {
     var context = new Context({ x: { y: 123 } });
 
@@ -38,5 +25,17 @@ describe('Paths', () => {
 
     deepEqual({ value: undefined, data: false }, context.get("blah"));
     deepEqual({ value: undefined, data: true }, context.get(["x", "blah"]));
+  });
+  
+  it('should retrieve values for getters defined on prototypes', () => {
+    class X {
+      get a() {
+        return 123;
+      }
+    }
+    
+    var context = new Context({ x: new X() });
+
+    deepEqual({ value: 123, data: true }, context.get(["x", "a"]));
   });
 });

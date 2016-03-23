@@ -55,7 +55,7 @@ export class File {
       return this._name;
     } else {
       if (this.isUpload) {
-        return this.contents.attributes.name;
+        return this.contents.name;
       } else {
         return 'untitled.txt';
       }
@@ -67,7 +67,7 @@ export class File {
       return this._mimetype;
     } else {
       if (this.isUpload) {
-        return this.contents.attributes.type;
+        return this.contents.type;
       } else {
         return 'text/plain';
       }
@@ -76,7 +76,7 @@ export class File {
   
   get size() {
     if (this.isUpload) {
-      return this.contents.attributes.size;
+      return this.contents.size;
     } else {
       return this.contents.length;
     }
@@ -84,7 +84,7 @@ export class File {
   
   getHashDigest(algorithm, encoding) {
     if (this.isUpload) {
-      var path = this.contents.attributes.path;
+      var path = this.contents.path;
   
       return new Promise(function(resolve, reject) {
         var hash = crypto.createHash(algorithm);

@@ -186,7 +186,7 @@ export default function generateSubmission(form, bundle) {
       var hash = crypto.createHash('md5');
       
       if (file.isUpload) {
-        var input = fs.createReadStream(file.contents.attributes.path);
+        var input = fs.createReadStream(file.contents.path);
         input.on('end', function() {
           hash.end();
           resolve(hash.read().toString('hex'));
@@ -227,7 +227,7 @@ export default function generateSubmission(form, bundle) {
   
     bundle.files.forEach(function(file) {
       if (file.isUpload) {
-        submission[file.id] = file.contents.attributes.path;
+        submission[file.id] = file.contents.path;
       } else {
         submission[file.id] = file.contents;
       }

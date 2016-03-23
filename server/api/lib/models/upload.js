@@ -14,6 +14,54 @@ function Upload(id, attributes) {
 }
 
 /**
+  The original name of the uploaded file.
+
+  @property name
+  @type {String}
+*/
+Object.defineProperty(Upload.prototype, 'name', {
+  get: function() {
+    return this.attributes.name;
+  }
+});
+
+/**
+  The uploaded file's MIME type.
+
+  @property type
+  @type {String}
+*/
+Object.defineProperty(Upload.prototype, 'type', {
+  get: function() {
+    return this.attributes.type;
+  }
+});
+
+/**
+  The size of the uploaded file in bytes.
+
+  @property size
+  @type {Number}
+*/
+Object.defineProperty(Upload.prototype, 'size', {
+  get: function() {
+    return this.attributes.size;
+  }
+});
+
+/**
+  The path to the uploaded file.
+
+  @property path
+  @type {String}
+*/
+Object.defineProperty(Upload.prototype, 'path', {
+  get: function() {
+    return this.attributes.path;
+  }
+});
+
+/**
   Return a JSON API resource object representing this upload.
   
   @method getResourceObject
@@ -26,9 +74,9 @@ Upload.prototype.getResourceObject = function() {
       type: 'upload',
       id: _this.id,
       attributes: {
-        name: _this.attributes.name,
-        type: _this.attributes.type,
-        size: _this.attributes.size
+        name: _this.name,
+        type: _this.type,
+        size: _this.size
       }
     });
   });

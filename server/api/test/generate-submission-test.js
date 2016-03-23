@@ -44,7 +44,7 @@ describe("Submission generation", function() {
     it("should contain METS XML as a Buffer, and the upload's path", function() {
       return submission.then(function(submission) {
         assert.ok(submission["mets.xml"] instanceof Buffer);
-        assert.equal(submission[bundle.files[0].id], bundle.files[0].contents.attributes.path);
+        assert.equal(submission[bundle.files[0].id], bundle.files[0].contents.path);
       });
     });
   
