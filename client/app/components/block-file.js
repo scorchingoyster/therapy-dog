@@ -8,7 +8,7 @@ export default Ember.Component.extend(FocusEntryAction, {
   },
 
   classNames: ['block', 'file'],
-  classNameBindings: ['required', 'invalid', 'multiple'],
+  classNameBindings: ['required', 'invalid', 'isMultiple:multiple'],
   required: Ember.computed.alias('entry.required'),
   invalid: Ember.computed.alias('entry.invalid'),
   isMultiple: Ember.computed.alias('entry.block.multiple'),
@@ -29,8 +29,8 @@ export default Ember.Component.extend(FocusEntryAction, {
     }
   },
 
-  acceptsNewUpload: Ember.computed('uploads.length', 'multiple', function() {
-    let count = this.get('uploads.length'), multiple = this.get('entry.block.multiple');
+  acceptsNewUpload: Ember.computed('uploads.length', 'isMultiple', function() {
+    let count = this.get('uploads.length'), multiple = this.get('isMultiple');
     
     if (!multiple && count > 0) {
       return false;
@@ -43,7 +43,7 @@ export default Ember.Component.extend(FocusEntryAction, {
     choose: function(fileList) {
       if (fileList.length > 0) {
         let uploader = this.get('uploader');
-        let isMultiple = this.get('entry.block.multiple');
+        let isMultiple = this.get('isMultiple');
         
         if (!isMultiple) {
           this.get('uploads').clear();
@@ -79,7 +79,7 @@ export default Ember.Component.extend(FocusEntryAction, {
     },
 
     remove(upload) {
-      if (this.get('entry.block.multiple')) {
+      if (this.get('isMultiple')) {
         this.get('entry.value').removeObject(upload.response);
       } else {
         this.set('entry.value', null);
