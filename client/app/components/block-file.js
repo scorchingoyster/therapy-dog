@@ -29,14 +29,14 @@ export default Ember.Component.extend(FocusEntryAction, {
     }
   },
 
-  acceptsNewUpload: Ember.computed('uploader.length', 'multiple', function() {
-      let count = this.get("uploader.length"), multiple = this.get("entry.block.multiple");
-
-      if (!multiple && count > 0) {
-        return false;
-      } else {
-        return true;
-      }
+  acceptsNewUpload: Ember.computed('uploads.length', 'multiple', function() {
+    let count = this.get('uploads.length'), multiple = this.get('entry.block.multiple');
+    
+    if (!multiple && count > 0) {
+      return false;
+    } else {
+      return true;
+    }
   }),
 
   actions: {
@@ -44,6 +44,10 @@ export default Ember.Component.extend(FocusEntryAction, {
       if (fileList.length > 0) {
         let uploader = this.get('uploader');
         let isMultiple = this.get('entry.block.multiple');
+        
+        if (!isMultiple) {
+          this.get('uploads').clear();
+        }
 
         for (let i = 0; i < fileList.length; i++) {
           let upload = uploader.upload(fileList[i]);
@@ -58,7 +62,7 @@ export default Ember.Component.extend(FocusEntryAction, {
 
           this.get("uploads").pushObject(upload);
 
-          if (isMultiple === undefined || !isMultiple) {
+          if (!isMultiple) {
             break;
           }
         }
