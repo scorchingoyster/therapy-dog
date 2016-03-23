@@ -1,5 +1,6 @@
 import DS from "ember-data";
+import ENV from 'therapy-dog/config/environment';
 
 export default DS.JSONAPIAdapter.extend({
-  namespace: 'api'
+  namespace: ENV.APP.apiNamespace
 });
