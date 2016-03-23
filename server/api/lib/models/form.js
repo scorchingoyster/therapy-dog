@@ -3,8 +3,7 @@ var path = require('path');
 var glob = require('glob');
 var Upload = require('./upload');
 var Vocabulary = require('./vocabulary');
-var VocabularyNotFoundError = require('../errors').VocabularyNotFoundError;
-var UploadNotFoundError = require('../errors').UploadNotFoundError;
+var FormNotFoundError = require('../errors').FormNotFoundError;
 
 var FORMS = {};
 
@@ -106,11 +105,7 @@ function resolveVocabularies(blocks) {
       });
     } else if (typeof block.options === 'string') {
       return Vocabulary.findById(block.options).then(function(vocabulary) {
-        if (vocabulary) {
-          return Object.assign({}, block, { options: vocabulary.terms });
-        } else {
-          throw new VocabularyNotFoundError('Couldn\'t find vocabulary "' + block.options + '"', { id: block.options });
-        }
+        return Object.assign({}, block, { options: vocabulary.terms });
       });
     } else {
       return Promise.resolve(block);
@@ -212,22 +207,10 @@ Form.prototype.transformValues = function(values) {
     } else if (block.type === "file") {
       if (block.multiple) {
         return Promise.all(value.map(function(v) {
-          return Upload.findById(v.id).then(function(upload) {
-            if (upload) {
-              return upload;
-            } else {
-              throw new UploadNotFoundError('Couldn\'t find upload "' + v.id + '"', { id: v.id });
-            }
-          });
+          return Upload.findById(v.id);
         }));
       } else {
-        return Upload.findById(value.id).then(function(upload) {
-          if (upload) {
-            return upload;
-          } else {
-            throw new UploadNotFoundError('Couldn\'t find upload "' + value.id + '"', { id: value.id });
-          }
-        });
+        return Upload.findById(value.id);
       }
     }
   });
@@ -258,7 +241,12 @@ Form.findAll = function() {
 */
 Form.findById = function(id) {
   return new Promise(function(resolve, reject) {
-    resolve(FORMS[id]);
+    var form = FORMS[id];
+    if (form) {
+      resolve(form);
+    } else {
+      reject(new FormNotFoundError('Couldn\'t find form "' + id + '"', { id: id }));
+    }
   })
 }
 

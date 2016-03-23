@@ -1,6 +1,7 @@
 var Promise = require('promise');
 var path = require('path');
 var glob = require('glob');
+var VocabularyNotFoundError = require('../errors').VocabularyNotFoundError;
 
 var VOCABULARIES = {};
 
@@ -34,7 +35,12 @@ function Vocabulary(id, terms) {
 */
 Vocabulary.findById = function(id) {
   return new Promise(function(resolve, reject) {
-    resolve(VOCABULARIES[id]);
+    var vocab = VOCABULARIES[id];
+    if (vocab) {
+      resolve(vocab);
+    } else {
+      reject(new VocabularyNotFoundError('Couldn\'t find vocabulary "' + id + '"', { id: id }));
+    }
   })
 }
 

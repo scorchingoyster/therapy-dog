@@ -1,4 +1,5 @@
 var Promise = require('promise');
+var UploadNotFoundError = require('../errors').UploadNotFoundError;
 
 var UPLOADS = {};
 
@@ -92,7 +93,12 @@ Upload.prototype.getResourceObject = function() {
 */
 Upload.findById = function(id) {
   return new Promise(function(resolve, reject) {
-    resolve(UPLOADS[id]);
+    var upload = UPLOADS[id];
+    if (upload) {
+      resolve(upload);
+    } else {
+      reject(new UploadNotFoundError('Couldn\'t find upload "' + id + '"', { id: id }));
+    }
   });
 }
 
