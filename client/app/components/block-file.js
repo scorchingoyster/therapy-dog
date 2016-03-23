@@ -60,7 +60,7 @@ export default Ember.Component.extend(FocusEntryAction, {
             }
           });
 
-          this.get("uploads").pushObject(upload);
+          this.get('uploads').pushObject(upload);
 
           if (!isMultiple) {
             break;
@@ -79,13 +79,13 @@ export default Ember.Component.extend(FocusEntryAction, {
     },
 
     remove(upload) {
-       if (this.get('entry.block.multiple')) {
-         this.get('entry.value').removeObject(upload.response);
-       } else {
-         this.set('entry.value', null);
-       }
+      if (this.get('entry.block.multiple')) {
+        this.get('entry.value').removeObject(upload.response);
+      } else {
+        this.set('entry.value', null);
+      }
 
-      this.get("uploads").removeObject(upload);
+      this.get('uploads').removeObject(upload);
     },
 
     focusEntry() {
