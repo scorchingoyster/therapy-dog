@@ -29,6 +29,66 @@ function Form(id, attributes) {
 }
 
 /**
+  @property destination
+  @type {String}
+*/
+Object.defineProperty(Form.prototype, 'destination', {
+  get: function() {
+    return this.attributes.destination;
+  }
+});
+
+/**
+  @property title
+  @type {String}
+*/
+Object.defineProperty(Form.prototype, 'title', {
+  get: function() {
+    return this.attributes.title;
+  }
+});
+
+/**
+  @property description
+  @type {String}
+*/
+Object.defineProperty(Form.prototype, 'description', {
+  get: function() {
+    return this.attributes.description;
+  }
+});
+
+/**
+  @property children
+  @type {Array}
+*/
+Object.defineProperty(Form.prototype, 'children', {
+  get: function() {
+    return this.attributes.children;
+  }
+});
+
+/**
+  @property bundle
+  @type {String}
+*/
+Object.defineProperty(Form.prototype, 'bundle', {
+  get: function() {
+    return this.attributes.bundle;
+  }
+});
+
+/**
+  @property templates
+  @type {Array}
+*/
+Object.defineProperty(Form.prototype, 'templates', {
+  get: function() {
+    return this.attributes.templates;
+  }
+});
+
+/**
   Traverse the given blocks, returning a copy of the blocks with vocabulary
   references (any non-section block with a string for its options property)
   replaced with that vocabulary's terms.
@@ -66,14 +126,14 @@ function resolveVocabularies(blocks) {
 */
 Form.prototype.getResourceObject = function() {
   var _this = this;
-  return resolveVocabularies(_this.attributes.children)
+  return resolveVocabularies(_this.children)
   .then(function(children) {
     return {
       type: 'form',
       id: _this.id,
       attributes: {
-        title: _this.attributes.title,
-        description: _this.attributes.description,
+        title: _this.title,
+        description: _this.description,
         children: children
       }
     };
@@ -138,7 +198,7 @@ function mapValues(blocks, values, iterator) {
   @return {Promise<Object>}
 */
 Form.prototype.transformValues = function(values) {
-  return mapValues(this.attributes.children, values, function(block, value) {
+  return mapValues(this.children, values, function(block, value) {
     if (block.type === "text") {
       return String(value);
     } else if (block.type === "date") {

@@ -3,9 +3,9 @@ import XML from 'arrow/documents/xml';
 import Bundle from '../bundle/index';
 
 export default function generateBundle(form, values) {
-  var arrow = new Arrow(form.attributes.bundle, Bundle);
+  var arrow = new Arrow(form.bundle, Bundle);
   
-  form.attributes.templates.forEach(function(template) {
+  form.templates.forEach(function(template) {
     arrow.registerPartial(template.id, new Arrow(template.template, XML));
   });
   
