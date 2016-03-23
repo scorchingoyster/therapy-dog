@@ -10,11 +10,10 @@ export default Ember.Component.extend(FocusEntryAction, {
   didInsertElement: function() {
     this._super(...arguments);
 
-    let typeAhead = this.get('entry.block.options');
-
-    if (typeAhead !== undefined) {
+    let options = this.get('entry.block.options');
+    if (Ember.isArray(options)) {
       this.$('input.autocomplete').autocomplete({
-        source: typeAhead
+        source: options
       });
     }
   },
@@ -22,7 +21,8 @@ export default Ember.Component.extend(FocusEntryAction, {
   willDestroyElement() {
     this._super(...arguments);
 
-    if (this.get('entry.block.options') !== undefined) {
+    let options = this.get('entry.block.options');
+    if (Ember.isArray(options)) {
       this.$('input.autocomplete').autocomplete('destroy');
     }
   },
