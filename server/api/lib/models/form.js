@@ -3,8 +3,7 @@ var path = require('path');
 var glob = require('glob');
 var Upload = require('./upload');
 var Vocabulary = require('./vocabulary');
-var VocabularyNotFoundError = require('../errors').VocabularyNotFoundError;
-var UploadNotFoundError = require('../errors').UploadNotFoundError;
+var FormNotFoundError = require('../errors').FormNotFoundError;
 
 var FORMS = {};
 
@@ -29,6 +28,66 @@ function Form(id, attributes) {
 }
 
 /**
+  @property destination
+  @type {String}
+*/
+Object.defineProperty(Form.prototype, 'destination', {
+  get: function() {
+    return this.attributes.destination;
+  }
+});
+
+/**
+  @property title
+  @type {String}
+*/
+Object.defineProperty(Form.prototype, 'title', {
+  get: function() {
+    return this.attributes.title;
+  }
+});
+
+/**
+  @property description
+  @type {String}
+*/
+Object.defineProperty(Form.prototype, 'description', {
+  get: function() {
+    return this.attributes.description;
+  }
+});
+
+/**
+  @property children
+  @type {Array}
+*/
+Object.defineProperty(Form.prototype, 'children', {
+  get: function() {
+    return this.attributes.children;
+  }
+});
+
+/**
+  @property bundle
+  @type {String}
+*/
+Object.defineProperty(Form.prototype, 'bundle', {
+  get: function() {
+    return this.attributes.bundle;
+  }
+});
+
+/**
+  @property templates
+  @type {Array}
+*/
+Object.defineProperty(Form.prototype, 'templates', {
+  get: function() {
+    return this.attributes.templates;
+  }
+});
+
+/**
   Traverse the given blocks, returning a copy of the blocks with vocabulary
   references (any non-section block with a string for its options property)
   replaced with that vocabulary's terms.
@@ -46,11 +105,7 @@ function resolveVocabularies(blocks) {
       });
     } else if (typeof block.options === 'string') {
       return Vocabulary.findById(block.options).then(function(vocabulary) {
-        if (vocabulary) {
-          return Object.assign({}, block, { options: vocabulary.terms });
-        } else {
-          throw new VocabularyNotFoundError('Couldn\'t find vocabulary "' + block.options + '"', { id: block.options });
-        }
+        return Object.assign({}, block, { options: vocabulary.terms });
       });
     } else {
       return Promise.resolve(block);
@@ -66,14 +121,14 @@ function resolveVocabularies(blocks) {
 */
 Form.prototype.getResourceObject = function() {
   var _this = this;
-  return resolveVocabularies(_this.attributes.children)
+  return resolveVocabularies(_this.children)
   .then(function(children) {
     return {
       type: 'form',
       id: _this.id,
       attributes: {
-        title: _this.attributes.title,
-        description: _this.attributes.description,
+        title: _this.title,
+        description: _this.description,
         children: children
       }
     };
@@ -138,7 +193,7 @@ function mapValues(blocks, values, iterator) {
   @return {Promise<Object>}
 */
 Form.prototype.transformValues = function(values) {
-  return mapValues(this.attributes.children, values, function(block, value) {
+  return mapValues(this.children, values, function(block, value) {
     if (block.type === "text") {
       return String(value);
     } else if (block.type === "date") {
@@ -152,22 +207,10 @@ Form.prototype.transformValues = function(values) {
     } else if (block.type === "file") {
       if (block.multiple) {
         return Promise.all(value.map(function(v) {
-          return Upload.findById(v.id).then(function(upload) {
-            if (upload) {
-              return upload;
-            } else {
-              throw new UploadNotFoundError('Couldn\'t find upload "' + v.id + '"', { id: v.id });
-            }
-          });
+          return Upload.findById(v.id);
         }));
       } else {
-        return Upload.findById(value.id).then(function(upload) {
-          if (upload) {
-            return upload;
-          } else {
-            throw new UploadNotFoundError('Couldn\'t find upload "' + value.id + '"', { id: value.id });
-          }
-        });
+        return Upload.findById(value.id);
       }
     }
   });
@@ -198,7 +241,12 @@ Form.findAll = function() {
 */
 Form.findById = function(id) {
   return new Promise(function(resolve, reject) {
-    resolve(FORMS[id]);
+    var form = FORMS[id];
+    if (form) {
+      resolve(form);
+    } else {
+      reject(new FormNotFoundError('Couldn\'t find form "' + id + '"', { id: id }));
+    }
   })
 }
 

@@ -189,4 +189,14 @@ describe('Evaluate', () => {
     
     deepEqual(actual, expected);
   });
+
+  it('should evaluate a path', () => {
+    let arrow = new Arrow('x.y;');
+    registerTestHelpers(arrow);
+
+    let actual = arrow.evaluate({ x: { y: 123 } });
+    let expected = [123];
+  
+    deepEqual(actual, expected);
+  });
 });

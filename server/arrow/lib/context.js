@@ -18,7 +18,7 @@ export default class Context {
     for (let f = this.frames.length - 1; f >= 0; f--) {
       let value;
       
-      if (this.frames[f].hasOwnProperty(path[0])) {
+      if (path[0] in this.frames[f]) {
         value = this.frames[f][path[0]];
       } else {
         continue;
@@ -28,7 +28,7 @@ export default class Context {
         let data = value.value;
         
         for (let i = 1; i < path.length; i++) {
-          if (data.hasOwnProperty(path[i])) {
+          if (path[i] in data) {
             data = data[path[i]];
           } else {
             data = undefined;

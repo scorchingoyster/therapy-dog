@@ -42,7 +42,7 @@ function postZip(form, zipFile) {
   return new Promise(function(resolve, reject) {
     var body = fs.readFileSync(zipFile);
     
-    request.post(form.attributes.destination, {
+    request.post(form.destination, {
       strictSSL: false,
       body: body,
       baseUrl: process.env.DEPOSIT_BASE_URL,

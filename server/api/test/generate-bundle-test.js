@@ -7,7 +7,7 @@ describe("Bundle generation", function() {
   describe("files", function() {
     describe("with upload bodies", function() {
       var form = new Form('test', {
-        bundle: 'item { thesis -> file }',
+        bundle: 'item label=thesis.name { thesis -> file }',
         templates: []
       });
       
@@ -19,7 +19,12 @@ describe("Bundle generation", function() {
       };
   
       var bundle = generateBundle(form, values);
+      var item = bundle.children[0];
       var file = bundle.children[0].children[0];
+  
+      it("should set item's label using the upload's name", function() {
+        assert.equal(item.label, 'thesis.pdf');
+      });
     
       it("should set contents for an upload body", function() {
         assert.ok(file.isUpload);

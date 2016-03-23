@@ -20,11 +20,7 @@ exports.index = function(req, res) {
 exports.show = function(req, res) {
   Form.findById(req.params.id)
   .then(function(form) {
-    if (form) {
-      return form.getResourceObject();
-    } else {
-      throw new FormNotFoundError('Couldn\'t find form "' + req.params.id + '"', { id: req.params.id });
-    }
+    return form.getResourceObject();
   })
   .then(function(resourceObject) {
     res.send({ data: resourceObject });
