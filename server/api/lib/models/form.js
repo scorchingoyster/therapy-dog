@@ -150,12 +150,24 @@ Form.prototype.transformValues = function(values) {
     } else if (block.type === "radio") {
       return value;
     } else if (block.type === "file") {
-      // FIXME: we'd prefer to accept just an id.
-      var upload = Upload.findById(value.id);
-      if (upload) {
-        return upload;
+      if (block.multiple) {
+        return Promise.all(value.map(function(v) {
+          return Upload.findById(v.id).then(function(upload) {
+            if (upload) {
+              return upload;
+            } else {
+              throw new UploadNotFoundError('Couldn\'t find upload "' + v.id + '"', { id: v.id });
+            }
+          });
+        }));
       } else {
-        throw new UploadNotFoundError('Couldn\'t find upload "' + value.id + '"', { id: value.id });
+        return Upload.findById(value.id).then(function(upload) {
+          if (upload) {
+            return upload;
+          } else {
+            throw new UploadNotFoundError('Couldn\'t find upload "' + value.id + '"', { id: value.id });
+          }
+        });
       }
     }
   });
