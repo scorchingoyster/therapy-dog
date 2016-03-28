@@ -1,5 +1,4 @@
 require('dotenv').config();
-require('source-map-support').install();
 
 var express = require('express');
 var morgan = require('morgan');
