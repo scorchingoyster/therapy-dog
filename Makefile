@@ -13,7 +13,7 @@ build-server: ## Build API server, with output in the deploy directory
 	cd server && node_modules/.bin/rollup -c -o ../deploy/api.js
 
 run-server: ## Run the API server in development mode
-	cd server && node_modules/.bin/nodemon --watch api/lib --watch arrow/lib --watch forms --exec "node_modules/.bin/rollup -c && node server"
+	cd server && node_modules/.bin/nodemon --ignore "uploads" npm start
 
 run-client: ## Run the client in development mode
 	cd client && ember server

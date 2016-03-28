@@ -3,7 +3,7 @@ require('source-map-support').install();
 
 var express = require('express');
 var morgan = require('morgan');
-var api = require('./build/bundle');
+var api = require('./api');
 
 var app = express();
 app.use(morgan('dev'));
