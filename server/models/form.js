@@ -5,7 +5,7 @@ var path = require('path');
 var glob = require('glob');
 var Upload = require('./upload');
 var Vocabulary = require('./vocabulary');
-var FormNotFoundError = require('../errors').FormNotFoundError;
+var FormNotFoundError = require('./errors').FormNotFoundError;
 
 var FORMS = {};
 

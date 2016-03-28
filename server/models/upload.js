@@ -1,7 +1,7 @@
 'use strict';
 
 var Promise = require('promise');
-var UploadNotFoundError = require('../errors').UploadNotFoundError;
+var UploadNotFoundError = require('./errors').UploadNotFoundError;
 
 var UPLOADS = {};
 

@@ -2,7 +2,7 @@
 
 var Promise = require('promise');
 var Form = require('../models/form');
-var FormNotFoundError = require('../errors').FormNotFoundError;
+var FormNotFoundError = require('../models/errors').FormNotFoundError;
 
 exports.index = function(req, res) {
   Form.findAll()

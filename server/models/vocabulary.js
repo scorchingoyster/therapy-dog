@@ -3,7 +3,7 @@
 var Promise = require('promise');
 var path = require('path');
 var glob = require('glob');
-var VocabularyNotFoundError = require('../errors').VocabularyNotFoundError;
+var VocabularyNotFoundError = require('./errors').VocabularyNotFoundError;
 
 var VOCABULARIES = {};
 
