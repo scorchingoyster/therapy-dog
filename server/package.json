@@ -4,7 +4,7 @@
     "lint": "jshint --exclude ./node_modules,arrow/parser.js .",
     "style": "jscs .",
     "test": "mocha \"test/**/*-test.js\"",
-    "start": "node server.js"
+    "start": "node --require dotenv/config server.js"
   },
   "dependencies": {
     "archiver": "^0.21.0",
