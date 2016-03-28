@@ -48,4 +48,4 @@ exports.create = function(req, res) {
     console.error(err.stack);
     res.status(500).send({ errors: [{ title: "Internal server error" }] });
   });
-}
+};

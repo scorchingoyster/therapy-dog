@@ -13,4 +13,4 @@ module.exports.buildTestUpload = function(name, type, buffer) {
     path: tmpobj.name,
     size: buffer.length
   });
-}
+};

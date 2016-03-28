@@ -6,9 +6,9 @@ var XMLElement = require('./xml/model').XMLElement;
 var XMLAttribute = require('./xml/model').XMLAttribute;
 
 function parseHash(hash) {
-  let options = {};
-  let attributes = {};
-  let data = false;
+  var options = {};
+  var attributes = {};
+  var data = false;
   
   Object.keys(hash).forEach(function(key) {
     if (key[0] === "@") {
@@ -20,7 +20,7 @@ function parseHash(hash) {
     data = data || hash[key].data;
   });
   
-  return { attributes, options, data };
+  return { attributes: attributes, options: options, data: data };
 }
 
 module.exports = {
@@ -33,7 +33,7 @@ module.exports = {
     data = data || name.data;
     name = name.value;
     
-    let children = body();
+    var children = body();
     data = data || children.data;
     
     if (options.compact) {
@@ -44,7 +44,7 @@ module.exports = {
       children = children.value;
     }
     
-    let keep;
+    var keep;
     if (typeof options.keep !== "undefined") {
       keep = options.keep;
     } else {
@@ -64,7 +64,7 @@ module.exports = {
     data = data || name.data;
     name = name.value;
     
-    let children = body();
+    var children = body();
     data = data || children.data;
     
     if (options.compact) {
@@ -79,7 +79,7 @@ module.exports = {
       children = children.value;
     }
     
-    let keep;
+    var keep;
     if (typeof options.keep !== "undefined") {
       keep = options.keep;
     } else {

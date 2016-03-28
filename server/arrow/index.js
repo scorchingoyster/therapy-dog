@@ -19,34 +19,36 @@ function evaluateBoolean(environment, context, node) {
 
 function blockEvaluator(block, locals, environment, context) {
   return function() {
+    var frame, i;
+    
     if (!block) {
       return { value: [], data: false };
     }
     
-    let frame = {};
-    for (let i = 0; i < locals.length && i < arguments.length; i++) {
+    frame = {};
+    for (i = 0; i < locals.length && i < arguments.length; i++) {
       frame[locals[i]] = arguments[i];
     }
   
     return evaluateNode(environment, context.concat(frame), block);
-  }
+  };
 }
 
 function evaluateCall(environment, context, node) {
   if (environment.helpers.hasOwnProperty(node.name)) {
-    let helper = environment.helpers[node.name];
+    var helper = environment.helpers[node.name];
     
-    let params = node.params.map(function(param) {
+    var params = node.params.map(function(param) {
       return evaluateNode(environment, context, param);
     });
     
-    let hash = node.hash.pairs.reduce(function(hash, pair) {
+    var hash = node.hash.pairs.reduce(function(hash, pair) {
       hash[pair.key] = evaluateNode(environment, context, pair.value);
       return hash;
     }, {});
     
-    let body = blockEvaluator(node.body, node.locals, environment, context);
-    let inverse = blockEvaluator(node.inverse, node.locals, environment, context);
+    var body = blockEvaluator(node.body, node.locals, environment, context);
+    var inverse = blockEvaluator(node.inverse, node.locals, environment, context);
     
     return helper(params, hash, body, inverse);
   } else {
@@ -55,8 +57,8 @@ function evaluateCall(environment, context, node) {
 }
 
 function evaluateProgram(environment, context, node) {
-  let value = [];
-  let data = false;
+  var value = [];
+  var data = false;
   
   node.body.forEach(function(child) {
     var results = evaluateNode(environment, context, child);
@@ -68,7 +70,7 @@ function evaluateProgram(environment, context, node) {
     data = data || results.data;
   });
   
-  return { value, data };
+  return { value: value, data: data };
 }
 
 function evaluatePath(environment, context, node) {
@@ -76,16 +78,16 @@ function evaluatePath(environment, context, node) {
 }
 
 function evaluatePartial(environment, context, node) {
-  let name = evaluateNode(environment, context, node.name).value;
+  var name = evaluateNode(environment, context, node.name).value;
   
   if (!environment.partials.hasOwnProperty(name)) {
     return { value: undefined, data: false };
   }
   
-  let template = environment.partials[name];
+  var template = environment.partials[name];
   
   if (node.context) {
-    let frame = node.context.pairs.reduce(function(hash, pair) {
+    var frame = node.context.pairs.reduce(function(hash, pair) {
       hash[pair.key] = evaluateNode(environment, context, pair.value);
       return hash;
     }, {});
@@ -96,53 +98,59 @@ function evaluatePartial(environment, context, node) {
   return evaluateNode(template.environment, context, template.program);
 }
 
-function evaluateArrow(environment, context, node) {
-  let value = [];
-  let data = false;
+function evaluateArrowTarget(environment, context, target, body) {
+  if (!environment.helpers.hasOwnProperty(target.name)) {
+    throw new Error('All of the parts of an arrow\'s target must be helpers.');
+  }
   
-  let source = evaluateNode(environment, context, node.source);
+  var helper = environment.helpers[target.name];
+
+  var params = target.params.map(function(param) {
+    return evaluateNode(environment, context, param);
+  });
+
+  var hash = target.hash.pairs.reduce(function(hash, pair) {
+    hash[pair.key] = evaluateNode(environment, context, pair.value);
+    return hash;
+  }, {});
+  
+  return helper(params, hash, function() { return body; });
+}
+
+function evaluateArrow(environment, context, node) {
+  var value = [];
+  var data = false;
+  
+  var source = evaluateNode(environment, context, node.source);
   source.value = Array.isArray(source.value) ? source.value : [source.value];
   
-  source.value.forEach((item) => {
+  source.value.forEach(function(item) {
+    var body;
+    var i;
+    var target, helper, params, hash;
+    
     if (isEmpty(item)) {
       return;
     }
     
-    let body = { value: item, data: source.data };
+    body = { value: item, data: source.data };
     
-    for (let i = node.target.length - 1; i >= 0; i--) {
-      let target = node.target[i];
-      
-      if (!environment.helpers.hasOwnProperty(target.name)) {
-        throw new Error('All of the parts of an arrow\'s target must be helpers.');
-      }
-      
-      let helper = environment.helpers[target.name];
-    
-      let params = target.params.map(function(param) {
-        return evaluateNode(environment, context, param);
-      });
-    
-      let hash = target.hash.pairs.reduce(function(hash, pair) {
-        hash[pair.key] = evaluateNode(environment, context, pair.value);
-        return hash;
-      }, {});
-      
+    for (i = node.target.length - 1; i >= 0; i--) {
       // In order to mimic the result of evaluating a program node, wrap in an array.
       body.value = Array.isArray(body.value) ? body.value : [body.value];
       
-      body = helper(params, hash, () => body);
+      body = evaluateArrowTarget(environment, context, node.target[i], body);
     }
     
     value = value.concat(body.value);
     data = data || body.data;
   });
   
-  return { value, data };
+  return { value: value, data: data };
 }
 
 function evaluateNode(environment, context, node) {
-  let result;
+  var result;
   
   if (node.type === "string") {
     result = evaluateString(environment, context, node);
@@ -169,40 +177,44 @@ function evaluateNode(environment, context, node) {
 
 function unwrappedEvaluator(block, isData) {
   return function() {
+    var wrappedArguments;
+    var i;
+    var result;
+    
     if (!block) {
       return { value: [], data: false };
     }
     
-    let wrappedArguments = [];
-    for (let i = 0; i < arguments.length; i++) {
+    wrappedArguments = [];
+    for (i = 0; i < arguments.length; i++) {
       wrappedArguments.push({ value: arguments[i], data: isData.params || isData.hash });
     }
     
-    let result = block.apply(undefined, wrappedArguments);
+    result = block.apply(undefined, wrappedArguments);
     isData.blocks = isData.blocks || result.data;
     return result.value;
-  }
+  };
 }
 
 function cookedHelper(func) {
   return function(params, hash, body, inverse) {
-    let unwrappedParams = params.map(function(p) { return p.value; });
-    let unwrappedHash = Object.keys(hash).reduce(function(h, k) { h[k] = hash[k].value; return h; }, {});
+    var unwrappedParams = params.map(function(p) { return p.value; });
+    var unwrappedHash = Object.keys(hash).reduce(function(h, k) { h[k] = hash[k].value; return h; }, {});
     
-    let isData = {
+    var isData = {
       params: params.some(function(p) { return p.data; }),
       hash: Object.keys(hash).some(function(k) { return hash[k].data; }),
       blocks: false
     };
     
-    let unwrappedBody = unwrappedEvaluator(body, isData);
-    let unwrappedInverse = unwrappedEvaluator(inverse, isData);
+    var unwrappedBody = unwrappedEvaluator(body, isData);
+    var unwrappedInverse = unwrappedEvaluator(inverse, isData);
     
     return {
       value: func(unwrappedParams, unwrappedHash, unwrappedBody, unwrappedInverse),
       data: isData.params || isData.hash || isData.blocks
     };
-  }
+  };
 }
 
 function parseInput(input) {
@@ -224,13 +236,14 @@ function Arrow(input, documentHelpers) {
   registerDefaultHelpers(this);
   
   if (typeof documentHelpers !== 'undefined') {
-    Object.keys(documentHelpers).forEach((name) => {
-      let helper = documentHelpers[name];
+    var _this = this;
+    Object.keys(documentHelpers).forEach(function(name) {
+      var helper = documentHelpers[name];
       
       if (name === 'document') {
-        this.registerDocumentHelper(helper);
+        _this.registerDocumentHelper(helper);
       } else {
-        this.registerHelper(name, helper);
+        _this.registerHelper(name, helper);
       }
     });
   }
@@ -238,15 +251,15 @@ function Arrow(input, documentHelpers) {
   
 Arrow.prototype.registerDocumentHelper = function(func) {
   this.environment.documentHelper = func;
-}
+};
   
 Arrow.prototype.registerHelper = function(name, func) {
   this.environment.helpers[name] = func;
-}
+};
 
 Arrow.prototype.registerPartial = function(name, template) {
   this.environment.partials[name] = template;
-}
+};
   
 Arrow.prototype.evaluate = function(input) {
   var result = evaluateNode(this.environment, new Context(input), this.program);
@@ -256,11 +269,11 @@ Arrow.prototype.evaluate = function(input) {
   } else {
     return result.value;
   }
-}
+};
 
 Arrow.helper = function(func) {
   var raw = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
   return raw ? func : cookedHelper(func);
-}
+};
 
 module.exports = Arrow;

@@ -12,4 +12,4 @@ module.exports = function(form, values) {
   });
   
   return arrow.evaluate(values);
-}
+};

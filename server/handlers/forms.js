@@ -1,5 +1,6 @@
 'use strict';
 
+var Promise = require('promise');
 var Form = require('../models/form');
 var FormNotFoundError = require('../errors').FormNotFoundError;
 
@@ -17,7 +18,7 @@ exports.index = function(req, res) {
     console.error(err.stack);
     res.status(500).send({ errors: [{ title: 'Internal server error' }] });
   });
-}
+};
 
 exports.show = function(req, res) {
   Form.findById(req.params.id)
@@ -29,10 +30,10 @@ exports.show = function(req, res) {
   })
   .catch(function(err) {
     if (err instanceof FormNotFoundError) {
-      res.status(404).send({ errors: [{ title: 'Form not found' }] })
+      res.status(404).send({ errors: [{ title: 'Form not found' }] });
     } else {
       console.error(err.stack);
       res.status(500).send({ errors: [{ title: 'Internal server error' }] });
     }
   });
-}
+};

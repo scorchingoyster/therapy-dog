@@ -3,7 +3,7 @@
 var assert = require('assert');
 var Form = require('../../models/form');
 var generateBundle = require('../../deposit/generate-bundle');
-var buildTestUpload = require('./helpers').buildTestUpload;
+var buildTestUpload = require('./test-helpers').buildTestUpload;
 
 describe("Bundle generation", function() {
   describe("files", function() {

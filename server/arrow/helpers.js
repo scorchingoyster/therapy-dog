@@ -8,4 +8,4 @@ module.exports.registerDefaultHelpers = function(arrow) {
   registerEach(arrow);
   registerIf(arrow);
   registerWith(arrow);
-}
+};

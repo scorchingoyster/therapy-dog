@@ -83,7 +83,7 @@ Upload.prototype.getResourceObject = function() {
       }
     });
   });
-}
+};
 
 /**
   Find the upload with the given id.
@@ -102,7 +102,7 @@ Upload.findById = function(id) {
       reject(new UploadNotFoundError('Couldn\'t find upload "' + id + '"', { id: id }));
     }
   });
-}
+};
 
 /**
   Create a new upload from a multer file object.
@@ -123,6 +123,6 @@ Upload.createFromFile = function(file) {
     UPLOADS[upload.id] = upload;
     resolve(upload);
   });
-}
+};
 
 module.exports = Upload;

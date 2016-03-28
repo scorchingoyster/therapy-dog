@@ -5,7 +5,7 @@ var libxmljs = require('libxmljs');
 var Form = require('../../models/form');
 var generateSubmission = require('../../deposit/generate-submission');
 var generateBundle = require('../../deposit/generate-bundle');
-var buildTestUpload = require('./helpers').buildTestUpload;
+var buildTestUpload = require('./test-helpers').buildTestUpload;
 
 describe("Submission generation", function() {
   describe("with metadata and files", function() {

@@ -30,7 +30,7 @@ describe('Contexts', function() {
   });
   
   it('should retrieve values for getters defined on prototypes', function() {
-    function X() {};
+    function X() {}
     Object.defineProperty(X.prototype, 'a',  { get: function() { return 123; } });
     
     var context = new Context({ x: new X() });

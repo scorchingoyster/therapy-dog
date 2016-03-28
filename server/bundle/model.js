@@ -3,6 +3,7 @@
 var crypto = require('crypto');
 var fs = require('fs');
 var uuid = require('uuid');
+var Promise = require('promise');
 var Upload = require('../models/upload');
 var XMLElement = require('../arrow/documents/xml/model').XMLElement;
 var inspect = require('util').inspect;
@@ -117,7 +118,7 @@ File.prototype.getHashDigest = function(algorithm, encoding) {
       resolve(hash.digest(encoding));
     });
   }
-}
+};
 
 module.exports.File = File;
 
@@ -170,7 +171,7 @@ function Bundle(children) {
   
   this.children = children;
   
-  let itemsByFragment = this.items.reduce(function(result, item) {
+  var itemsByFragment = this.items.reduce(function(result, item) {
     if (!result.hasOwnProperty(item.fragment)) {
       result[item.fragment] = [];
     }

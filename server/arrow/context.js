@@ -1,5 +1,3 @@
-'use strict';
-
 function Context(data) {
   if (data) {
     this.frames = [
@@ -14,11 +12,11 @@ function Context(data) {
 }
 
 Context.prototype.get = function(name) {
-  let path = Array.isArray(name) ? name : [name];
+  var path = Array.isArray(name) ? name : [name];
+  var f, i;
+  var value, data;
   
-  for (let f = this.frames.length - 1; f >= 0; f--) {
-    let value;
-    
+  for (f = this.frames.length - 1; f >= 0; f--) {
     if (path[0] in this.frames[f]) {
       value = this.frames[f][path[0]];
     } else {
@@ -26,9 +24,9 @@ Context.prototype.get = function(name) {
     }
     
     if (value.data) {
-      let data = value.value;
+      data = value.value;
       
-      for (let i = 1; i < path.length; i++) {
+      for (i = 1; i < path.length; i++) {
         if (path[i] in data) {
           data = data[path[i]];
         } else {
@@ -44,12 +42,12 @@ Context.prototype.get = function(name) {
   }
   
   return { value: undefined, data: false };
-}
+};
 
 Context.prototype.concat = function(values) {
-  let context = new Context();
+  var context = new Context();
   context.frames = this.frames.concat(values);
   return context;
-}
+};
 
 module.exports = Context;

@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "lint": "jshint --exclude ./node_modules,arrow/parser.js .",
     "test": "mocha \"test/**/*-test.js\"",
     "start": "node server.js"
   },
@@ -19,6 +20,7 @@
     "xmlbuilder": "^4.2.1"
   },
   "devDependencies": {
+    "jshint": "^2.9.1",
     "libxmljs": "^0.17.1",
     "mocha": "^2.4.5",
     "nodemon": "^1.9.1",

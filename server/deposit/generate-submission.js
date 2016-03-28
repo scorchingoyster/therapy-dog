@@ -226,4 +226,4 @@ module.exports = function(form, bundle) {
   
     return submission;
   });
-}
+};

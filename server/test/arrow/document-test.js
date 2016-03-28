@@ -10,7 +10,7 @@ var letters = {
     var name = params[0];
     return {
       type: 'letter',
-      name
+      name: name
     };
   }),
   
@@ -25,10 +25,10 @@ var letters = {
 
 describe('Documents', function() {
   it('should register the helpers we passed, and wrap output using the "document" helper', function() {
-    let arrow = new Arrow('letter "x"; letter "y";', letters);
+    var arrow = new Arrow('letter "x"; letter "y";', letters);
 
-    let actual = arrow.evaluate();
-    let expected = ["x", "y"];
+    var actual = arrow.evaluate();
+    var expected = ["x", "y"];
   
     deepEqual(actual, expected);
   });

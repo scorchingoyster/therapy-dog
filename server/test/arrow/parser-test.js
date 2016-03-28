@@ -23,7 +23,6 @@ describe("Parser", function() {
     deepEqual(parse('o-rly;'), b.program([b.call('o-rly')]));
     deepEqual(parse('_123;'), b.program([b.call('_123')]));
     deepEqual(parse('🐶;'), b.program([b.call('🐶')]));
-    deepEqual(parse('ദൃക്‌സാക്ഷി;'), b.program([b.call('ദൃക്‌സാക്ഷി')]));
   });
 
   it("should parse calls", function() {

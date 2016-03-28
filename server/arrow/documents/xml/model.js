@@ -30,7 +30,7 @@ XMLAttribute.prototype.render = function(builder) {
   });
   
   builder.attribute(this.name, value);
-}
+};
 
 module.exports.XMLAttribute = XMLAttribute;
 
@@ -42,9 +42,9 @@ function XMLElement(name, attributes, children, keep) {
 }
 
 XMLElement.prototype.render = function(builder) {
-  let element = builder.element(this.name);
+  var element = builder.element(this.name);
   renderElement(element, this.attributes, this.children);
-}
+};
 
 module.exports.XMLElement = XMLElement;
 
@@ -54,13 +54,13 @@ function XMLDocument(root) {
 
 XMLDocument.prototype.render = function(builder) {
   if (typeof builder === 'undefined') {
-    let builder = Xmlbuilder.create(this.root.name);
+    builder = Xmlbuilder.create(this.root.name);
     renderElement(builder, this.root.attributes, this.root.children);
     return builder.doc();
   } else {
-    let element = builder.element(this.root.name);
+    var element = builder.element(this.root.name);
     renderElement(element, this.root.attributes, this.root.children);
   }
-}
+};
 
 module.exports.XMLDocument = XMLDocument;

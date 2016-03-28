@@ -5,7 +5,7 @@ exports.FormNotFoundError = function(message, extra) {
   this.name = this.constructor.name;
   this.message = message;
   this.extra = extra;
-}
+};
 inherits(exports.FormNotFoundError, Error);
 
 exports.VocabularyNotFoundError = function(message, extra) {
@@ -13,7 +13,7 @@ exports.VocabularyNotFoundError = function(message, extra) {
   this.name = this.constructor.name;
   this.message = message;
   this.extra = extra;
-}
+};
 inherits(exports.VocabularyNotFoundError, Error);
 
 exports.UploadNotFoundError = function(message, extra) {
@@ -21,5 +21,5 @@ exports.UploadNotFoundError = function(message, extra) {
   this.name = this.constructor.name;
   this.message = message;
   this.extra = extra;
-}
+};
 inherits(exports.UploadNotFoundError, Error);

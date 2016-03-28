@@ -43,7 +43,7 @@ Vocabulary.findById = function(id) {
     } else {
       reject(new VocabularyNotFoundError('Couldn\'t find vocabulary "' + id + '"', { id: id }));
     }
-  })
-}
+  });
+};
 
 module.exports = Vocabulary;

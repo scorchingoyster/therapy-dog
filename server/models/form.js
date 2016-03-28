@@ -135,7 +135,7 @@ Form.prototype.getResourceObject = function() {
       }
     };
   });
-}
+};
 
 /**
   Traverse the given blocks and values, yielding non-section blocks and their
@@ -216,7 +216,7 @@ Form.prototype.transformValues = function(values) {
       }
     }
   });
-}
+};
 
 /**
   Find all forms.
@@ -231,7 +231,7 @@ Form.findAll = function() {
       return FORMS[id];
     }));
   });
-}
+};
 
 /**
   Find the form with the given id.
@@ -249,7 +249,7 @@ Form.findById = function(id) {
     } else {
       reject(new FormNotFoundError('Couldn\'t find form "' + id + '"', { id: id }));
     }
-  })
-}
+  });
+};
 
 module.exports = Form;
