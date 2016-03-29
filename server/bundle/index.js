@@ -16,7 +16,7 @@ module.exports = {
     return new File(body(), hash);
   }),
 
-  link: Arrow.helper(function(params, hash, body) {
+  link: Arrow.helper(function(params, hash) {
     return new Link(hash);
   }),
 

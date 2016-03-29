@@ -1,3 +1,14 @@
 {
-  "node": true
+  "node": true,
+  "esversion": 6,
+  
+  "curly": true,
+  "eqeqeq": true,
+  "forin": true,
+  "noarg": true,
+  "nonew": true,
+  "strict": true,
+  "undef": true,
+  "unused": true,
+  "varstmt": true
 }
