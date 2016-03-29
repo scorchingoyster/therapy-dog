@@ -1,18 +1,15 @@
 'use strict';
 
-var crypto = require('crypto');
-var fs = require('fs');
-var Xmlbuilder = require('xmlbuilder');
-var Promise = require('promise');
-var Link = require('../bundle/model').Link;
-var Item = require('../bundle/model').Item;
-var File = require('../bundle/model').File;
-var Metadata = require('../bundle/model').Metadata;
+const Xmlbuilder = require('xmlbuilder');
+const Link = require('../bundle/model').Link;
+const Item = require('../bundle/model').Item;
+const File = require('../bundle/model').File;
+const Metadata = require('../bundle/model').Metadata;
 
 // metsHdr
 
-function generateMetsHdr(mets, bundle) {
-  var metsHdr =
+function generateMetsHdr(mets) {
+  let metsHdr =
   mets
     .element("metsHdr", { CREATEDATE: "2016-02-04T16:33:26-05:00" });
 
@@ -27,11 +24,11 @@ function generateMetsHdr(mets, bundle) {
 function generateDmdSec(mets, bundle) {
   bundle.metadata.forEach(function(metadata) {
     if (metadata.type === "descriptive") {
-      var dmdSec =
+      let dmdSec =
       mets
         .element("dmdSec", { ID: metadata.id });
 
-      var xmlData =
+      let xmlData =
       dmdSec
         .element("mdWrap", { MDTYPE: "MODS" })
           .element("xmlData");
@@ -44,25 +41,25 @@ function generateDmdSec(mets, bundle) {
 // amdSec
 
 function generateAmdSec(mets, bundle) {
-  var metadata = bundle.metadata.filter(function(node) {
+  let metadata = bundle.metadata.filter(function(node) {
     return node.type === "access-control";
   });
-  
+
   if (metadata.length > 0) {
-    var amdSec =
+    let amdSec =
     mets
       .element("amdSec");
-    
+
     metadata.forEach(function(node) {
-      var rights =
+      let rights =
       amdSec
         .element("rightsMD", { ID: node.id });
-      
-      var xmlData =
+
+      let xmlData =
       rights
         .element("mdWrap", { MDTYPE: "OTHER" })
           .element("xmlData");
-      
+
       node.contents.render(xmlData);
     });
   }
@@ -71,7 +68,7 @@ function generateAmdSec(mets, bundle) {
 // fileSec
 
 function generateFileSec(mets, bundle, locations, checksums) {
-  var fileGrp =
+  let fileGrp =
   mets
     .element("fileSec")
       .element("fileGrp", { ID: "OBJECTS" });
@@ -86,18 +83,18 @@ function generateFileSec(mets, bundle, locations, checksums) {
 // structMap
 
 function generateItem(parent, node) {
-  var div =
+  let div =
   parent
     .element("div", { ID: node.id });
-  
+
   if (node.type) {
     div.attribute("TYPE", node.type);
   }
-  
+
   if (node.label) {
     div.attribute("LABEL", node.label);
   }
-  
+
   node.children.forEach(function(child) {
     if (child instanceof Item) {
       generateItem(div, child);
@@ -106,17 +103,17 @@ function generateItem(parent, node) {
     }
   });
 
-  var metadata = node.children.filter(function(child) {
+  let metadata = node.children.filter(function(child) {
     return child instanceof Metadata;
   });
 
-  var dmdIds = metadata.filter(function(node) {
+  let dmdIds = metadata.filter(function(node) {
     return node.type === "descriptive";
   }).map(function(node) {
     return node.id;
   });
 
-  var admIds = metadata.filter(function(node) {
+  let admIds = metadata.filter(function(node) {
     return node.type === "access-control";
   }).map(function(node) {
     return node.id;
@@ -132,7 +129,7 @@ function generateItem(parent, node) {
 }
 
 function generateStructMap(mets, bundle) {
-  var structMap =
+  let structMap =
   mets
     .element("structMap");
 
@@ -144,8 +141,8 @@ function generateStructMap(mets, bundle) {
 // structLink
 
 function collectSmLinks(bundle) {
-  var result = [];
-  
+  let result = [];
+
   bundle.items.forEach(function(item) {
     item.children.forEach(function(child) {
       if (child instanceof Link) {
@@ -164,10 +161,10 @@ function collectSmLinks(bundle) {
 }
 
 function generateStructLink(mets, bundle) {
-  var smLinks = collectSmLinks(bundle);
-  
+  let smLinks = collectSmLinks(bundle);
+
   if (smLinks.length > 0) {
-    var structMap =
+    let structMap =
     mets
       .element("structLink");
 
@@ -180,42 +177,42 @@ function generateStructLink(mets, bundle) {
 module.exports = function(form, bundle) {
   // Build a hash of file locations (just the file id right now) by file id.
   // This is where we'd assign staging URLs if we wanted to refer to files outside of the submission proper.
-  var fileLocations = bundle.files.reduce(function(obj, file) {
+  let fileLocations = bundle.files.reduce(function(obj, file) {
     obj[file.id] = file.id;
     return obj;
   }, {});
-  
+
   // Build an array of promises which calculate the checksum for each file.
-  var checksums = bundle.files.map(function(file) {
+  let checksums = bundle.files.map(function(file) {
     return file.getHashDigest('md5', 'hex');
   });
-  
+
   // Calculate all of the checksums, and then proceed with generating METS.
   return Promise.all(checksums)
   .then(function(checksums) {
     // Build a hash of checksums by file id.
-    var fileChecksums = bundle.files.reduce(function(obj, file, index) {
+    let fileChecksums = bundle.files.reduce(function(obj, file, index) {
       obj[file.id] = checksums[index];
       return obj;
     }, {});
-    
-    var mets = Xmlbuilder.create('mets')
+
+    let mets = Xmlbuilder.create('mets')
       .attribute("xmlns", "http://www.loc.gov/METS/")
       .attribute("xmlns:xlink", "http://www.w3.org/1999/xlink")
       .attribute("PROFILE", "http://cdr.unc.edu/METS/profiles/Simple");
-  
+
     generateMetsHdr(mets, bundle);
     generateDmdSec(mets, bundle);
     generateAmdSec(mets, bundle);
     generateFileSec(mets, bundle, fileLocations, fileChecksums);
     generateStructMap(mets, bundle);
     generateStructLink(mets, bundle);
-  
+
     // Build the submission. The name of the METS XML will be "mets.xml", and the rest of the files will be named by their ID.
-    var submission = {
+    let submission = {
       "mets.xml": new Buffer(mets.end({ pretty: true }))
     };
-  
+
     bundle.files.forEach(function(file) {
       if (file.isUpload) {
         submission[file.id] = file.contents.path;

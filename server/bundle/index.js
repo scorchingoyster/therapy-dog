@@ -1,11 +1,11 @@
 'use strict';
 
-var Arrow = require('../arrow');
-var Item = require('./model').Item;
-var File = require('./model').File;
-var Link = require('./model').Link;
-var Metadata = require('./model').Metadata;
-var Bundle = require('./model').Bundle;
+const Arrow = require('../arrow');
+const Item = require('./model').Item;
+const File = require('./model').File;
+const Link = require('./model').Link;
+const Metadata = require('./model').Metadata;
+const Bundle = require('./model').Bundle;
 
 module.exports = {
   item: Arrow.helper(function(params, hash, body) {

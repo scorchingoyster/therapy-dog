@@ -1,6 +1,6 @@
 'use strict';
 
-var Upload = require('../models/upload');
+const Upload = require('../models/upload');
 
 exports.create = function(req, res) {
   Upload.createFromFile(req.file)

@@ -1,10 +1,12 @@
+'use strict';
+
 require('dotenv').config();
 
-var express = require('express');
-var morgan = require('morgan');
-var router = require('./router');
+const express = require('express');
+const morgan = require('morgan');
+const router = require('./router');
 
-var app = express();
+let app = express();
 app.use(morgan('dev'));
 app.use('/api', router);
 

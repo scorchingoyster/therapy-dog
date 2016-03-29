@@ -1,67 +1,66 @@
 'use strict';
 
-var Arrow = require('../../arrow');
-var b = require('../../arrow/builders');
-var deepEqual = require('assert').deepEqual;
-var registerTestHelpers = require('./test-helpers').registerTestHelpers;
+const Arrow = require('../../arrow');
+const deepEqual = require('assert').deepEqual;
+const registerTestHelpers = require('./test-helpers').registerTestHelpers;
 
 describe('Partials', function() {
   it('should evaluate with the current context', function() {
-    var outer = new Arrow('each letters as |letter| { partial "inner"; }');
-    var inner = new Arrow('letter;');
-    
+    let outer = new Arrow('each letters as |letter| { partial "inner"; }');
+    let inner = new Arrow('letter;');
+
     outer.registerPartial("inner", inner);
 
-    var actual = outer.evaluate({ letters: ["x", "y"] });
-    var expected = ["x", "y"];
-  
+    let actual = outer.evaluate({ letters: ["x", "y"] });
+    let expected = ["x", "y"];
+
     deepEqual(actual, expected);
   });
-  
+
   it('should evaluate to nothing if a matching partial is not registered', function() {
-    var outer = new Arrow('partial "inner";');
+    let outer = new Arrow('partial "inner";');
 
-    var actual = outer.evaluate();
-    var expected = [];
-  
+    let actual = outer.evaluate();
+    let expected = [];
+
     deepEqual(actual, expected);
   });
-  
+
   it('should accept a call for the partial name', function() {
-    var outer = new Arrow('partial name;');
-    var inner = new Arrow('"abc";');
-    
+    let outer = new Arrow('partial name;');
+    let inner = new Arrow('"abc";');
+
     outer.registerPartial("inner", inner);
 
-    var actual = outer.evaluate({ name: 'inner' });
-    var expected = ["abc"];
-  
+    let actual = outer.evaluate({ name: 'inner' });
+    let expected = ["abc"];
+
     deepEqual(actual, expected);
   });
-  
+
   it('should accept a subexpression for the partial name', function() {
-    var outer = new Arrow('partial (concat name "-stuff");');
+    let outer = new Arrow('partial (concat name "-stuff");');
     registerTestHelpers(outer);
-    
-    var inner = new Arrow('"abc";');
-    
+
+    let inner = new Arrow('"abc";');
+
     outer.registerPartial("inner-stuff", inner);
 
-    var actual = outer.evaluate({ name: 'inner' });
-    var expected = ["abc"];
-  
+    let actual = outer.evaluate({ name: 'inner' });
+    let expected = ["abc"];
+
     deepEqual(actual, expected);
   });
-  
+
   it('should evaluate with additional context', function() {
-    var outer = new Arrow('each letters as |letter| { partial "inner" suffix="!"; }');
-    var inner = new Arrow('letter; suffix;');
-    
+    let outer = new Arrow('each letters as |letter| { partial "inner" suffix="!"; }');
+    let inner = new Arrow('letter; suffix;');
+
     outer.registerPartial("inner", inner);
 
-    var actual = outer.evaluate({ letters: ["x", "y"] });
-    var expected = ["x", "!", "y", "!"];
-  
+    let actual = outer.evaluate({ letters: ["x", "y"] });
+    let expected = ["x", "!", "y", "!"];
+
     deepEqual(actual, expected);
   });
 });

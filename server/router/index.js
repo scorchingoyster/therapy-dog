@@ -1,8 +1,10 @@
-var express = require('express');
-var multer = require('multer');
+'use strict';
 
-var router = express.Router();
-var upload = multer({ dest: process.env.UPLOADS_DIRECTORY });
+const express = require('express');
+const multer = require('multer');
+
+let router = express.Router();
+let upload = multer({ dest: process.env.UPLOADS_DIRECTORY });
 
 router.use(require('body-parser').json());
 

@@ -1,16 +1,15 @@
 'use strict';
 
-var inspect = require('util').inspect;
-var Form = require('../models/form');
-var Upload = require('../models/upload');
-var generateBundle = require('../deposit/generate-bundle');
-var generateSubmission = require('../deposit/generate-submission');
-var submitZip = require('../deposit/submit-zip');
+const inspect = require('util').inspect;
+const Form = require('../models/form');
+const generateBundle = require('../deposit/generate-bundle');
+const generateSubmission = require('../deposit/generate-submission');
+const submitZip = require('../deposit/submit-zip');
 
 exports.create = function(req, res) {
-  var deposit = req.body;
-  var form, values, bundle;
-  
+  let deposit = req.body;
+  let form, values, bundle;
+
   Form.findById(deposit.form)
   .then(function(f) {
     form = f;

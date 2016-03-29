@@ -1,10 +1,10 @@
 'use strict';
 
-var registerEach = require('./helpers/each');
-var registerIf = require('./helpers/if');
-var registerWith = require('./helpers/with');
+const registerEach = require('./helpers/each');
+const registerIf = require('./helpers/if');
+const registerWith = require('./helpers/with');
 
-module.exports.registerDefaultHelpers = function(arrow) {
+exports.registerDefaultHelpers = function(arrow) {
   registerEach(arrow);
   registerIf(arrow);
   registerWith(arrow);

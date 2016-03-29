@@ -1,4 +1,6 @@
-var inherits = require('util').inherits;
+'use strict';
+
+const inherits = require('util').inherits;
 
 exports.FormNotFoundError = function(message, extra) {
   Error.captureStackTrace(this, this.constructor);

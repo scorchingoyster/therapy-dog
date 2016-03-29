@@ -1,10 +1,9 @@
 'use strict';
 
-var fs = require('fs');
-var request = require('request');
-var Promise = require('promise');
-var archiver = require('archiver');
-var tmp = require('tmp');
+const fs = require('fs');
+const request = require('request');
+const archiver = require('archiver');
+const tmp = require('tmp');
 
 function makeZip(submission) {
   return new Promise(function(resolve, reject) {
@@ -13,20 +12,20 @@ function makeZip(submission) {
         reject(err);
         return;
       }
-    
-      var output = fs.createWriteStream(zipFile);
+
+      let output = fs.createWriteStream(zipFile);
 
       output.on('close', function() {
         resolve(zipFile);
       });
 
-      var archive = archiver.create('zip', {});
+      let archive = archiver.create('zip', {});
       archive.pipe(output);
 
       archive.on('error', function(err) {
         reject(err);
       });
-      
+
       Object.keys(submission).forEach(function(name) {
         if (submission[name] instanceof Buffer) {
           archive.append(submission[name], { name: name });
@@ -42,8 +41,8 @@ function makeZip(submission) {
 
 function postZip(form, zipFile) {
   return new Promise(function(resolve, reject) {
-    var body = fs.readFileSync(zipFile);
-    
+    let body = fs.readFileSync(zipFile);
+
     request.post(form.destination, {
       strictSSL: false,
       body: body,

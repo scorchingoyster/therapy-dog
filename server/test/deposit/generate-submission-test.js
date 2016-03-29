@@ -1,15 +1,15 @@
 'use strict';
 
-var assert = require('assert');
-var libxmljs = require('libxmljs');
-var Form = require('../../models/form');
-var generateSubmission = require('../../deposit/generate-submission');
-var generateBundle = require('../../deposit/generate-bundle');
-var buildTestUpload = require('./test-helpers').buildTestUpload;
+const assert = require('assert');
+const libxmljs = require('libxmljs');
+const Form = require('../../models/form');
+const generateSubmission = require('../../deposit/generate-submission');
+const generateBundle = require('../../deposit/generate-bundle');
+const buildTestUpload = require('./test-helpers').buildTestUpload;
 
 describe("Submission generation", function() {
   describe("with metadata and files", function() {
-    var form = new Form('test', {
+    let form = new Form('test', {
       blocks: [
         { type: "file", key: "thesis" },
         { type: "text", key: "title" }
@@ -28,18 +28,18 @@ describe("Submission generation", function() {
         }
       ]
     });
-    
-    var buffer = new Buffer('lorem ipsum');
-    var thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
-    
-    var values = {
+
+    let buffer = new Buffer('lorem ipsum');
+    let thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
+
+    let values = {
       thesis: thesis,
       title: "My Thesis"
     };
-    
-    var bundle = generateBundle(form, values);
-    var submission = generateSubmission(form, bundle);
-    var doc = submission.then(function(submission) {
+
+    let bundle = generateBundle(form, values);
+    let submission = generateSubmission(form, bundle);
+    let doc = submission.then(function(submission) {
       return libxmljs.parseXml(submission["mets.xml"]);
     });
     
@@ -52,41 +52,41 @@ describe("Submission generation", function() {
   
     it("should generate a mets element with the correct profile", function() {
       return doc.then(function(doc) {
-        var mets = doc.get("/mets:mets", { mets: "http://www.loc.gov/METS/" });
+        let mets = doc.get("/mets:mets", { mets: "http://www.loc.gov/METS/" });
         assert.equal(mets.attr("PROFILE").value(), "http://cdr.unc.edu/METS/profiles/Simple");
       });
     });
   
     it("should generate a metsHdr element", function() {
       return doc.then(function(doc) {
-        var metsHdr = doc.get("/mets:mets/mets:metsHdr", { mets: "http://www.loc.gov/METS/" });
+        let metsHdr = doc.get("/mets:mets/mets:metsHdr", { mets: "http://www.loc.gov/METS/" });
         assert.ok(metsHdr);
         assert.ok(metsHdr.attr("CREATEDATE"));
-    
-        var agent = metsHdr.get("mets:agent", { mets: "http://www.loc.gov/METS/" });
+
+        let agent = metsHdr.get("mets:agent", { mets: "http://www.loc.gov/METS/" });
         assert.ok(agent);
         assert.ok(agent.attr("ROLE"));
         assert.ok(agent.attr("TYPE"));
-    
-        var name = agent.get("mets:name", { mets: "http://www.loc.gov/METS/" });
+
+        let name = agent.get("mets:name", { mets: "http://www.loc.gov/METS/" });
         assert.ok(name);
       });
     });
   
     it("should generate a dmdSec element", function() {
       return doc.then(function(doc) {
-        var dmdSec = doc.get("/mets:mets/mets:dmdSec", { mets: "http://www.loc.gov/METS/" });
+        let dmdSec = doc.get("/mets:mets/mets:dmdSec", { mets: "http://www.loc.gov/METS/" });
         assert.ok(dmdSec);
         assert.equal(dmdSec.attr("ID").value(), bundle.children[0].children[1].id);
-    
-        var mdWrap = dmdSec.get("mets:mdWrap", { mets: "http://www.loc.gov/METS/" });
+
+        let mdWrap = dmdSec.get("mets:mdWrap", { mets: "http://www.loc.gov/METS/" });
         assert.ok(mdWrap);
         assert.equal(mdWrap.attr("MDTYPE").value(), "MODS");
-    
-        var mods = mdWrap.get("mets:xmlData/mods:mods", { mets: "http://www.loc.gov/METS/", mods: "http://www.loc.gov/mods/v3" });
+
+        let mods = mdWrap.get("mets:xmlData/mods:mods", { mets: "http://www.loc.gov/METS/", mods: "http://www.loc.gov/mods/v3" });
         assert.ok(mods);
-    
-        var title = mods.get("mods:titleInfo/mods:title", { mods: "http://www.loc.gov/mods/v3" });
+
+        let title = mods.get("mods:titleInfo/mods:title", { mods: "http://www.loc.gov/mods/v3" });
         assert.ok(title);
         assert.equal(title.text(), "My Thesis");
       });
@@ -94,17 +94,17 @@ describe("Submission generation", function() {
   
     it("should generate an amdSec element", function() {
       return doc.then(function(doc) {
-        var amdSec = doc.get("/mets:mets/mets:amdSec", { mets: "http://www.loc.gov/METS/" });
+        let amdSec = doc.get("/mets:mets/mets:amdSec", { mets: "http://www.loc.gov/METS/" });
         assert.ok(amdSec);
-      
-        var rightsMD = amdSec.get("mets:rightsMD", { mets: "http://www.loc.gov/METS/" });
+
+        let rightsMD = amdSec.get("mets:rightsMD", { mets: "http://www.loc.gov/METS/" });
         assert.equal(rightsMD.attr("ID").value(), bundle.children[0].children[2].id);
-    
-        var mdWrap = rightsMD.get("mets:mdWrap", { mets: "http://www.loc.gov/METS/" });
+
+        let mdWrap = rightsMD.get("mets:mdWrap", { mets: "http://www.loc.gov/METS/" });
         assert.ok(mdWrap);
         assert.equal(mdWrap.attr("MDTYPE").value(), "OTHER");
-    
-        var accessControl = mdWrap.get("mets:xmlData/acl:accessControl", { mets: "http://www.loc.gov/METS/", acl: "http://cdr.unc.edu/definitions/acl" });
+
+        let accessControl = mdWrap.get("mets:xmlData/acl:accessControl", { mets: "http://www.loc.gov/METS/", acl: "http://cdr.unc.edu/definitions/acl" });
         assert.ok(accessControl);
         assert.equal(accessControl.attr("published").value(), "false");
       });
@@ -112,15 +112,15 @@ describe("Submission generation", function() {
   
     it("should generate a file element", function() {
       return doc.then(function(doc) {
-        var file = doc.get("/mets:mets/mets:fileSec/mets:fileGrp/mets:file", { mets: "http://www.loc.gov/METS/" });
+        let file = doc.get("/mets:mets/mets:fileSec/mets:fileGrp/mets:file", { mets: "http://www.loc.gov/METS/" });
         assert.ok(file);
         assert.equal(file.attr("ID").value(), bundle.children[0].children[0].id);
         assert.equal(file.attr("MIMETYPE").value(), "application/pdf");
         assert.equal(file.attr("CHECKSUM").value(), "80a751fde577028640c419000e33eba6");
         assert.equal(file.attr("CHECKSUMTYPE").value(), "MD5");
         assert.equal(file.attr("SIZE").value(), "11");
-    
-        var flocat = file.get("mets:FLocat", { mets: "http://www.loc.gov/METS/" });
+
+        let flocat = file.get("mets:FLocat", { mets: "http://www.loc.gov/METS/" });
         assert.ok(flocat);
         assert.equal(flocat.get("@xlink:href", { xlink: "http://www.w3.org/1999/xlink" }).value(), bundle.files[0].id);
       });
@@ -128,15 +128,15 @@ describe("Submission generation", function() {
   
     it("should generate a div element linked to the file element and metadata elements", function() {
       return doc.then(function(doc) {
-        var div = doc.get("/mets:mets/mets:structMap/mets:div", { mets: "http://www.loc.gov/METS/" });
+        let div = doc.get("/mets:mets/mets:structMap/mets:div", { mets: "http://www.loc.gov/METS/" });
         assert.ok(div);
         assert.equal(div.attr("ID").value(), bundle.children[0].id);
         assert.equal(div.attr("TYPE").value(), "File");
         assert.equal(div.attr("LABEL").value(), "My Thesis");
         assert.equal(div.attr("DMDID").value(), bundle.children[0].children[1].id);
         assert.equal(div.attr("ADMID").value(), bundle.children[0].children[2].id);
-    
-        var fptr = div.get("mets:fptr", { mets: "http://www.loc.gov/METS/" });
+
+        let fptr = div.get("mets:fptr", { mets: "http://www.loc.gov/METS/" });
         assert.ok(fptr);
         assert.equal(fptr.attr("FILEID").value(), bundle.children[0].children[0].id);
       });
@@ -144,16 +144,16 @@ describe("Submission generation", function() {
   
     it("should generate sections in order", function() {
       return doc.then(function(doc) {
-        var sections = doc.find("/mets:mets/*", { mets: "http://www.loc.gov/METS/" });
-        var names = sections.map(function(s) { return s.name(); });
-      
+        let sections = doc.find("/mets:mets/*", { mets: "http://www.loc.gov/METS/" });
+        let names = sections.map(function(s) { return s.name(); });
+
         assert.deepEqual(["metsHdr", "dmdSec", "amdSec", "fileSec", "structMap"], names);
       });
     });
   });
   
   describe("with multiple access control metadata elements", function() {
-    var form = new Form('test', {
+    let form = new Form('test', {
       children: [],
       bundle: "item type='Folder' label='My Folder' { item type='Folder' label='A' { metadata type='access-control' { partial 'unpublished'; } }; item type='Folder' label='B' { metadata type='access-control' { partial 'unpublished'; } } }",
       templates: [
@@ -165,20 +165,20 @@ describe("Submission generation", function() {
       ]
     });
 
-    var values = {};
+    let values = {};
 
-    var bundle = generateBundle(form, values);
-    var submission = generateSubmission(form, bundle);
-    var doc = submission.then(function(submission) {
+    let bundle = generateBundle(form, values);
+    let submission = generateSubmission(form, bundle);
+    let doc = submission.then(function(submission) {
       return libxmljs.parseXml(submission["mets.xml"]);
     });
 
     it("should generate an amdSec element", function() {
       return doc.then(function(doc) {
-        var amdSec = doc.find("/mets:mets/mets:amdSec", { mets: "http://www.loc.gov/METS/" });
+        let amdSec = doc.find("/mets:mets/mets:amdSec", { mets: "http://www.loc.gov/METS/" });
         assert.equal(amdSec.length, 1);
-        
-        var rightsMD = amdSec[0].find("mets:rightsMD", { mets: "http://www.loc.gov/METS/" });
+
+        let rightsMD = amdSec[0].find("mets:rightsMD", { mets: "http://www.loc.gov/METS/" });
         assert.equal(rightsMD.length, 2);
         assert.equal(rightsMD[0].attr("ID").value(), bundle.children[0].children[0].children[0].id);
         assert.equal(rightsMD[1].attr("ID").value(), bundle.children[0].children[1].children[0].id);
@@ -187,7 +187,7 @@ describe("Submission generation", function() {
 
     it("should generate div elements linked to the metadata elements", function() {
       return doc.then(function(doc) {
-        var inner = doc.find("/mets:mets/mets:structMap/mets:div/mets:div", { mets: "http://www.loc.gov/METS/" });
+        let inner = doc.find("/mets:mets/mets:structMap/mets:div/mets:div", { mets: "http://www.loc.gov/METS/" });
         assert.equal(inner.length, 2);
         
         assert.equal(inner[0].attr("TYPE").value(), "Folder");
@@ -202,7 +202,7 @@ describe("Submission generation", function() {
   });
 
   describe("with links", function() {
-    var form = new Form('test', {
+    let form = new Form('test', {
       blocks: [
         { type: "text", key: "title" }
       ],
@@ -210,19 +210,19 @@ describe("Submission generation", function() {
       templates: []
     });
 
-    var values = {
+    let values = {
       title: "My Thesis"
     };
 
-    var bundle = generateBundle(form, values);
-    var submission = generateSubmission(form, bundle);
-    var doc = submission.then(function(submission) {
+    let bundle = generateBundle(form, values);
+    let submission = generateSubmission(form, bundle);
+    let doc = submission.then(function(submission) {
       return libxmljs.parseXml(submission["mets.xml"]);
     });
 
     it("should generate a structLink element with a link from the Aggregate Work div to the File div", function() {
       return doc.then(function(doc) {
-        var smLink = doc.get("/mets:mets/mets:structLink/mets:smLink", { mets: "http://www.loc.gov/METS/" });
+        let smLink = doc.get("/mets:mets/mets:structLink/mets:smLink", { mets: "http://www.loc.gov/METS/" });
         assert.ok(smLink);
         assert.equal(smLink.get("@xlink:arcrole", { xlink: "http://www.w3.org/1999/xlink" }).value(), "http://example.com/blah");
         assert.equal(smLink.get("@xlink:from", { xlink: "http://www.w3.org/1999/xlink" }).value(), "#" + bundle.children[0].id);
@@ -232,12 +232,12 @@ describe("Submission generation", function() {
   });
 
   describe("with literal file contents", function() {
-    var form = new Form('test', {
+    let form = new Form('test', {
       bundle: "item kind='File' { file { agreement.terms; '\\n'; agreement.date; '\\n'; agreement.agent; '\\n'; } }",
       templates: []
     });
 
-    var values = {
+    let values = {
       agreement: {
         terms: "You agree to the terms, etc.",
         date: "2016-01-01",
@@ -245,9 +245,9 @@ describe("Submission generation", function() {
       }
     };
 
-    var bundle = generateBundle(form, values);
-    var submission = generateSubmission(form, bundle);
-    var doc = submission.then(function(submission) {
+    let bundle = generateBundle(form, values);
+    let submission = generateSubmission(form, bundle);
+    let doc = submission.then(function(submission) {
       return libxmljs.parseXml(submission["mets.xml"]);
     });
     
@@ -259,7 +259,7 @@ describe("Submission generation", function() {
 
     it("should generate a file element", function() {
       return doc.then(function(doc) {
-        var file = doc.get("/mets:mets/mets:fileSec/mets:fileGrp/mets:file", { mets: "http://www.loc.gov/METS/" });
+        let file = doc.get("/mets:mets/mets:fileSec/mets:fileGrp/mets:file", { mets: "http://www.loc.gov/METS/" });
         assert.ok(file);
         assert.equal(file.attr("ID").value(), bundle.children[0].children[0].id);
         assert.equal(file.attr("MIMETYPE").value(), "text/plain");
@@ -267,7 +267,7 @@ describe("Submission generation", function() {
         assert.equal(file.attr("CHECKSUMTYPE").value(), "MD5");
         assert.equal(file.attr("SIZE").value(), "48");
 
-        var flocat = file.get("mets:FLocat", { mets: "http://www.loc.gov/METS/" });
+        let flocat = file.get("mets:FLocat", { mets: "http://www.loc.gov/METS/" });
         assert.ok(flocat);
         assert.equal(flocat.get("@xlink:href", { xlink: "http://www.w3.org/1999/xlink" }).value(), bundle.files[0].id);
       });
