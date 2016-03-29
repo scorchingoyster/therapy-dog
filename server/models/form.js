@@ -9,9 +9,9 @@ const FormNotFoundError = require('./errors').FormNotFoundError;
 const FORMS = {};
 
 if (process.env.FORMS_DIRECTORY) {
-  glob(path.join(process.env.FORMS_DIRECTORY, "*.json"), function(err, filenames) {
+  glob(path.join(process.env.FORMS_DIRECTORY, '*.json'), function(err, filenames) {
     filenames.forEach(function(filename) {
-      let id = path.basename(filename, ".json");
+      let id = path.basename(filename, '.json');
       FORMS[id] = new Form(id, require(filename));
     });
   });
@@ -40,7 +40,7 @@ function mapValues(blocks, values, iterator) {
       return;
     }
 
-    if (block.type === "section") {
+    if (block.type === 'section') {
       if (block.repeat) {
         result[key] = Promise.all(value.map(function(item) {
           return mapValues(block.children, item, iterator);
@@ -183,17 +183,17 @@ class Form {
   */
   transformValues(values) {
     return mapValues(this.children, values, function(block, value) {
-      if (block.type === "text") {
+      if (block.type === 'text') {
         return String(value);
-      } else if (block.type === "date") {
+      } else if (block.type === 'date') {
         return String(value);
-      } else if (block.type === "select") {
+      } else if (block.type === 'select') {
         return value;
-      } else if (block.type === "checkboxes") {
+      } else if (block.type === 'checkboxes') {
         return value;
-      } else if (block.type === "radio") {
+      } else if (block.type === 'radio') {
         return value;
-      } else if (block.type === "file") {
+      } else if (block.type === 'file') {
         if (block.multiple) {
           return Promise.all(value.map(function(v) {
             return Upload.findById(v.id);

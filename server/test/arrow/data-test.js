@@ -24,7 +24,7 @@ describe('Data', function() {
       each letters as |letter| { params-are-data letter; }`);
     registerTestHelpers(arrow);
 
-    let actual = arrow.evaluate({ letters: ["x", "y"] });
+    let actual = arrow.evaluate({ letters: ['x', 'y'] });
     let expected = [true, false, { ls: true, a: false }, true, false, true, true];
 
     deepEqual(actual, expected);
@@ -34,7 +34,7 @@ describe('Data', function() {
     let arrow = new Arrow('body-is-data { each letters as |letter| { concat letter "!"; } }');
     registerTestHelpers(arrow);
 
-    let actual = arrow.evaluate({ letters: ["x", "y"] });
+    let actual = arrow.evaluate({ letters: ['x', 'y'] });
     let expected = [true];
 
     deepEqual(actual, expected);
@@ -44,7 +44,7 @@ describe('Data', function() {
     let arrow = new Arrow('body-is-data { element "blah" etc=letter; }');
     registerTestHelpers(arrow);
 
-    let actual = arrow.evaluate({ letter: "x" });
+    let actual = arrow.evaluate({ letter: 'x' });
     let expected = [true];
 
     deepEqual(actual, expected);
@@ -54,7 +54,7 @@ describe('Data', function() {
     let arrow = new Arrow('body-is-data { contrary { 1; } else contrary { 2; } else { letter; } }');
     registerTestHelpers(arrow);
 
-    let actual = arrow.evaluate({ letter: "x" });
+    let actual = arrow.evaluate({ letter: 'x' });
     let expected = [true];
 
     deepEqual(actual, expected);

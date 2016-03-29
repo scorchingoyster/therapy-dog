@@ -9,8 +9,8 @@ describe('Evaluate', function() {
     let arrow = new Arrow('repeat 2 { "hello"; }; repeat 2 { number; }; repeat 2 { letters; }');
     registerTestHelpers(arrow);
 
-    let actual = arrow.evaluate({ number: 123, letters: ["x", "y"] });
-    let expected = ["hello", "hello", 123, 123, "x", "y", "x", "y"];
+    let actual = arrow.evaluate({ number: 123, letters: ['x', 'y'] });
+    let expected = ['hello', 'hello', 123, 123, 'x', 'y', 'x', 'y'];
 
     deepEqual(actual, expected);
   });
@@ -20,7 +20,7 @@ describe('Evaluate', function() {
     registerTestHelpers(arrow);
 
     let actual = arrow.evaluate();
-    let expected = ["\\hello\r\nworld\'\""];
+    let expected = ['\\hello\r\nworld\'\"'];
 
     deepEqual(actual, expected);
   });
@@ -32,13 +32,13 @@ describe('Evaluate', function() {
     let actual = arrow.evaluate();
     let expected = [
       {
-        type: "element",
-        name: "blah",
+        type: 'element',
+        name: 'blah',
         attributes: {
-          type: "stuff"
+          type: 'stuff'
         },
         children: [
-          "hello"
+          'hello'
         ]
       }
     ];
@@ -53,8 +53,8 @@ describe('Evaluate', function() {
     let actual = arrow.evaluate();
     let expected = [
       {
-        type: "element",
-        name: "blah",
+        type: 'element',
+        name: 'blah',
         attributes: {},
         children: []
       }
@@ -67,8 +67,8 @@ describe('Evaluate', function() {
     let arrow = new Arrow('concat letter "!";');
     registerTestHelpers(arrow);
 
-    let actual = arrow.evaluate({ letter: "x" });
-    let expected = ["x!"];
+    let actual = arrow.evaluate({ letter: 'x' });
+    let expected = ['x!'];
 
     deepEqual(actual, expected);
   });
@@ -78,7 +78,7 @@ describe('Evaluate', function() {
     registerTestHelpers(arrow);
 
     let actual = arrow.evaluate();
-    let expected = ["no"];
+    let expected = ['no'];
 
     deepEqual(actual, expected);
   });
@@ -87,13 +87,13 @@ describe('Evaluate', function() {
     let arrow = new Arrow('each letters as |letter index blah| { letter; index; }');
     registerTestHelpers(arrow);
 
-    let actual = arrow.evaluate({ letters: ["x", "y"] });
-    let expected = ["x", 0, "y", 1];
+    let actual = arrow.evaluate({ letters: ['x', 'y'] });
+    let expected = ['x', 0, 'y', 1];
 
     deepEqual(actual, expected);
   });
 
-  it("should put list items inside the nested instances of an arrow's target", function() {
+  it('should put list items inside the nested instances of an arrow\'s target', function() {
     let arrow = new Arrow('letters -> (element "abc" a=1) (element "def" b=2);');
     registerTestHelpers(arrow);
 
@@ -107,7 +107,7 @@ describe('Evaluate', function() {
           {
             type: 'element',
             name: 'def',
-            attributes: { b: 2},
+            attributes: { b: 2 },
             children: ['x']
           }
         ]
@@ -120,7 +120,7 @@ describe('Evaluate', function() {
           {
             type: 'element',
             name: 'def',
-            attributes: { b: 2},
+            attributes: { b: 2 },
             children: ['y']
           }
         ]
@@ -130,7 +130,7 @@ describe('Evaluate', function() {
     deepEqual(actual, expected);
   });
 
-  it("should put the nonempty source of an arrow inside its target", function() {
+  it('should put the nonempty source of an arrow inside its target', function() {
     let arrow = new Arrow('x -> echo;');
     registerTestHelpers(arrow);
 
@@ -139,7 +139,7 @@ describe('Evaluate', function() {
     deepEqual(arrow.evaluate({ x: 0 }), [{ type: 'echo', body: [0] }]);
   });
 
-  it("should output nothing for an arrow with an empty source", function() {
+  it('should output nothing for an arrow with an empty source', function() {
     let arrow = new Arrow('x -> echo;');
     registerTestHelpers(arrow);
 
@@ -151,7 +151,7 @@ describe('Evaluate', function() {
     deepEqual(arrow.evaluate({ x: [] }), []);
   });
 
-  it("should output only the nonempty elements of an arrow's array source", function() {
+  it('should output only the nonempty elements of an arrow\'s array source', function() {
     let arrow = new Arrow('x -> echo;');
     registerTestHelpers(arrow);
 
@@ -160,14 +160,14 @@ describe('Evaluate', function() {
     deepEqual(arrow.evaluate({ x: [null, undefined, 1, 2] }), [{ type: 'echo', body: [1] }, { type: 'echo', body: [2] }]);
   });
 
-  it("should just output the items of an arrow's source if it has no target", function() {
+  it('should just output the items of an arrow\'s source if it has no target', function() {
     let arrow = new Arrow('letters ->;');
     registerTestHelpers(arrow);
 
     deepEqual(arrow.evaluate({ letters: ['a', 'b'] }), ['a', 'b']);
   });
 
-  it("should accept a helper as the source of an arrow", function() {
+  it('should accept a helper as the source of an arrow', function() {
     let arrow = new Arrow('element "whatever" x=1 -> element "blah" y=2;');
     registerTestHelpers(arrow);
 

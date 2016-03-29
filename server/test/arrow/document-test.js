@@ -26,7 +26,7 @@ describe('Documents', function() {
     let arrow = new Arrow('letter "x"; letter "y";', letters);
 
     let actual = arrow.evaluate();
-    let expected = ["x", "y"];
+    let expected = ['x', 'y'];
 
     deepEqual(actual, expected);
   });

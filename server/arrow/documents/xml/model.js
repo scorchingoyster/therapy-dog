@@ -24,7 +24,7 @@ class XMLAttribute {
   }
 
   render(builder) {
-    let value = "";
+    let value = '';
 
     this.children.forEach(function(child) {
       value += String(child);

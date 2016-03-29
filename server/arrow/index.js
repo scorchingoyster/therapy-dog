@@ -146,21 +146,21 @@ function evaluateArrow(environment, context, node) {
 function evaluateNode(environment, context, node) {
   let result;
 
-  if (node.type === "string") {
+  if (node.type === 'string') {
     result = evaluateString(environment, context, node);
-  } else if (node.type === "number") {
+  } else if (node.type === 'number') {
     result = evaluateNumber(environment, context, node);
-  } else if (node.type === "boolean") {
+  } else if (node.type === 'boolean') {
     result = evaluateBoolean(environment, context, node);
-  } else if (node.type === "call") {
+  } else if (node.type === 'call') {
     result = evaluateCall(environment, context, node);
-  } else if (node.type === "program") {
+  } else if (node.type === 'program') {
     result = evaluateProgram(environment, context, node);
-  } else if (node.type === "path") {
+  } else if (node.type === 'path') {
     result = evaluatePath(environment, context, node);
-  } else if (node.type === "partial") {
+  } else if (node.type === 'partial') {
     result = evaluatePartial(environment, context, node);
-  } else if (node.type === "arrow") {
+  } else if (node.type === 'arrow') {
     result = evaluateArrow(environment, context, node);
   } else {
     throw new Error('Unknown node type: ' + node.type);
@@ -189,7 +189,10 @@ function unwrappedEvaluator(block, isData) {
 function cookedHelper(func) {
   return function(params, hash, body, inverse) {
     let unwrappedParams = params.map(function(p) { return p.value; });
-    let unwrappedHash = Object.keys(hash).reduce(function(h, k) { h[k] = hash[k].value; return h; }, {});
+    let unwrappedHash = Object.keys(hash).reduce(function(h, k) {
+      h[k] = hash[k].value;
+      return h;
+    }, {});
 
     let isData = {
       params: params.some(function(p) { return p.data; }),

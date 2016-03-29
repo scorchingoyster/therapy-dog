@@ -61,7 +61,7 @@ function postZip(form, zipFile) {
       if (err) {
         reject(err);
       } else {
-        resolve({ status: response.statusCode === 201 ? "OK" : "ERROR", message: body });
+        resolve({ status: response.statusCode === 201 ? 'OK' : 'ERROR', message: body });
       }
     });
   });

@@ -23,7 +23,7 @@ module.exports = {
   metadata: Arrow.helper(function(params, hash, body) {
     return new Metadata(body(), hash);
   }),
-  
+
   document: Arrow.helper(function(params, hash, body) {
     return new Bundle(body());
   })

@@ -11,27 +11,27 @@ const Metadata = require('../bundle/model').Metadata;
 function generateMetsHdr(mets) {
   let metsHdr =
   mets
-    .element("metsHdr", { CREATEDATE: "2016-02-04T16:33:26-05:00" });
+    .element('metsHdr', { CREATEDATE: '2016-02-04T16:33:26-05:00' });
 
   metsHdr
-    .element("agent", { ROLE: "CREATOR", TYPE: "OTHER" })
-      .element("name")
-        .text("CDR Forms");
+    .element('agent', { ROLE: 'CREATOR', TYPE: 'OTHER' })
+      .element('name')
+        .text('CDR Forms');
 }
 
 // dmdSec
 
 function generateDmdSec(mets, bundle) {
   bundle.metadata.forEach(function(metadata) {
-    if (metadata.type === "descriptive") {
+    if (metadata.type === 'descriptive') {
       let dmdSec =
       mets
-        .element("dmdSec", { ID: metadata.id });
+        .element('dmdSec', { ID: metadata.id });
 
       let xmlData =
       dmdSec
-        .element("mdWrap", { MDTYPE: "MODS" })
-          .element("xmlData");
+        .element('mdWrap', { MDTYPE: 'MODS' })
+          .element('xmlData');
 
       metadata.contents.render(xmlData);
     }
@@ -42,23 +42,23 @@ function generateDmdSec(mets, bundle) {
 
 function generateAmdSec(mets, bundle) {
   let metadata = bundle.metadata.filter(function(node) {
-    return node.type === "access-control";
+    return node.type === 'access-control';
   });
 
   if (metadata.length > 0) {
     let amdSec =
     mets
-      .element("amdSec");
+      .element('amdSec');
 
     metadata.forEach(function(node) {
       let rights =
       amdSec
-        .element("rightsMD", { ID: node.id });
+        .element('rightsMD', { ID: node.id });
 
       let xmlData =
       rights
-        .element("mdWrap", { MDTYPE: "OTHER" })
-          .element("xmlData");
+        .element('mdWrap', { MDTYPE: 'OTHER' })
+          .element('xmlData');
 
       node.contents.render(xmlData);
     });
@@ -70,13 +70,13 @@ function generateAmdSec(mets, bundle) {
 function generateFileSec(mets, bundle, locations, checksums) {
   let fileGrp =
   mets
-    .element("fileSec")
-      .element("fileGrp", { ID: "OBJECTS" });
+    .element('fileSec')
+      .element('fileGrp', { ID: 'OBJECTS' });
 
   bundle.files.forEach(function(file) {
     fileGrp
-      .element("file", { CHECKSUM: checksums[file.id], CHECKSUMTYPE: "MD5", ID: file.id, MIMETYPE: file.mimetype, SIZE: file.size })
-        .element("FLocat", { "xlink:href": locations[file.id], LOCTYPE: "OTHER", USE: "STAGE" });
+      .element('file', { CHECKSUM: checksums[file.id], CHECKSUMTYPE: 'MD5', ID: file.id, MIMETYPE: file.mimetype, SIZE: file.size })
+        .element('FLocat', { 'xlink:href': locations[file.id], LOCTYPE: 'OTHER', USE: 'STAGE' });
   });
 }
 
@@ -85,21 +85,21 @@ function generateFileSec(mets, bundle, locations, checksums) {
 function generateItem(parent, node) {
   let div =
   parent
-    .element("div", { ID: node.id });
+    .element('div', { ID: node.id });
 
   if (node.type) {
-    div.attribute("TYPE", node.type);
+    div.attribute('TYPE', node.type);
   }
 
   if (node.label) {
-    div.attribute("LABEL", node.label);
+    div.attribute('LABEL', node.label);
   }
 
   node.children.forEach(function(child) {
     if (child instanceof Item) {
       generateItem(div, child);
     } else if (child instanceof File) {
-      div.element("fptr", { FILEID: child.id });
+      div.element('fptr', { FILEID: child.id });
     }
   });
 
@@ -108,30 +108,30 @@ function generateItem(parent, node) {
   });
 
   let dmdIds = metadata.filter(function(node) {
-    return node.type === "descriptive";
+    return node.type === 'descriptive';
   }).map(function(node) {
     return node.id;
   });
 
   let admIds = metadata.filter(function(node) {
-    return node.type === "access-control";
+    return node.type === 'access-control';
   }).map(function(node) {
     return node.id;
   });
 
   if (dmdIds.length > 0) {
-    div.attribute("DMDID", dmdIds.join(" "));
+    div.attribute('DMDID', dmdIds.join(' '));
   }
 
   if (admIds.length > 0) {
-    div.attribute("ADMID", admIds.join(" "));
+    div.attribute('ADMID', admIds.join(' '));
   }
 }
 
 function generateStructMap(mets, bundle) {
   let structMap =
   mets
-    .element("structMap");
+    .element('structMap');
 
   bundle.children.forEach(function(child) {
     generateItem(structMap, child);
@@ -148,10 +148,10 @@ function collectSmLinks(bundle) {
       if (child instanceof Link) {
         if (child.items) {
           child.items.map(function(target) {
-            result.push({ arcrole: child.rel, from: "#" + item.id, to: "#" + target.id });
+            result.push({ arcrole: child.rel, from: '#' + item.id, to: '#' + target.id });
           });
         } else {
-          result.push({ arcrole: child.rel, from: "#" + item.id, to: child.href });
+          result.push({ arcrole: child.rel, from: '#' + item.id, to: child.href });
         }
       }
     });
@@ -166,10 +166,10 @@ function generateStructLink(mets, bundle) {
   if (smLinks.length > 0) {
     let structMap =
     mets
-      .element("structLink");
+      .element('structLink');
 
     smLinks.forEach(function(link) {
-      structMap.element("smLink", { "xlink:arcrole": link.arcrole, "xlink:from": link.from, "xlink:to": link.to });
+      structMap.element('smLink', { 'xlink:arcrole': link.arcrole, 'xlink:from': link.from, 'xlink:to': link.to });
     });
   }
 }
@@ -197,9 +197,9 @@ module.exports = function(form, bundle) {
     }, {});
 
     let mets = Xmlbuilder.create('mets')
-      .attribute("xmlns", "http://www.loc.gov/METS/")
-      .attribute("xmlns:xlink", "http://www.w3.org/1999/xlink")
-      .attribute("PROFILE", "http://cdr.unc.edu/METS/profiles/Simple");
+      .attribute('xmlns', 'http://www.loc.gov/METS/')
+      .attribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+      .attribute('PROFILE', 'http://cdr.unc.edu/METS/profiles/Simple');
 
     generateMetsHdr(mets, bundle);
     generateDmdSec(mets, bundle);
@@ -210,7 +210,7 @@ module.exports = function(form, bundle) {
 
     // Build the submission. The name of the METS XML will be "mets.xml", and the rest of the files will be named by their ID.
     let submission = {
-      "mets.xml": new Buffer(mets.end({ pretty: true }))
+      'mets.xml': new Buffer(mets.end({ pretty: true }))
     };
 
     bundle.files.forEach(function(file) {
@@ -220,7 +220,7 @@ module.exports = function(form, bundle) {
         submission[file.id] = file.contents;
       }
     });
-  
+
     return submission;
   });
 };

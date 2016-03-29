@@ -9,15 +9,15 @@ function parse(input) {
   return arrow.program;
 }
 
-describe("Parser", function() {
-  it("should parse literals", function() {
+describe('Parser', function() {
+  it('should parse literals', function() {
     deepEqual(parse('123;'), b.program([b.number(123)]));
     deepEqual(parse('true;'), b.program([b.boolean(true)]));
     deepEqual(parse('"abc";'), b.program([b.string('abc')]));
-    deepEqual(parse("'abc';"), b.program([b.string('abc')]));
+    deepEqual(parse('\'abc\';'), b.program([b.string('abc')]));
   });
 
-  it("should parse identifiers", function() {
+  it('should parse identifiers', function() {
     deepEqual(parse('a1;'), b.program([b.call('a1')]));
     deepEqual(parse('@ok;'), b.program([b.call('@ok')]));
     deepEqual(parse('o-rly;'), b.program([b.call('o-rly')]));
@@ -25,7 +25,7 @@ describe("Parser", function() {
     deepEqual(parse('🐶;'), b.program([b.call('🐶')]));
   });
 
-  it("should parse calls", function() {
+  it('should parse calls', function() {
     deepEqual(parse('test;'),
       b.program([
         b.call('test')
@@ -40,7 +40,7 @@ describe("Parser", function() {
         )
       ])
     );
-    
+
     deepEqual(parse('test x.y `x` y'),
       b.program([
         b.call('test', [b.path(['x', 'y']), b.path(['x']), b.call('y')])
@@ -56,13 +56,13 @@ describe("Parser", function() {
         )
       ])
     );
-    
+
     deepEqual(parse('test a=x.y'),
       b.program([
         b.call('test', [], b.hash([b.pair('a', b.path(['x', 'y']))]))
       ])
     );
-    
+
     deepEqual(parse('element "blah" xmlns:xlink="http://www.w3.org/1999/xlink";'),
       b.program([
         b.call(
@@ -74,7 +74,7 @@ describe("Parser", function() {
     );
   });
 
-  it("should parse calls with subexpression params", function() {
+  it('should parse calls with subexpression params', function() {
     deepEqual(parse('test (blah 123) (xyz true);'),
       b.program([
         b.call('test', [b.call('blah', [b.number(123)]), b.call('xyz', [b.boolean(true)])])
@@ -82,13 +82,13 @@ describe("Parser", function() {
     );
   });
 
-  it("should parse arrows", function() {
+  it('should parse arrows', function() {
     deepEqual(parse('test -> blah "whatever" x=1;'),
       b.program([
         b.arrow(b.call('test'), [b.call('blah', [b.string('whatever')], b.hash([b.pair('x', b.number(1))]))])
       ])
     );
-    
+
     deepEqual(parse('test 123 y=2 -> blah "whatever" x=1;'),
       b.program([
         b.arrow(
@@ -141,19 +141,19 @@ describe("Parser", function() {
     );
   });
 
-  it("should parse paths", function() {
+  it('should parse paths', function() {
     deepEqual(parse('x.y.z;'),
       b.program([
         b.path(['x', 'y', 'z'])
       ])
     );
-    
+
     deepEqual(parse('`zap!`.`pow!`.blam;'),
       b.program([
         b.path(['zap!', 'pow!', 'blam'])
       ])
     );
-    
+
     deepEqual(parse('`#ok`;'),
       b.program([
         b.path(['#ok'])
@@ -161,7 +161,7 @@ describe("Parser", function() {
     );
   });
 
-  it("should parse program bodies", function() {
+  it('should parse program bodies', function() {
     deepEqual(parse(''), b.program([]));
 
     deepEqual(parse('x;\n'),
@@ -224,7 +224,7 @@ describe("Parser", function() {
     );
   });
 
-  it("should strip comments", function() {
+  it('should strip comments', function() {
     deepEqual(parse('x; # the unknown quantity\ny; # indeed\nz; # rhymes with bed'),
       b.program([
         b.call('x'),
@@ -234,7 +234,7 @@ describe("Parser", function() {
     );
   });
 
-  it("should parse blocks", function() {
+  it('should parse blocks', function() {
     deepEqual(parse('test { 123; }'),
       b.program([
         b.call('test', [], b.hash(), [], b.program([b.number(123)]))
@@ -260,7 +260,7 @@ describe("Parser", function() {
     );
   });
 
-  it("should ignore empty statements", function() {
+  it('should ignore empty statements', function() {
     deepEqual(parse('test { };;test { };;'),
       b.program([
         b.call('test', [], b.hash(), [], b.program()),
@@ -269,7 +269,7 @@ describe("Parser", function() {
     );
   });
 
-  it("should treat semicolons as optional", function() {
+  it('should treat semicolons as optional', function() {
     deepEqual(parse('test'),
       b.program([
         b.call('test')
@@ -301,25 +301,25 @@ describe("Parser", function() {
     );
   });
 
-  it("should parse partials", function() {
+  it('should parse partials', function() {
     deepEqual(parse('partial "thing";'),
       b.program([
         b.partial(b.string('thing'))
       ])
     );
-    
+
     deepEqual(parse('partial "thing" x=y;'),
       b.program([
         b.partial(b.string('thing'), b.hash([b.pair('x', b.call('y'))]))
       ])
     );
-    
+
     deepEqual(parse('partial thing;'),
       b.program([
         b.partial(b.call('thing'))
       ])
     );
-    
+
     deepEqual(parse('partial (thing 123);'),
       b.program([
         b.partial(b.call('thing', [b.number(123)]))

@@ -147,7 +147,7 @@ function collectNodes(parent, constructor) {
     if (child instanceof constructor) {
       items = items.concat(child);
     }
-  
+
     if (child instanceof Item) {
       return items.concat(collectNodes(child, constructor));
     } else {
@@ -175,7 +175,7 @@ class Bundle {
     }, {});
 
     this.links.forEach(function(link) {
-      if (link.href[0] === "#") {
+      if (link.href[0] === '#') {
         link.items = itemsByFragment[link.href.slice(1)] || [];
       }
     });

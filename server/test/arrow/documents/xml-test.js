@@ -37,7 +37,7 @@ describe('XML document helpers', function() {
   it('should render using a builder we pass to render if present', function() {
     let arrow = new Arrow('element "stuff";', XML);
 
-    let builder = Xmlbuilder.create("root");
+    let builder = Xmlbuilder.create('root');
     arrow.evaluate().render(builder);
 
     let actual = builder.doc().toString();

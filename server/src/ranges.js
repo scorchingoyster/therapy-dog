@@ -1,4 +1,4 @@
-const regenerate = require("regenerate");
+const regenerate = require('regenerate');
 
 // Borrowed from the Swift lexer: lib/Parse/Lexer.cpp
 
@@ -23,14 +23,14 @@ let disallowed = regenerate()
 .addRange(0x0300, 0x036F).addRange(0x1DC0, 0x1DFF).addRange(0x20D0, 0x20FF).addRange(0xFE20, 0xFE2F);
 
 let head = regenerate()
-.addRange("a", "z").addRange("A", "Z").add("_")
-.add("@").add("-").add(":")
+.addRange('a', 'z').addRange('A', 'Z').add('_')
+.add('@').add('-').add(':')
 .add(extended)
 .remove(disallowed);
 
 let tail = regenerate()
-.addRange("a", "z").addRange("A", "Z").add("_").addRange("0", "9")
-.add("-").add(":")
+.addRange('a', 'z').addRange('A', 'Z').add('_').addRange('0', '9')
+.add('-').add(':')
 .add(extended);
 
 console.log(head.toString());

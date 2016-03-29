@@ -11,7 +11,7 @@ function parseHash(hash) {
   let data = false;
 
   Object.keys(hash).forEach(function(key) {
-    if (key[0] === "@") {
+    if (key[0] === '@') {
       options[key.slice(1)] = hash[key].value;
     } else {
       attributes[key] = hash[key].value;
@@ -45,7 +45,7 @@ module.exports = {
     }
 
     let keep;
-    if (typeof options.keep !== "undefined") {
+    if (typeof options.keep !== 'undefined') {
       keep = options.keep;
     } else {
       keep = data;
@@ -80,7 +80,7 @@ module.exports = {
     }
 
     let keep;
-    if (typeof options.keep !== "undefined") {
+    if (typeof options.keep !== 'undefined') {
       keep = options.keep;
     } else {
       keep = data || children.some(function(child) { return child.keep; });

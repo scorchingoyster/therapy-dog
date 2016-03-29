@@ -2,42 +2,42 @@
 
 function buildProgram(body) {
   return {
-    type: "program",
+    type: 'program',
     body: body || []
   };
 }
 
 function buildString(value) {
   return {
-    type: "string",
+    type: 'string',
     value: value
   };
 }
 
 function buildBoolean(value) {
   return {
-    type: "boolean",
+    type: 'boolean',
     value: value
   };
 }
 
 function buildNumber(value) {
   return {
-    type: "number",
+    type: 'number',
     value: value
   };
 }
 
 function buildHash(pairs) {
   return {
-    type: "hash",
+    type: 'hash',
     pairs: pairs || []
   };
 }
 
 function buildPair(key, value) {
   return {
-    type: "pair",
+    type: 'pair',
     key: key,
     value: value
   };
@@ -45,7 +45,7 @@ function buildPair(key, value) {
 
 function buildCall(name, params, hash, locals, body, inverse) {
   return {
-    type: "call",
+    type: 'call',
     name: name,
     params: params || [],
     hash: hash || buildHash(),
@@ -57,14 +57,14 @@ function buildCall(name, params, hash, locals, body, inverse) {
 
 function buildPath(parts) {
   return {
-    type: "path",
+    type: 'path',
     parts: parts || []
   };
 }
 
 function buildArrow(source, target) {
   return {
-    type: "arrow",
+    type: 'arrow',
     source: source,
     target: target || []
   };
@@ -72,7 +72,7 @@ function buildArrow(source, target) {
 
 function buildPartial(name, context) {
   return {
-    type: "partial",
+    type: 'partial',
     name: name,
     context: context || buildHash()
   };

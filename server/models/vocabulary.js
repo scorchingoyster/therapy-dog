@@ -7,9 +7,9 @@ const VocabularyNotFoundError = require('./errors').VocabularyNotFoundError;
 const VOCABULARIES = {};
 
 if (process.env.VOCABULARIES_DIRECTORY) {
-  glob(path.join(process.env.VOCABULARIES_DIRECTORY, "*.json"), function(err, filenames) {
+  glob(path.join(process.env.VOCABULARIES_DIRECTORY, '*.json'), function(err, filenames) {
     filenames.forEach(function(filename) {
-      let id = path.basename(filename, ".json");
+      let id = path.basename(filename, '.json');
       VOCABULARIES[id] = new Vocabulary(id, require(filename));
     });
   });
