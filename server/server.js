@@ -1,13 +1,14 @@
+'use strict';
+
 require('dotenv').config();
-require('source-map-support').install();
 
-var express = require('express');
-var morgan = require('morgan');
-var api = require('./build/bundle');
+const express = require('express');
+const morgan = require('morgan');
+const router = require('./router');
 
-var app = express();
+let app = express();
 app.use(morgan('dev'));
-app.use('/api', api);
+app.use('/api', router);
 
 app.listen(process.env.PORT, process.env.HOST, function() {
   console.log('Server started on %s:%d', process.env.HOST, process.env.PORT);
