@@ -5,8 +5,9 @@ const Form = require('../models/form');
 const generateBundle = require('../deposit/generate-bundle');
 const generateSubmission = require('../deposit/generate-submission');
 const submitZip = require('../deposit/submit-zip');
+const logging = require('../lib/logging');
 
-exports.create = function(req, res) {
+exports.create = function(req, res, next) {
   let deposit = req.body;
   let form, values, bundle;
 
@@ -18,20 +19,27 @@ exports.create = function(req, res) {
   })
   .then(function(v) {
     values = v;
-    console.log(inspect(values, { depth: null }));
+    logging.debug('Transformed values for form "%s"', deposit.form, {
+      values: values
+    });
 
     bundle = generateBundle(form, values);
-    console.log(inspect(bundle, { depth: null }));
+    logging.debug('Generated bundle for form "%s"', deposit.form, {
+      bundle: bundle
+    });
 
     return generateSubmission(form, bundle);
   })
   .then(function(submission) {
-    Object.keys(submission).forEach(function(name) {
-      if (submission[name] instanceof Buffer) {
-        console.log(name, submission[name].toString());
-      } else {
-        console.log(name, submission[name]);
-      }
+    logging.debug('Generated submission for form "%s"', deposit.form, {
+      submission: Object.keys(submission).reduce(function(object, name) {
+        if (submission[name] instanceof Buffer) {
+          object[name] = submission[name].toString();
+        } else {
+          object[name] = submission[name];
+        }
+        return object;
+      }, {})
     });
 
     return submitZip(form, submission, {
@@ -44,7 +52,6 @@ exports.create = function(req, res) {
     res.send(result).end();
   })
   .catch(function(err) {
-    console.error(err.stack);
-    res.status(500).send({ errors: [{ title: 'Internal server error' }] });
+    next(err);
   });
 };

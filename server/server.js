@@ -3,6 +3,9 @@
 const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');
+const express = require('express');
+const logging = require('./lib/logging');
+const router = require('./router');
 
 // Check that the required environment variables are present (as defined in .env.example)
 let missing = Object.keys(dotenv.parse(fs.readFileSync(path.join(__dirname, '.env.example'))))
@@ -15,13 +18,22 @@ if (missing.length > 0) {
   process.exit(1);
 }
 
-const express = require('express');
-const morgan = require('morgan');
-const router = require('./router');
-
+// Start the server
 let app = express();
-app.use(morgan('dev'));
+
+if (logging.requestLogger) {
+  app.use(logging.requestLogger);
+}
+
 app.use('/', router);
+
+app.use(logging.errorLogger);
+
+app.use(function(err, req, res, next) {
+  /*jshint unused: vars */
+  res.status(500);
+  res.send({ errors: [{ detail: 'Internal server error' }] });
+});
 
 app.listen(process.env.PORT, process.env.HOST, function() {
   console.log('Server started on %s:%d', process.env.HOST, process.env.PORT);

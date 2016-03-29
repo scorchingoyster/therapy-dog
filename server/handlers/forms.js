@@ -2,8 +2,9 @@
 
 const Form = require('../models/form');
 const FormNotFoundError = require('../models/errors').FormNotFoundError;
+const logging = require('../lib/logging');
 
-exports.index = function(req, res) {
+exports.index = function(req, res, next) {
   Form.findAll()
   .then(function(forms) {
     return Promise.all(forms.map(function(form) {
@@ -14,12 +15,11 @@ exports.index = function(req, res) {
     res.send({ data: data });
   })
   .catch(function(err) {
-    console.error(err.stack);
-    res.status(500).send({ errors: [{ title: 'Internal server error' }] });
+    next(err);
   });
 };
 
-exports.show = function(req, res) {
+exports.show = function(req, res, next) {
   Form.findById(req.params.id)
   .then(function(form) {
     return form.getResourceObject();
@@ -29,10 +29,9 @@ exports.show = function(req, res) {
   })
   .catch(function(err) {
     if (err instanceof FormNotFoundError) {
-      res.status(404).send({ errors: [{ title: 'Form not found' }] });
+      res.status(404).send({ errors: [{ title: 'Not found' }] });
     } else {
-      console.error(err.stack);
-      res.status(500).send({ errors: [{ title: 'Internal server error' }] });
+      next(err);
     }
   });
 };

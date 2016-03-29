@@ -2,7 +2,7 @@
 
 const Upload = require('../models/upload');
 
-exports.create = function(req, res) {
+exports.create = function(req, res, err) {
   Upload.createFromFile(req.file)
   .then(function(upload) {
     return upload.getResourceObject();
@@ -11,7 +11,6 @@ exports.create = function(req, res) {
     res.send({ data: data });
   })
   .catch(function(err) {
-    console.error(err.stack);
-    res.status(500).send({ errors: [{ title: 'Internal server error' }] });
+    next(err);
   });
 };
