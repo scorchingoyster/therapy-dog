@@ -2,6 +2,10 @@ import Ember from 'ember';
 /* globals $ */
 
 export default Ember.Route.extend({
+  title: function() {
+    return this.modelFor('deposit').get('form.title');
+  },
+  
   model() {
     return this.modelFor('deposit').get('entry');
   },
