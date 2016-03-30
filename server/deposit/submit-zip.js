@@ -4,6 +4,7 @@ const fs = require('fs');
 const request = require('request');
 const archiver = require('archiver');
 const tmp = require('tmp');
+const SwordError = require('../lib/errors').SwordError;
 
 function makeZip(submission) {
   return new Promise(function(resolve, reject) {
@@ -60,8 +61,13 @@ function postZip(form, zipFile) {
     }, function(err, response, body) {
       if (err) {
         reject(err);
+      } else if (response.statusCode !== 201) {
+        reject(new SwordError('Received error response from SWORD endpoint', {
+          statusCode: response.statusCode,
+          body: body
+        }));
       } else {
-        resolve({ status: response.statusCode === 201 ? 'OK' : 'ERROR', message: body });
+        resolve({ status: 'OK', message: body });
       }
     });
   });

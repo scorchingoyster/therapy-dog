@@ -6,6 +6,7 @@ const generateBundle = require('../deposit/generate-bundle');
 const generateSubmission = require('../deposit/generate-submission');
 const submitZip = require('../deposit/submit-zip');
 const logging = require('../lib/logging');
+const SwordError = require('../lib/errors').SwordError;
 
 exports.create = function(req, res, next) {
   let deposit = req.body;
@@ -52,6 +53,10 @@ exports.create = function(req, res, next) {
     res.send(result).end();
   })
   .catch(function(err) {
+    if (err instanceof SwordError) {
+      logging.error('Received error response from SWORD endpoint: %s', err.extra.body);
+    }
+    
     next(err);
   });
 };
