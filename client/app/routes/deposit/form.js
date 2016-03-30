@@ -18,10 +18,18 @@ export default Ember.Route.extend({
         values: this.modelFor('deposit').get('entry').flatten()
       };
       
-      let promise = $.ajax('/api/deposits', {
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(payload)
+      let promise = new Ember.RSVP.Promise(function(resolve, reject) {
+        $.ajax('/api/deposits', {
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(payload)
+        })
+        .done(function(data) {
+          resolve(data);
+        })
+        .fail(function() {
+          reject();
+        });
       });
       
       let proxy = Ember.ObjectProxy.extend(Ember.PromiseProxyMixin).create({ promise });
