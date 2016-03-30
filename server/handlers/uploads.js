@@ -2,7 +2,7 @@
 
 const Upload = require('../models/upload');
 
-exports.create = function(req, res, err) {
+exports.create = function(req, res, next) {
   Upload.createFromFile(req.file)
   .then(function(upload) {
     return upload.getResourceObject();

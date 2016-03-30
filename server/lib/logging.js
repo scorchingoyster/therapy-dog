@@ -2,20 +2,15 @@
 
 const winston = require('winston');
 const expressWinston = require('express-winston');
-// var winstonMail = require('winston-mail');
 
 let requestLogger, errorLogger;
 
 if (process.env.NODE_ENV === 'production') {
-  var transports = [
+  let transports = [
     new winston.transports.File({
       level: 'info',
       filename: process.env.LOG_FILENAME
-    }),
-    // new winstonMail.Mail({
-    //   to: process.env.ERROR_MAIL_TO,
-    //   level: 'error'
-    // })
+    })
   ];
 
   winston.clear();

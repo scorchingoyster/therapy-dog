@@ -2,7 +2,6 @@
 
 const Form = require('../models/form');
 const FormNotFoundError = require('../lib/errors').FormNotFoundError;
-const logging = require('../lib/logging');
 
 exports.index = function(req, res, next) {
   Form.findAll()

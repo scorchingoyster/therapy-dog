@@ -1,6 +1,5 @@
 'use strict';
 
-const inspect = require('util').inspect;
 const Form = require('../models/form');
 const generateBundle = require('../deposit/generate-bundle');
 const generateSubmission = require('../deposit/generate-submission');
@@ -56,7 +55,7 @@ exports.create = function(req, res, next) {
     if (err instanceof SwordError) {
       logging.error('Received error response from SWORD endpoint: %s', err.extra.body);
     }
-    
+
     next(err);
   });
 };

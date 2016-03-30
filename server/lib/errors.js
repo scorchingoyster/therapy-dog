@@ -31,5 +31,5 @@ exports.SwordError = function(message, extra) {
   this.name = this.constructor.name;
   this.message = message;
   this.extra = extra;
-}
+};
 inherits(exports.SwordError, Error);
