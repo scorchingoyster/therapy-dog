@@ -5,11 +5,12 @@ const glob = require('glob');
 const Upload = require('./upload');
 const Vocabulary = require('./vocabulary');
 const FormNotFoundError = require('../lib/errors').FormNotFoundError;
+const config = require('../lib/config');
 
 const FORMS = {};
 
-if (process.env.FORMS_DIRECTORY) {
-  glob(path.join(process.env.FORMS_DIRECTORY, '*.json'), function(err, filenames) {
+if (config.get('FORMS_DIRECTORY')) {
+  glob(path.join(config.get('FORMS_DIRECTORY'), '*.json'), function(err, filenames) {
     filenames.forEach(function(filename) {
       let id = path.basename(filename, '.json');
       FORMS[id] = new Form(id, require(filename));

@@ -2,9 +2,10 @@
 
 const express = require('express');
 const multer = require('multer');
+const config = require('../lib/config');
 
 let router = express.Router();
-let upload = multer({ dest: process.env.UPLOADS_DIRECTORY });
+let upload = multer({ dest: config.get('UPLOADS_DIRECTORY') });
 
 router.use(require('body-parser').json());
 

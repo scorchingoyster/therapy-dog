@@ -2,6 +2,7 @@
 
 const winston = require('winston');
 const expressWinston = require('express-winston');
+const config = require('./config');
 
 let requestLogger, errorLogger;
 
@@ -9,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
   let transports = [
     new winston.transports.File({
       level: 'info',
-      filename: process.env.LOG_FILENAME
+      filename: config.get('LOG_FILENAME')
     })
   ];
 

@@ -42,11 +42,7 @@ exports.create = function(req, res, next) {
       }, {})
     });
 
-    return submitZip(form, submission, {
-      baseUrl: process.env.SWORD_BASE_URL,
-      username: process.env.SWORD_USERNAME,
-      password: process.env.SWORD_PASSWORD
-    });
+    return submitZip(form, submission);
   })
   .then(function(result) {
     res.send(result).end();
