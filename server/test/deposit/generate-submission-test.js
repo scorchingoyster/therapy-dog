@@ -2,9 +2,9 @@
 
 const assert = require('assert');
 const libxmljs = require('libxmljs');
-const Form = require('../../models/form');
-const generateSubmission = require('../../deposit/generate-submission');
-const generateBundle = require('../../deposit/generate-bundle');
+const Form = require('../../lib/models/form');
+const generateSubmission = require('../../lib/deposit/generate-submission');
+const generateBundle = require('../../lib/deposit/generate-bundle');
 const buildTestUpload = require('./test-helpers').buildTestUpload;
 
 describe('Submission generation', function() {

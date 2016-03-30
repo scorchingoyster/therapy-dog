@@ -1,6 +1,6 @@
 'use strict';
 
-const Context = require('../../arrow/context');
+const Context = require('../../lib/arrow/context');
 const deepEqual = require('assert').deepEqual;
 
 describe('Contexts', function() {

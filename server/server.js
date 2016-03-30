@@ -3,7 +3,7 @@
 const express = require('express');
 const config = require('./lib/config');
 const logging = require('./lib/logging');
-const router = require('./router');
+const router = require('./lib/router');
 
 // Start the server
 let app = express();

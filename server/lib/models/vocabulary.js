@@ -2,8 +2,8 @@
 
 const path = require('path');
 const glob = require('glob');
-const VocabularyNotFoundError = require('../lib/errors').VocabularyNotFoundError;
-const config = require('../lib/config');
+const VocabularyNotFoundError = require('../errors').VocabularyNotFoundError;
+const config = require('../config');
 
 const VOCABULARIES = {};
 

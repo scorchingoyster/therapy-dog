@@ -1,7 +1,7 @@
 'use strict';
 
 const Form = require('../models/form');
-const FormNotFoundError = require('../lib/errors').FormNotFoundError;
+const FormNotFoundError = require('../errors').FormNotFoundError;
 
 exports.index = function(req, res, next) {
   Form.findAll()

@@ -12,9 +12,9 @@ if (process.env.NODE_ENV !== 'production') {
     SWORD_BASE_URL: 'https://localhost:8443/services/sword/collection/',
     SWORD_USERNAME: 'depositforms',
     SWORD_PASSWORD: 'depositforms',
-    FORMS_DIRECTORY: path.join(__dirname, '../forms'),
-    VOCABULARIES_DIRECTORY: path.join(__dirname, '../vocabularies'),
-    UPLOADS_DIRECTORY: path.join(__dirname, '../uploads')
+    FORMS_DIRECTORY: path.join(__dirname, '../data/forms'),
+    VOCABULARIES_DIRECTORY: path.join(__dirname, '../data/vocabularies'),
+    UPLOADS_DIRECTORY: path.join(__dirname, '../data/uploads')
   });
 }
 

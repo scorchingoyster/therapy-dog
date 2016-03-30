@@ -3,8 +3,8 @@
 const deepEqual = require('assert').deepEqual;
 const equal = require('assert').equal;
 const Xmlbuilder = require('xmlbuilder');
-const Arrow = require('../../../arrow');
-const XML = require('../../../arrow/documents/xml');
+const Arrow = require('../../../lib/arrow');
+const XML = require('../../../lib/arrow/documents/xml');
 
 describe('XML document helpers', function() {
   it('should render a basic document', function() {

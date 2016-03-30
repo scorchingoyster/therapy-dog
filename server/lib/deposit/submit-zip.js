@@ -4,8 +4,8 @@ const fs = require('fs');
 const request = require('request');
 const archiver = require('archiver');
 const tmp = require('tmp');
-const config = require('../lib/config');
-const SwordError = require('../lib/errors').SwordError;
+const config = require('../config');
+const SwordError = require('../errors').SwordError;
 
 function makeZip(submission) {
   return new Promise(function(resolve, reject) {

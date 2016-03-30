@@ -1,2 +1,2 @@
-arrow/parser.js: src/parser.pegjs
-	node_modules/.bin/pegjs src/parser.pegjs arrow/parser.js
+lib/arrow/parser.js: src/parser.pegjs
+	node_modules/.bin/pegjs src/parser.pegjs lib/arrow/parser.js

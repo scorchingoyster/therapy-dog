@@ -1,6 +1,6 @@
 'use strict';
 
-const Arrow = require('../../arrow');
+const Arrow = require('../../lib/arrow');
 
 exports.registerTestHelpers = function(arrow) {
   arrow.registerHelper('repeat', Arrow.helper(function(params, hash, body) {

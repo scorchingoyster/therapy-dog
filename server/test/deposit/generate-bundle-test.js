@@ -1,8 +1,8 @@
 'use strict';
 
 const assert = require('assert');
-const Form = require('../../models/form');
-const generateBundle = require('../../deposit/generate-bundle');
+const Form = require('../../lib/models/form');
+const generateBundle = require('../../lib/deposit/generate-bundle');
 const buildTestUpload = require('./test-helpers').buildTestUpload;
 
 describe('Bundle generation', function() {

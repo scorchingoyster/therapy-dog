@@ -1,6 +1,6 @@
 {
   "esnext": true,
-  "excludeFiles": ["arrow/parser.js", "node_modules/**"],
+  "excludeFiles": ["lib/arrow/parser.js", "node_modules/**"],
   "disallowSpacesInsideArrayBrackets": "all",
   "disallowPaddingNewlinesInBlocks": true,
   "requireSpaceBeforeObjectValues": true,

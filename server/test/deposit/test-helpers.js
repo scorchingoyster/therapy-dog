@@ -3,7 +3,7 @@
 const fs = require('fs');
 const tmp = require('tmp');
 const uuid = require('uuid');
-const Upload = require('../../models/upload');
+const Upload = require('../../lib/models/upload');
 
 exports.buildTestUpload = function(name, type, buffer) {
   let tmpobj = tmp.fileSync();

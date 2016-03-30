@@ -1,8 +1,8 @@
 'use strict';
 
 const deepEqual = require('assert').deepEqual;
-const Arrow = require('../../arrow');
-const b = require('../../arrow/builders');
+const Arrow = require('../../lib/arrow');
+const b = require('../../lib/arrow/builders');
 
 function parse(input) {
   let arrow = new Arrow(input);
