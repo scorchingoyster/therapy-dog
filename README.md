@@ -30,7 +30,7 @@ Copy the example form and vocabularies:
     cp server/vocabularies/genre.json.example server/vocabularies/genre.json
     cp server/vocabularies/issuance.json.example server/vocabularies/issuance.json
 
-In order to test submission to the CDR development VM via SWORD, you'll need to set the `"destination"` property of this form to the PID of some container. The container must grant the "unc:app:lib:cdr:depositor:depositforms" group the "ingester" role. If you want to submit to the QA server instead, you'll also need to change the `DEPOSIT_BASE_URL` variable in `server/.env`.
+In order to test submission to the CDR development VM via SWORD, you'll need to set the `"destination"` property of this form to the PID of some container. The container must grant the "unc:app:lib:cdr:depositor:depositforms" group the "ingester" role. If you want to submit to the QA server instead, you'll also need to change the `SWORD_BASE_URL` variable in `server/.env`.
 
 Start the API server:
 

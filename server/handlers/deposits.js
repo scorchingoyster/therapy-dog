@@ -44,9 +44,9 @@ exports.create = function(req, res, next) {
     });
 
     return submitZip(form, submission, {
-      baseUrl: process.env.DEPOSIT_BASE_URL,
-      username: process.env.DEPOSIT_USERNAME,
-      password: process.env.DEPOSIT_PASSWORD
+      baseUrl: process.env.SWORD_BASE_URL,
+      username: process.env.SWORD_USERNAME,
+      password: process.env.SWORD_PASSWORD
     });
   })
   .then(function(result) {
