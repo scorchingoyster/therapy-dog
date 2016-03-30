@@ -1,6 +1,5 @@
 /node_modules
 /build
-/.env
 data/uploads
 data/forms/*.json
 data/vocabularies/*.json
