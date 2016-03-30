@@ -3,11 +3,12 @@
 const path = require('path');
 const glob = require('glob');
 const VocabularyNotFoundError = require('../lib/errors').VocabularyNotFoundError;
+const config = require('../lib/config');
 
 const VOCABULARIES = {};
 
-if (process.env.VOCABULARIES_DIRECTORY) {
-  glob(path.join(process.env.VOCABULARIES_DIRECTORY, '*.json'), function(err, filenames) {
+if (config.get('VOCABULARIES_DIRECTORY')) {
+  glob(path.join(config.get('VOCABULARIES_DIRECTORY'), '*.json'), function(err, filenames) {
     filenames.forEach(function(filename) {
       let id = path.basename(filename, '.json');
       VOCABULARIES[id] = new Vocabulary(id, require(filename));

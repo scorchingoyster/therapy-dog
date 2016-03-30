@@ -4,6 +4,7 @@ const fs = require('fs');
 const request = require('request');
 const archiver = require('archiver');
 const tmp = require('tmp');
+const config = require('../lib/config');
 const SwordError = require('../lib/errors').SwordError;
 
 function makeZip(submission) {
@@ -47,15 +48,15 @@ function postZip(form, zipFile) {
     request.post(form.destination, {
       strictSSL: false,
       body: body,
-      baseUrl: process.env.SWORD_BASE_URL,
+      baseUrl: config.get('SWORD_BASE_URL'),
       headers: {
         'Packaging': 'http://cdr.unc.edu/METS/profiles/Simple',
         'Content-Disposition': 'attachment; filename=package.zip',
         'Content-Type': 'application/zip'
       },
       auth: {
-        username: process.env.SWORD_USERNAME,
-        password: process.env.SWORD_PASSWORD,
+        username: config.get('SWORD_USERNAME'),
+        password: config.get('SWORD_PASSWORD'),
         sendImmediately: true
       }
     }, function(err, response, body) {
