@@ -11,7 +11,6 @@ module.exports = function(app) {
   });
 
   app.use(proxyPath, function(req, res, next) {
-    req.url = proxyPath + '/' + req.url;
     proxy.web(req, res, { target: 'http://127.0.0.1:3000/' });
   });
 };

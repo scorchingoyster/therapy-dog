@@ -1,6 +1,6 @@
 'use strict';
 
-const UploadNotFoundError = require('./errors').UploadNotFoundError;
+const UploadNotFoundError = require('../lib/errors').UploadNotFoundError;
 
 const UPLOADS = {};
 
