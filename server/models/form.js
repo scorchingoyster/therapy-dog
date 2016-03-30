@@ -4,7 +4,7 @@ const path = require('path');
 const glob = require('glob');
 const Upload = require('./upload');
 const Vocabulary = require('./vocabulary');
-const FormNotFoundError = require('./errors').FormNotFoundError;
+const FormNotFoundError = require('../lib/errors').FormNotFoundError;
 
 const FORMS = {};
 
