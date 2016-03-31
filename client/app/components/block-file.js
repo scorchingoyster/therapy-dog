@@ -38,33 +38,31 @@ export default Ember.Component.extend(FocusEntryAction, {
       return true;
     }
   }),
+  
+  uploadFile: function(file) {
+    let upload = this.get('uploader').upload(file);
+
+    upload.on('complete', (response) => {
+      if (this.get('isMultiple')) {
+        this.get('entry.value').pushObject(response);
+      } else {
+        this.set('entry.value', response);
+      }
+    });
+
+    this.get('uploads').pushObject(upload);
+  },
 
   actions: {
     choose: function(fileList) {
       if (fileList.length > 0) {
-        let uploader = this.get('uploader');
-        let isMultiple = this.get('isMultiple');
-        
-        if (!isMultiple) {
-          this.get('uploads').clear();
-        }
-
-        for (let i = 0; i < fileList.length; i++) {
-          let upload = uploader.upload(fileList[i]);
-
-          upload.on('complete', (response) => {
-            if (isMultiple) {
-              this.get('entry.value').pushObject(response);
-            } else {
-              this.set('entry.value', response);
-            }
-          });
-
-          this.get('uploads').pushObject(upload);
-
-          if (!isMultiple) {
-            break;
+        if (this.get('isMultiple')) {
+          for (let i = 0; i < fileList.length; i++) {
+            this.uploadFile(fileList[i]);
           }
+        } else {
+          this.get('uploads').clear();
+          this.uploadFile(fileList[0]);
         }
       }
     },

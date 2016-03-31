@@ -24,7 +24,7 @@ const Upload = Ember.Object.extend(Ember.Evented, {
       this.set('progress', Ember.Object.create({ loaded, total, fraction }));
     };
     
-    this.xhr.upload.onerror = (e) => {
+    this.xhr.upload.onerror = () => {
       this.trigger('error');
       this.set('error', true);
       this.set('loading', false);
@@ -32,7 +32,7 @@ const Upload = Ember.Object.extend(Ember.Evented, {
     
     this.xhr.onload = () => {
       if (this.xhr.status === 200) {
-        let response = { ...this.xhr.response.data.attributes, id: this.xhr.response.data.id };
+        let response = Object.assign({}, this.xhr.response.data.attributes, { id: this.xhr.response.data.id });
         this.trigger('complete', response);
         this.set('response', response);
         this.set('loading', false);
