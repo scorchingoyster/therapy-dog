@@ -4,7 +4,7 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 run-server: ## Run the API server in development mode
-	cd server && node_modules/.bin/nodemon --ignore "uploads" npm start
+	cd server && node_modules/.bin/nodemon --ignore "data/uploads" npm start
 
 run-client: ## Run the client in development mode
 	cd client && ember server
