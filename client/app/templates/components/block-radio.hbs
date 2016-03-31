@@ -1,7 +1,11 @@
 <label>{{entry.block.label}}</label>
 
 {{#each entry.block.options as |option|}}
-  {{radio-button value=option groupValue=entry.value}} {{option}}
+  {{#if option.value}}
+    {{radio-button value=option.value groupValue=entry.value}} {{option.label}}
+  {{else}}
+    {{radio-button value=option groupValue=entry.value}} {{option}}
+  {{/if}}
 {{/each}}
 
 {{entry-error-messages entry=entry}}

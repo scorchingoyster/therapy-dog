@@ -1,0 +1,31 @@
+{
+  "title": "Article Form",
+  "children": [
+    {
+      "type": "text",
+      "key": "title",
+      "label": "Title"
+    },
+    {
+      "type": "select",
+      "key": "language",
+      "label": "Language",
+      "options": "language"
+    },
+    {
+      "type": "checkboxes",
+      "key": "roles",
+      "label": "Roles",
+      "options": "role"
+    },
+    {
+      "type": "select",
+      "key": "license",
+      "label": "License",
+      "options": [
+        "CC-BY",
+        "CC-BY-NC"
+      ]
+    }
+  ]
+}

@@ -22,6 +22,6 @@ app.use(function(err, req, res, next) {
   res.send({ errors: [{ detail: 'Internal server error' }] });
 });
 
-let server = app.listen(config.get('PORT'), config.get('HOST'), function() {
+let server = app.listen(config.PORT, config.HOST, function() {
   console.log('Server started on %s:%s', server.address().address, server.address().port);
 });

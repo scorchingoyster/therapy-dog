@@ -21,7 +21,7 @@ exports.index = function(req, res, next) {
 exports.show = function(req, res, next) {
   Form.findById(req.params.id)
   .then(function(form) {
-    return form.getResourceObject();
+    return form.getResourceObject({ children: true });
   })
   .then(function(resourceObject) {
     res.send({ data: resourceObject });

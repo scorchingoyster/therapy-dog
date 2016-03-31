@@ -7,8 +7,8 @@ const config = require('../config');
 
 const VOCABULARIES = {};
 
-if (config.get('VOCABULARIES_DIRECTORY')) {
-  glob(path.join(config.get('VOCABULARIES_DIRECTORY'), '*.json'), function(err, filenames) {
+if (config.VOCABULARIES_DIRECTORY) {
+  glob(path.join(config.VOCABULARIES_DIRECTORY, '*.json'), function(err, filenames) {
     filenames.forEach(function(filename) {
       let id = path.basename(filename, '.json');
       VOCABULARIES[id] = new Vocabulary(id, require(filename));
@@ -20,12 +20,60 @@ if (config.get('VOCABULARIES_DIRECTORY')) {
   @class Vocabulary
   @constructor
   @param {String} id
-  @param {Object} terms
+  @param {Object} attributes
 */
 class Vocabulary {
-  constructor(id, terms) {
+  constructor(id, attributes) {
     this.id = id;
-    this.terms = terms;
+    this.attributes = attributes;
+  }
+
+  /**
+    @property terms
+    @type {Array}
+  */
+  get terms() {
+    return this.attributes.terms;
+  }
+
+  /**
+    @property labelKey
+    @type {String}
+  */
+  get labelKey() {
+    return this.attributes.labelKey;
+  }
+
+  /**
+    @property valueKey
+    @type {String}
+  */
+  get valueKey() {
+    return this.attributes.valueKey;
+  }
+
+  /**
+    @method getOptions
+    @type {Array}
+  */
+  get options() {
+    return this.terms.map((term) => {
+      if (typeof term === 'object') {
+        return { label: term[this.labelKey], value: term[this.valueKey] };
+      } else {
+        return term;
+      }
+    });
+  }
+
+  getTerm(value) {
+    return this.terms.find((term) => {
+      if (typeof term === 'object') {
+        return term[this.valueKey] === value;
+      } else {
+        return term === value;
+      }
+    });
   }
 
   /**

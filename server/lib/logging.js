@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
   let transports = [
     new winston.transports.File({
       level: 'info',
-      filename: config.get('LOG_FILENAME')
+      filename: config.LOG_FILENAME
     })
   ];
 

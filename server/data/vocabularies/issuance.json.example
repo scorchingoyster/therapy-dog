@@ -1,11 +1,13 @@
-[
-  "Art Installation",
-  "Blog",
-  "Journal",
-  "Monograph",
-  "Newsletter",
-  "Painting",
-  "Pamphlet",
-  "Social Media Post",
-  "Zine"
-]
+{
+  "terms": [
+    "Art Installation",
+    "Blog",
+    "Journal",
+    "Monograph",
+    "Newsletter",
+    "Painting",
+    "Pamphlet",
+    "Social Media Post",
+    "Zine"
+  ]
+}

@@ -1,5 +1,7 @@
-[
-  "Essay",
-  "Fiction",
-  "Scholarly Publication"
-]
+{
+  "terms": [
+    "Essay",
+    "Fiction",
+    "Scholarly Publication"
+  ]
+}

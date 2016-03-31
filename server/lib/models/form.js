@@ -9,8 +9,8 @@ const config = require('../config');
 
 const FORMS = {};
 
-if (config.get('FORMS_DIRECTORY')) {
-  glob(path.join(config.get('FORMS_DIRECTORY'), '*.json'), function(err, filenames) {
+if (config.FORMS_DIRECTORY) {
+  glob(path.join(config.FORMS_DIRECTORY, '*.json'), function(err, filenames) {
     filenames.forEach(function(filename) {
       let id = path.basename(filename, '.json');
       FORMS[id] = new Form(id, require(filename));
@@ -83,12 +83,30 @@ function resolveVocabularies(blocks) {
       });
     } else if (typeof block.options === 'string') {
       return Vocabulary.findById(block.options).then(function(vocabulary) {
-        return Object.assign({}, block, { options: vocabulary.terms });
+        return Object.assign({}, block, {
+          options: vocabulary.options
+        });
       });
     } else {
       return Promise.resolve(block);
     }
   }));
+}
+
+/**
+  @method transformOptionValue
+  @private
+*/
+function transformOptionValue(options, value) {
+  if (typeof options === 'string') {
+    return Vocabulary.findById(options).then(function(vocabulary) {
+      return vocabulary.getTerm(value);
+    });
+  } else if (Array.isArray(options)) {
+    if (options.indexOf(value) !== -1) {
+      return value;
+    }
+  }
 }
 
 /**
@@ -158,18 +176,31 @@ class Form {
     @return {Promise<Object>}
   */
   getResourceObject() {
-    return resolveVocabularies(this.children)
-    .then((children) => {
+    let options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+    if (options.children) {
+      return resolveVocabularies(this.children)
+      .then((children) => {
+        return {
+          type: 'form',
+          id: this.id,
+          attributes: {
+            title: this.title,
+            description: this.description,
+            children: children
+          }
+        };
+      });
+    } else {
       return {
         type: 'form',
         id: this.id,
         attributes: {
           title: this.title,
-          description: this.description,
-          children: children
+          description: this.description
         }
       };
-    });
+    }
   }
 
   /**
@@ -189,11 +220,19 @@ class Form {
       } else if (block.type === 'date') {
         return String(value);
       } else if (block.type === 'select') {
-        return value;
+        return transformOptionValue(block.options, value);
       } else if (block.type === 'checkboxes') {
-        return value;
+        if (Array.isArray(value)) {
+          return Promise.all(value.map(function(v) {
+            return transformOptionValue(block.options, v);
+          })).then(function(terms) {
+            return terms.filter(t => t !== undefined);
+          });
+        } else {
+          return [];
+        }
       } else if (block.type === 'radio') {
-        return value;
+        return transformOptionValue(block.options, value);
       } else if (block.type === 'file') {
         if (block.multiple) {
           return Promise.all(value.map(function(v) {
