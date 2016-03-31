@@ -22,7 +22,7 @@ describe('Form', function() {
     it('converts object array vocabularies to options arrays', function() {
       return Form.findById('article')
       .then(function(form) {
-        return form.getResourceObject();
+        return form.getResourceObject({ children: true });
       })
       .then(function(resourceObject) {
         let language = resourceObject.attributes.children[1];
@@ -36,7 +36,7 @@ describe('Form', function() {
     it('does not convert string array vocabularies or literal options to options arrays', function() {
       return Form.findById('article')
       .then(function(form) {
-        return form.getResourceObject();
+        return form.getResourceObject({ children: true });
       })
       .then(function(resourceObject) {
         let roles = resourceObject.attributes.children[2];

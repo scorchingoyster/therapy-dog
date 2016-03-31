@@ -176,18 +176,31 @@ class Form {
     @return {Promise<Object>}
   */
   getResourceObject() {
-    return resolveVocabularies(this.children)
-    .then((children) => {
+    let options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+    if (options.children) {
+      return resolveVocabularies(this.children)
+      .then((children) => {
+        return {
+          type: 'form',
+          id: this.id,
+          attributes: {
+            title: this.title,
+            description: this.description,
+            children: children
+          }
+        };
+      });
+    } else {
       return {
         type: 'form',
         id: this.id,
         attributes: {
           title: this.title,
-          description: this.description,
-          children: children
+          description: this.description
         }
       };
-    });
+    }
   }
 
   /**
