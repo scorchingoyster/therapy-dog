@@ -10,13 +10,13 @@
       "type": "select",
       "key": "language",
       "label": "Language",
-      "options": "languages"
+      "options": "language"
     },
     {
       "type": "checkboxes",
       "key": "roles",
       "label": "Roles",
-      "options": "roles"
+      "options": "role"
     },
     {
       "type": "select",
