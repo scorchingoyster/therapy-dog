@@ -2,7 +2,11 @@
 
 <select onchange={{action "change" value="target.value"}}>
   {{#each entry.block.options as |option|}}
-    <option selected={{if (eq entry.value option) "selected" ""}}>{{option}}</option>
+    {{#if option.value}}
+      <option selected={{if (eq entry.value option.value) "selected" ""}} value={{option.value}}>{{option.label}}</option>
+    {{else}}
+      <option selected={{if (eq entry.value option) "selected" ""}}>{{option}}</option>
+    {{/if}}
   {{/each}}
 </select>
 

@@ -1,4 +1,8 @@
-[
-  { "code": "eng", "name": "English" },
-  { "code": "spa", "name": "Spanish; Castilian" }
-]
+{
+  "terms": [
+    { "code": "eng", "name": "English" },
+    { "code": "spa", "name": "Spanish; Castilian" }
+  ],
+  "valueKey": "code",
+  "labelKey": "name"
+}

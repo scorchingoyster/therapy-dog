@@ -1,5 +1,7 @@
-[
-  "Student",
-  "Faculty",
-  "Staff"
-]
+{
+  "terms": [
+    "Student",
+    "Faculty",
+    "Staff"
+  ]
+}

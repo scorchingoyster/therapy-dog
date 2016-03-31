@@ -10,15 +10,22 @@
       "type": "select",
       "key": "language",
       "label": "Language",
-      "options": "languages",
-      "optionValuePath": "code",
-      "optionLabelPath": "name"
+      "options": "languages"
+    },
+    {
+      "type": "checkboxes",
+      "key": "roles",
+      "label": "Roles",
+      "options": "roles"
     },
     {
       "type": "select",
-      "key": "role",
-      "label": "Primary Role",
-      "options": "roles"
+      "key": "license",
+      "label": "License",
+      "options": [
+        "CC-BY",
+        "CC-BY-NC"
+      ]
     }
   ]
 }

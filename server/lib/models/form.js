@@ -83,12 +83,30 @@ function resolveVocabularies(blocks) {
       });
     } else if (typeof block.options === 'string') {
       return Vocabulary.findById(block.options).then(function(vocabulary) {
-        return Object.assign({}, block, { options: vocabulary.terms });
+        return Object.assign({}, block, {
+          options: vocabulary.options
+        });
       });
     } else {
       return Promise.resolve(block);
     }
   }));
+}
+
+/**
+  @method transformOptionValue
+  @private
+*/
+function transformOptionValue(options, value) {
+  if (typeof options === 'string') {
+    return Vocabulary.findById(options).then(function(vocabulary) {
+      return vocabulary.getTerm(value);
+    });
+  } else if (Array.isArray(options)) {
+    if (options.indexOf(value) !== -1) {
+      return value;
+    }
+  }
 }
 
 /**
@@ -189,11 +207,19 @@ class Form {
       } else if (block.type === 'date') {
         return String(value);
       } else if (block.type === 'select') {
-        return value;
+        return transformOptionValue(block.options, value);
       } else if (block.type === 'checkboxes') {
-        return value;
+        if (Array.isArray(value)) {
+          return Promise.all(value.map(function(v) {
+            return transformOptionValue(block.options, v);
+          })).then(function(terms) {
+            return terms.filter(t => t !== undefined);
+          });
+        } else {
+          return [];
+        }
       } else if (block.type === 'radio') {
-        return value;
+        return transformOptionValue(block.options, value);
       } else if (block.type === 'file') {
         if (block.multiple) {
           return Promise.all(value.map(function(v) {
