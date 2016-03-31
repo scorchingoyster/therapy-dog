@@ -48,15 +48,15 @@ function postZip(form, zipFile) {
     request.post(form.destination, {
       strictSSL: false,
       body: body,
-      baseUrl: config.get('SWORD_BASE_URL'),
+      baseUrl: config.SWORD_BASE_URL,
       headers: {
         'Packaging': 'http://cdr.unc.edu/METS/profiles/Simple',
         'Content-Disposition': 'attachment; filename=package.zip',
         'Content-Type': 'application/zip'
       },
       auth: {
-        username: config.get('SWORD_USERNAME'),
-        password: config.get('SWORD_PASSWORD'),
+        username: config.SWORD_USERNAME,
+        password: config.SWORD_PASSWORD,
         sendImmediately: true
       }
     }, function(err, response, body) {

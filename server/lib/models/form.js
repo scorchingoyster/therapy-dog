@@ -9,8 +9,8 @@ const config = require('../config');
 
 const FORMS = {};
 
-if (config.get('FORMS_DIRECTORY')) {
-  glob(path.join(config.get('FORMS_DIRECTORY'), '*.json'), function(err, filenames) {
+if (config.FORMS_DIRECTORY) {
+  glob(path.join(config.FORMS_DIRECTORY, '*.json'), function(err, filenames) {
     filenames.forEach(function(filename) {
       let id = path.basename(filename, '.json');
       FORMS[id] = new Form(id, require(filename));

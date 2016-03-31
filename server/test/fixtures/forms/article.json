@@ -1,0 +1,24 @@
+{
+  "title": "Article Form",
+  "children": [
+    {
+      "type": "text",
+      "key": "title",
+      "label": "Title"
+    },
+    {
+      "type": "select",
+      "key": "language",
+      "label": "Language",
+      "options": "languages",
+      "optionValuePath": "code",
+      "optionLabelPath": "name"
+    },
+    {
+      "type": "select",
+      "key": "role",
+      "label": "Primary Role",
+      "options": "roles"
+    }
+  ]
+}

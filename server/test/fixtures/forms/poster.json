@@ -1,0 +1,10 @@
+{
+  "title": "Poster Form",
+  "children": [
+    {
+      "type": "text",
+      "key": "title",
+      "label": "Title"
+    }
+  ]
+}

@@ -7,8 +7,8 @@ const config = require('../config');
 
 const VOCABULARIES = {};
 
-if (config.get('VOCABULARIES_DIRECTORY')) {
-  glob(path.join(config.get('VOCABULARIES_DIRECTORY'), '*.json'), function(err, filenames) {
+if (config.VOCABULARIES_DIRECTORY) {
+  glob(path.join(config.VOCABULARIES_DIRECTORY, '*.json'), function(err, filenames) {
     filenames.forEach(function(filename) {
       let id = path.basename(filename, '.json');
       VOCABULARIES[id] = new Vocabulary(id, require(filename));
