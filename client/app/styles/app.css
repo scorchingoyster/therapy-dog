@@ -148,6 +148,12 @@
   border: 1px solid #c00;
 }
 
+.ui-autocomplete {
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 
 /* date blocks */
 
