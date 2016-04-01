@@ -12,10 +12,6 @@ Install Node.js. If you are using Homebrew:
 
     brew install node
 
-Install Bower and ember-cli:
-
-    npm install -g bower ember-cli
-
 Install dependencies:
 
     make deps
@@ -23,10 +19,6 @@ Install dependencies:
 Copy example the example form and its vocabularies:
 
     make examples
-
-In development, forms and vocabularies are kept in the server/data directory.
-
-In order to test submission to the CDR development VM via SWORD, you'll need to set the `"destination"` property of this form to the PID of some container. The container must grant the "unc:app:lib:cdr:depositor:depositforms" group the "ingester" role. If you want to submit to the QA server instead, you'll also need to set the `SWORD_BASE_URL` environment variable.
 
 Start the API server:
 
@@ -39,3 +31,45 @@ Start the client:
 ## Check before you commit
 
 We don't have CI set up yet, so always run `make check` before committing.
+
+## How to add dependencies
+
+The source code for some dependencies is added to the repository:
+
+  - for the client, Bower components and anything in the vendor/ directory
+  - for the server, production npm dependencies (those listed in server/package.json under "dependencies")
+
+We don't add the source code for development npm dependencies (those listed in server/package.json under "devDependencies"), which are anything we need for development (for example, running tests) but not for actually running the client or server.
+
+Add or remove dependencies separately from code changes. This makes reviewing a merge request a little easier, since we can look at our own code in separate commits.
+
+`git log --oneline` should look like this: (most recent at top)
+
+    bbbbbbb NIH left-pad.
+    aaaaaaa Remove 'left-pad' dependency from server.
+    1234567 Ensure output is left-padded.
+    abcdefg Add 'left-pad' dependency to server.
+
+### To add a Bower component to client
+
+    bower install --save DOMPurify
+    git add bower.json bower_components/DOMPurify
+    git commit -m "Add 'DOMPurify' Bower component to client."
+
+### To add a vendor dependency to client
+
+    git add vendor/normalize.css
+    git commit -m "Add 'normalize.css' vendor dependency to client."
+
+### To add a production npm dependency to server
+
+    npm install --save archiver
+    git add package.json node_modules/archiver
+    git commit -m "Add 'archiver' dependency to server."
+
+### To add a development npm dependency to server
+
+    npm install --save-dev xmldom
+    echo "node_modules/xmldom" >> .gitignore
+    git add package.json .gitignore
+    git commit -m "Add 'xmldom' devDependency to server."
