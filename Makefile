@@ -7,7 +7,7 @@ run-server: ## Run the API server in development mode
 	cd server && node_modules/.bin/nodemon --ignore "data/uploads" npm start
 
 run-client: ## Run the client in development mode
-	cd client && ember server
+	cd client && node_modules/.bin/ember server
 
 EXAMPLE_TEMPLATES = $(wildcard server/data/forms/*.json.example server/data/vocabularies/*.json.example)
 
