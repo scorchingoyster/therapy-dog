@@ -2,7 +2,7 @@
 
 const winston = require('winston');
 const expressWinston = require('express-winston');
-const config = require('./config');
+const config = require('../config');
 
 let requestLogger, errorLogger;
 

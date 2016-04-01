@@ -3,7 +3,7 @@
 const path = require('path');
 const glob = require('glob');
 const VocabularyNotFoundError = require('../errors').VocabularyNotFoundError;
-const config = require('../config');
+const config = require('../../config');
 
 const VOCABULARIES = {};
 

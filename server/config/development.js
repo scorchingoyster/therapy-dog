@@ -8,7 +8,7 @@ module.exports = {
   SWORD_BASE_URL: 'https://localhost:8443/services/sword/collection/',
   SWORD_USERNAME: 'depositforms',
   SWORD_PASSWORD: 'depositforms',
-  FORMS_DIRECTORY: path.join(__dirname, '../../data/forms'),
-  VOCABULARIES_DIRECTORY: path.join(__dirname, '../../data/vocabularies'),
-  UPLOADS_DIRECTORY: path.join(__dirname, '../../data/uploads')
+  FORMS_DIRECTORY: path.join(__dirname, '../data/forms'),
+  VOCABULARIES_DIRECTORY: path.join(__dirname, '../data/vocabularies'),
+  UPLOADS_DIRECTORY: path.join(__dirname, '../data/uploads')
 };

@@ -2,7 +2,7 @@
 
 const express = require('express');
 const multer = require('multer');
-const config = require('./config');
+const config = require('../config');
 
 let router = express.Router();
 let upload = multer({ dest: config.UPLOADS_DIRECTORY });

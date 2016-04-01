@@ -4,7 +4,7 @@ const fs = require('fs');
 const request = require('request');
 const archiver = require('archiver');
 const tmp = require('tmp');
-const config = require('../config');
+const config = require('../../config');
 const SwordError = require('../errors').SwordError;
 
 function makeZip(submission) {
