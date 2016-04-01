@@ -12,11 +12,12 @@ run-client: ## Run the client in development mode
 test-server: ## Run the API server tests
 	cd server && npm test
 
-examples: ## Copy example forms and vocabularies
-	cp server/data/forms/test-form.json.example server/data/forms/test-form.json
-	cp server/data/vocabularies/genre.json.example server/data/vocabularies/genre.json
-	cp server/data/vocabularies/issuance.json.example server/data/vocabularies/issuance.json
-	cp server/data/vocabularies/language.json.example server/data/vocabularies/language.json
+EXAMPLE_TEMPLATES = $(wildcard server/data/forms/*.json.example server/data/vocabularies/*.json.example)
+
+examples: $(EXAMPLE_TEMPLATES:.json.example=.json) ## Copy example forms and vocabularies
+
+%.json: %.json.example
+	cp $< $@
 
 deps: ## Install dependencies for the client and API server
 	cd server && npm install
