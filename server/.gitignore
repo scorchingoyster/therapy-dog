@@ -1,4 +1,16 @@
-/node_modules
 data/uploads
 data/forms/*.json
 data/vocabularies/*.json
+
+# npm binaries
+node_modules/.bin
+
+# npm devDependencies
+node_modules/jscs
+node_modules/jshint
+node_modules/mocha
+node_modules/nodemon
+node_modules/pegjs
+node_modules/regenerate
+node_modules/xmldom
+node_modules/xpath
