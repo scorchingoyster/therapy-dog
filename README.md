@@ -32,29 +32,44 @@ Start the client:
 
 We don't have CI set up yet, so always run `make check` before committing.
 
-## Dependencies
+## How to add dependencies
 
-### `server/`
+The source code for some dependencies is added to the repository:
 
-Always commit the source code of production dependencies (those listed in the "dependencies" key in server/package.json). Add the files to server/node_modules and server/package.json in one commit. It should look like this: "Add \'name\' dependency to server." or "Remove \'name\' dependency from server."
+  - for the client, Bower components and anything in the vendor/ directory
+  - for the server, production npm dependencies (those listed in server/package.json under "dependencies")
 
-Do not add production dependencies with native addons.
+We don't add the source code for development npm dependencies (those listed in server/package.json under "devDependencies"), which are anything we need for development (for example, running tests) but not for actually running the client or server.
 
-Do not commit the source code of devDependencies, just the addition to server/package.json and a entry in server/.gitignore. Add this in a separate commit. It should look like this: "Add \'name\' devDependency to server."
-
-Changes to code should be in separate commits, after adding the dependency. This makes reviewing a merge request that involves dependencies a little easier, since we can look at our code separately.
+Add or remove dependencies separately from code changes. This makes reviewing a merge request a little easier, since we can look at our own code in separate commits.
 
 `git log --oneline` should look like this: (most recent at top)
 
-    ddddddd Use xpath expressions in a test or something.
-    ccccccc Add 'xpath' devDependency to server.
-    bbbbbbb Right-pad output instead.
+    bbbbbbb NIH left-pad.
     aaaaaaa Remove 'left-pad' dependency from server.
     1234567 Ensure output is left-padded.
     abcdefg Add 'left-pad' dependency to server.
 
-### `client/`
+### To add a Bower component to client
 
-Do not commit the source code for npm dependencies.
+    bower install --save DOMPurify
+    git add bower.json bower_components/DOMPurify
+    git commit -m "Add 'DOMPurify' Bower component to client."
 
-Always commit Bower components and dependencies in client/vendor. Add the change to client/bower.json and client/bower_components in one commit. Use separate commits for code and dependency changes.
+### To add a vendor dependency to client
+
+    git add vendor/normalize.css
+    git commit -m "Add 'normalize.css' vendor dependency to client."
+
+### To add a production npm dependency to server
+
+    npm install --save archiver
+    git add package.json node_modules/archiver
+    git commit -m "Add 'archiver' dependency to server."
+
+### To add a development npm dependency to server
+
+    npm install --save-dev xmldom
+    echo "node_modules/xmldom" >> .gitignore
+    git add package.json .gitignore
+    git commit -m "Add 'xmldom' devDependency to server."
