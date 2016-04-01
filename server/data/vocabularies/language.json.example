@@ -1,10 +1,10 @@
 {
   "terms": [
-    { "code": "en", "name": "English" },
-    { "code": "fr", "name": "French" },
-    { "code": "de", "name": "German" },
-    { "code": "sa", "name": "Sanskrit" },
-    { "code": "ur", "name": "Urdu" }
+    { "code": "eng", "name": "English" },
+    { "code": "fre", "name": "French" },
+    { "code": "ger", "name": "German" },
+    { "code": "san", "name": "Sanskrit" },
+    { "code": "urd", "name": "Urdu" }
   ],
   "valueKey": "code",
   "labelKey": "name"
