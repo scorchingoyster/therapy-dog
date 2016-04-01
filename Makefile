@@ -18,7 +18,7 @@ examples: $(EXAMPLE_TEMPLATES:.json.example=.json) ## Copy example forms and voc
 
 deps: ## Install dependencies for the client and API server
 	cd server && npm install
-	cd client && npm install && bower install
+	cd client && npm install
 
 check: ## Run code style checks, linting, and unit tests.
 	cd server && npm run lint
