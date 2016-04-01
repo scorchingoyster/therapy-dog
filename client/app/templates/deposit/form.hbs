@@ -8,7 +8,7 @@
 
 <div id="form">
   <h1>{{form.title}}</h1>
-  <p>{{form.description}}</p>
+  <p>{{sanitize-html form.description}}</p>
   
   {{object-entry entry=model}}
   
