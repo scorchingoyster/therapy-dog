@@ -35,3 +35,7 @@ Start the API server:
 Start the client:
 
     make run-client
+
+## Check before you commit
+
+We don't have CI set up yet, so always run `make check` before committing.
