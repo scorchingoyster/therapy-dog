@@ -6,6 +6,7 @@
     "ember-cli-test-loader": "0.2.2",
     "jquery-ui": "~1.11.4",
     "ember-qunit-notifications": "0.1.0",
-    "ember-validations": "http://builds.dockyard.com.s3.amazonaws.com/ember-validations/latest/ember-validations.js"
+    "ember-validations": "http://builds.dockyard.com.s3.amazonaws.com/ember-validations/latest/ember-validations.js",
+    "DOMPurify": "^0.7.4"
   }
 }
