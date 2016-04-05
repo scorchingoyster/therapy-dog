@@ -139,7 +139,8 @@
         {
           "key": "description",
           "type": "text",
-          "label": "Description"
+          "label": "Description",
+          "size": "paragraph"
         }
       ]
     }
