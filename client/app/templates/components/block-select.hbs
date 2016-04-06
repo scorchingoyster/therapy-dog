@@ -2,7 +2,7 @@
 
 <select onchange={{action "change" value="target.value"}}>
   {{#if entry.block.allowBlank}}
-    <option selected={{if (isBlank entry.value) "selected" ""}} value=""></option>
+    <option selected={{unless entry.value "selected" ""}} value=""></option>
   {{/if}}
   {{#each entry.block.options as |option|}}
     {{#if option.value}}
