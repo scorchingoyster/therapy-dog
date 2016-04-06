@@ -7,5 +7,8 @@
     {{radio-button value=option groupValue=entry.value}} {{option}}
   {{/if}}
 {{/each}}
+{{#if entry.block.allowBlank}}
+  {{radio-button value="" groupValue=entry.value}} <i>No response</i>
+{{/if}}
 
 {{entry-error-messages entry=entry}}
