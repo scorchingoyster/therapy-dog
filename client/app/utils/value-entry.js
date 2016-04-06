@@ -14,13 +14,23 @@ export default Ember.Object.extend(Ember.Validations.Mixin, {
     
     if (validations) {
       this.validations = { value: validations };
+    } else {
+      this.validations = {};
+    }
+    
+    if (this.get('block.type') === 'agreement') {
+      this.validations = { value: { acceptance: true } };
     }
     
     this._super(...arguments);
   },
   
-  required: Ember.computed('block.validations', function() {
-    return Ember.isPresent(this.get('block.validations.presence'));
+  required: Ember.computed('block.validations', 'block.type', function() {
+    if (this.get('block.type') === 'agreement') {
+      return true;
+    } else {
+      return Ember.isPresent(this.get('block.validations.presence'));
+    }
   }),
   
   invalid: Ember.computed('isValid', 'attempted', function() {

@@ -142,6 +142,13 @@
           "label": "Description"
         }
       ]
+    },
+    {
+      "type": "agreement",
+      "key": "agreement",
+      "name": "Deposit Agreement",
+      "uri": "http://example.com/agreement",
+      "prompt": "I agree to the terms in the agreement."
     }
   ],
 

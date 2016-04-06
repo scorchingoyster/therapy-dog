@@ -52,28 +52,18 @@ describe('Form', function() {
     it('transforms values to the correct term', function() {
       return Form.findById('article')
       .then(function(form) {
-        return form.transformValues({ title: 'My Article', language: 'eng', roles: ['Staff', 'Faculty'], license: 'CC-BY' });
+        return form.transformValues({ language: 'eng', roles: ['Staff', 'Faculty'] });
       })
       .then(function(values) {
-        assert.deepEqual(values, {
-          title: 'My Article',
-          language: {
-            code: 'eng',
-            name: 'English'
-          },
-          roles: [
-            'Staff',
-            'Faculty'
-          ],
-          license: 'CC-BY'
-        });
+        assert.deepEqual(values.language, { code: 'eng', name: 'English' });
+        assert.deepEqual(values.roles, ['Staff', 'Faculty']);
       });
     });
 
     it('does not assign terms not found in an object array vocabulary', function() {
       return Form.findById('article')
       .then(function(form) {
-        return form.transformValues({ title: 'My Article', language: 'other', roles: 'Student' });
+        return form.transformValues({ language: 'other' });
       })
       .then(function(values) {
         assert.equal(values.language, undefined);
@@ -83,10 +73,24 @@ describe('Form', function() {
     it('does not assign terms not found in a string array vocabulary', function() {
       return Form.findById('article')
       .then(function(form) {
-        return form.transformValues({ title: 'My Article', language: 'eng', roles: ['Student', 'President'] });
+        return form.transformValues({ roles: ['Student', 'President'] });
       })
       .then(function(values) {
         assert.deepEqual(values.roles, ['Student']);
+      });
+    });
+
+    it('transforms agreements to an object representing the agreement', function() {
+      return Form.findById('article')
+      .then(function(form) {
+        return form.transformValues({ agreement: true });
+      })
+      .then(function(values) {
+        assert.deepEqual(values.agreement, {
+          name: 'Deposit Agreement',
+          uri: 'http://example.com/agreement',
+          prompt: 'I agree to the terms in the agreement.'
+        });
       });
     });
   });

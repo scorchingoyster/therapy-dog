@@ -300,3 +300,35 @@
   margin: 4px;
   flex: 0 0 auto;
 }
+
+
+/* agreement blocks */
+
+.block.agreement h2 {
+  display: block;
+  margin: 8px 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.block.agreement h2:after {
+  color: red;
+  content: " *";
+}
+
+.block.agreement input {
+  float: left;
+  margin: 8px 0;
+}
+
+.block.agreement label {
+  display: block;
+  margin: 16px 0;
+  margin-left: 24px;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.block.agreement label:after {
+  content: "";
+}
