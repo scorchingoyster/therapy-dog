@@ -1,6 +1,9 @@
 <label>{{entry.block.label}}</label>
 
 <select onchange={{action "change" value="target.value"}}>
+  {{#if entry.block.allowBlank}}
+    <option selected={{unless entry.value "selected" ""}} value=""></option>
+  {{/if}}
   {{#each entry.block.options as |option|}}
     {{#if option.value}}
       <option selected={{if (eq entry.value option.value) "selected" ""}} value={{option.value}}>{{option.label}}</option>
