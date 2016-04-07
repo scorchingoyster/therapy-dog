@@ -1,8 +1,11 @@
 <h2>{{entry.block.name}}</h2>
 
-{{input type="checkbox" checked=entry.value}}
-
-<label>{{entry.block.prompt}}</label>
+<table>
+  <tr>
+    <td>{{input type="checkbox" checked=entry.value id=(object-guid entry)}}</td>
+    <td><label for={{object-guid entry}}>{{entry.block.prompt}}</label></td>
+  </tr>
+</table>
 
 <ul class="errors">
   {{#if entry.invalid}}

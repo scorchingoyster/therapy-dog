@@ -1,5 +1,5 @@
-<label>{{entry.block.label}}</label>
+<label for={{object-guid entry}}>{{entry.block.label}}</label>
 
-{{input type="text" value=entry.value class="datepicker"}}
+{{input type="text" value=entry.value class="datepicker" placeholder="YYYY-MM-DD" id=(object-guid entry)}}
 
 {{entry-error-messages entry=entry}}

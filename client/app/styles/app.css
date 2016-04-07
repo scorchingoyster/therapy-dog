@@ -110,19 +110,7 @@
 }
 
 .block {
-  margin: 48px 0;
-}
-
-.block label {
-  display: block;
-  margin: 8px 0;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.block.required label:after {
-  color: red;
-  content: " *";
+  margin: 36px 0;
 }
 
 .block .errors {
@@ -130,6 +118,45 @@
   padding: 0;
   margin: 8px 0;
   color: #c00;
+}
+
+
+/* blocks */
+
+.block.text label,
+.block.date label,
+.block.select label,
+.block.file label,
+.block.checkboxes h2,
+.block.radio h2,
+.block.agreement h2 {
+  display: block;
+  margin: 8px 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.section .block.text label,
+.section .block.date label,
+.section .block.select label,
+.section .block.file label,
+.section .block.checkboxes h2,
+.section .block.radio h2,
+.section .block.agreement h2 {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.block.text.required label:after,
+.block.date.required label:after,
+.block.select.required label:after,
+.block.file.required label:after,
+.block.checkboxes.required h2:after,
+.block.radio.required h2:after,
+.block.agreement.required h2:after {
+  color: red;
+  content: " *";
 }
 
 
@@ -169,6 +196,26 @@
 }
 
 
+/* checkboxes, radio, agreement blocks */
+
+.block.radio td,
+.block.checkboxes td,
+.block.agreement td {
+  padding: 5px 0;
+  vertical-align: top;
+}
+
+.block.radio input,
+.block.checkboxes input,
+.block.agreement input {
+  margin-right: 7px;
+}
+
+.block.radio tr.blank label {
+  font-style: italic;
+}
+
+
 /* date blocks */
 
 .block.date input {
@@ -196,17 +243,7 @@
 /* blocks inside section blocks */
 
 .section .block {
-  margin: 16px 0;
-}
-
-.section .block label {
-  margin: 8px 0;
-  font-size: 14px;
-  color: #666;
-}
-
-.section .block input {
-  margin: 8px 0;
+  margin: 24px 0;
 }
 
 
@@ -313,36 +350,4 @@
 .block.file .new-upload .choose-file-wrapper {
   margin: 4px;
   flex: 0 0 auto;
-}
-
-
-/* agreement blocks */
-
-.block.agreement h2 {
-  display: block;
-  margin: 8px 0;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.block.agreement h2:after {
-  color: red;
-  content: " *";
-}
-
-.block.agreement input {
-  float: left;
-  margin: 8px 0;
-}
-
-.block.agreement label {
-  display: block;
-  margin: 16px 0;
-  margin-left: 24px;
-  font-size: 16px;
-  font-weight: normal;
-}
-
-.block.agreement label:after {
-  content: "";
 }

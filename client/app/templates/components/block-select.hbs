@@ -1,6 +1,6 @@
-<label>{{entry.block.label}}</label>
+<label for={{object-guid entry}}>{{entry.block.label}}</label>
 
-<select onchange={{action "change" value="target.value"}}>
+<select onchange={{action "change" value="target.value"}} id={{object-guid entry}}>
   {{#if entry.block.allowBlank}}
     <option selected={{unless entry.value "selected" ""}} value=""></option>
   {{/if}}

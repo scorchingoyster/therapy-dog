@@ -1,14 +1,23 @@
-<label>{{entry.block.label}}</label>
+<h2>{{entry.block.label}}</h2>
 
-{{#each entry.block.options as |option|}}
-  {{#if option.value}}
-    {{radio-button value=option.value groupValue=entry.value}} {{option.label}}
-  {{else}}
-    {{radio-button value=option groupValue=entry.value}} {{option}}
+<table>
+  {{#each entry.block.options as |option index|}}
+    <tr>
+      {{#if option.value}}
+        <td>{{radio-button value=option.value groupValue=entry.value id=(concat (object-guid entry) "-" index)}}</td>
+        <td><label for={{concat (object-guid entry) "-" index}}>{{option.label}}</label></td>
+      {{else}}
+        <td>{{radio-button value=option groupValue=entry.value id=(concat (object-guid entry) "-" index)}}</td>
+        <td><label for={{concat (object-guid entry) "-" index}}>{{option}}</label></td>
+      {{/if}}
+    </tr>
+  {{/each}}
+  {{#if entry.block.allowBlank}}
+    <tr class="blank">
+      <td>{{radio-button value="" groupValue=entry.value id=(concat (object-guid entry) "-blank")}}</td>
+      <td><label for={{concat (object-guid entry) "-blank"}}>No response</label></td>
+    </tr>
   {{/if}}
-{{/each}}
-{{#if entry.block.allowBlank}}
-  {{radio-button value="" groupValue=entry.value}} <i>No response</i>
-{{/if}}
+</table>
 
 {{entry-error-messages entry=entry}}

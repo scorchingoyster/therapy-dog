@@ -1,11 +1,17 @@
-<label>{{entry.block.label}}</label>
+<h2>{{entry.block.label}}</h2>
 
-{{#each entry.block.options as |option|}}
-  {{#if option.value}}
-    {{check-box value=option.value groupValue=entry.value}} {{option.label}}
-  {{else}}
-    {{check-box value=option groupValue=entry.value}} {{option}}
-  {{/if}}
-{{/each}}
+<table>
+  {{#each entry.block.options as |option index|}}
+    <tr>
+      {{#if option.value}}
+        <td>{{check-box value=option.value groupValue=entry.value id=(concat (object-guid entry) "-" index)}}</td>
+        <td><label for={{concat (object-guid entry) "-" index}}>{{option.label}}</label></td>
+      {{else}}
+        <td>{{check-box value=option groupValue=entry.value id=(concat (object-guid entry) "-" index)}}</td>
+        <td><label for={{concat (object-guid entry) "-" index}}>{{option}}</label></td>
+      {{/if}}
+    </tr>
+  {{/each}}
+</table>
 
 {{entry-error-messages entry=entry}}
