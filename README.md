@@ -45,8 +45,8 @@ Add or remove dependencies separately from code changes. This makes reviewing a 
 
 `git log --oneline` should look like this: (most recent at top)
 
-    bbbbbbb NIH left-pad.
-    aaaaaaa Remove 'left-pad' dependency from server.
+    bbbbbbb Remove 'left-pad' dependency from server.
+    aaaaaaa Implement NIH left-padding to avoid dependency on 'left-pad'.
     1234567 Ensure output is left-padded.
     abcdefg Add 'left-pad' dependency to server.
 
