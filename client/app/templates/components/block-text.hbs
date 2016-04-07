@@ -1,5 +1,9 @@
 <label>{{entry.block.label}}</label>
 
-{{input value=entry.value type="text" class="autocomplete" placeholder=entry.block.placeholder}}
+{{#if (eq entry.block.size "paragraph")}}
+  {{textarea value=entry.value type="text" class="autocomplete" placeholder=entry.block.placeholder cols=80 rows=5}}
+{{else}}
+  {{input value=entry.value type="text" class="autocomplete" placeholder=entry.block.placeholder}}
+{{/if}}
 
 {{entry-error-messages entry=entry}}

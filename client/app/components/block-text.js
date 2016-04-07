@@ -12,7 +12,7 @@ export default Ember.Component.extend(FocusEntryAction, {
 
     let options = this.get('entry.block.options');
     if (Ember.isArray(options)) {
-      this.$('input.autocomplete').autocomplete({
+      this.$('.autocomplete').autocomplete({
         source: options
       });
     }
@@ -23,7 +23,7 @@ export default Ember.Component.extend(FocusEntryAction, {
 
     let options = this.get('entry.block.options');
     if (Ember.isArray(options)) {
-      this.$('input.autocomplete').autocomplete('destroy');
+      this.$('.autocomplete').autocomplete('destroy');
     }
   },
   
