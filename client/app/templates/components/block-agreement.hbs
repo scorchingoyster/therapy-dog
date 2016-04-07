@@ -3,7 +3,7 @@
 <table>
   <tr>
     <td>{{input type="checkbox" checked=entry.value id=(object-guid entry)}}</td>
-    <td><label for={{object-guid entry}}>{{entry.block.prompt}}</label></td>
+    <td><label for={{object-guid entry}}>{{sanitize-html entry.block.prompt}}</label></td>
   </tr>
 </table>
 
