@@ -11,7 +11,7 @@ const Metadata = require('../bundle/model').Metadata;
 function generateMetsHdr(mets) {
   let metsHdr =
   mets
-    .element('metsHdr', { CREATEDATE: '2016-02-04T16:33:26-05:00' });
+    .element('metsHdr', { CREATEDATE: new Date().toISOString() });
 
   metsHdr
     .element('agent', { ROLE: 'CREATOR', TYPE: 'OTHER' })
