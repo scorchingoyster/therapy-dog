@@ -1,0 +1,11 @@
+<h2>{{entry.block.name}}</h2>
+
+{{input type="checkbox" checked=entry.value}}
+
+<label>{{entry.block.prompt}}</label>
+
+<ul class="errors">
+  {{#if entry.invalid}}
+    <li>You must agree to the {{entry.block.name}}.</li>
+  {{/if}}
+</ul>

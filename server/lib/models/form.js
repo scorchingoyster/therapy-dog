@@ -241,6 +241,10 @@ class Form {
         } else {
           return Upload.findById(value.id);
         }
+      } else if (block.type === 'agreement') {
+        if (value) {
+          return { name: block.name, uri: block.uri, prompt: block.prompt };
+        }
       }
     });
   }
