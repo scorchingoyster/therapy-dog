@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import ENV from 'therapy-dog/config/environment';
 /* globals $ */
 
 export default Ember.Route.extend({
@@ -23,7 +24,7 @@ export default Ember.Route.extend({
       };
       
       let promise = new Ember.RSVP.Promise(function(resolve, reject) {
-        $.ajax('/api/deposits', {
+        $.ajax('/' + ENV.APP.apiNamespace + '/deposits', {
           method: 'POST',
           contentType: 'application/json',
           data: JSON.stringify(payload)
