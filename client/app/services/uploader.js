@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import ENV from 'therapy-dog/config/environment';
 
 /**
  * @class Upload
@@ -43,7 +44,7 @@ const Upload = Ember.Object.extend(Ember.Evented, {
       }
     };
     
-    this.xhr.open('POST', '/api/uploads', true);
+    this.xhr.open('POST', '/' + ENV.APP.apiNamespace + '/uploads', true);
     this.xhr.send(formData);
 
     this.set('progress', Ember.Object.create({ loaded: 0, total: 0 }));
