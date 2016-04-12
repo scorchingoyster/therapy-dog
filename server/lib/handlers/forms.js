@@ -28,7 +28,7 @@ exports.show = function(req, res, next) {
   })
   .catch(function(err) {
     if (err instanceof FormNotFoundError) {
-      res.status(404).send({ errors: [{ title: 'Not found' }] });
+      res.status(404).send({ errors: [{ status: '404', title: 'Not found' }] });
     } else {
       next(err);
     }

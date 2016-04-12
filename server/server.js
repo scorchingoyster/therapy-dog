@@ -22,7 +22,7 @@ app.use(logging.errorLogger);
 app.use(function(err, req, res, next) {
   /*jshint unused: vars */
   res.status(500);
-  res.send({ errors: [{ detail: 'Internal server error' }] });
+  res.send({ errors: [{ status: '500', title: 'Internal server error' }] });
 });
 
 let server = app.listen(config.PORT, config.HOST, function() {
