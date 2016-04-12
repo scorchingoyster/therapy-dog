@@ -4,9 +4,12 @@ const express = require('express');
 const config = require('./config');
 const logging = require('./lib/logging');
 const router = require('./lib/router');
+const auth = require('./lib/auth');
 
 // Start the server
 let app = express();
+
+app.use(auth.requireRemoteUser);
 
 if (logging.requestLogger) {
   app.use(logging.requestLogger);

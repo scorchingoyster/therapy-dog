@@ -6,6 +6,7 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
+  this.route('login');
   this.route('forms', { path: '/' });
   this.route('deposit', { path: '/:form_id' }, function() {
     this.route('form');
