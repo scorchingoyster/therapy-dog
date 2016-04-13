@@ -1,17 +1,18 @@
 import Ember from 'ember';
+/* globals $ */
 
 export default Ember.Controller.extend({
-  queryParams: ['returnPath'],
-  returnPath: null,
+  queryParams: ['path'],
+  path: null,
   
-  returnURL: Ember.computed('returnPath', function() {
-    let returnPath = this.get('returnPath');
-    let origin = window.location.protocol + "//" + window.location.host;
+  url: Ember.computed('path', function() {
+    let path = this.get('path');
+    let origin = window.location.protocol + '//' + window.location.host;
     
-    if (returnPath) {
-      return origin + returnPath;
+    if (path) {
+      return origin + path;
     } else {
-      return origin;
+      return origin + ($('base').attr('href') || '');
     }
   })
 });

@@ -4,7 +4,9 @@ export default Ember.Route.extend({
   actions: {
     error(error) {
       if (error.isAdapterError && error.errors.any(e => e.status === '401')) {
-        this.transitionTo('login', { queryParams: { returnPath: this.get('router.url') }});
+        let location = this.get('router.location');
+        let path = location.formatURL(location.getURL());
+        this.transitionTo('login', { queryParams: { path: path }});
       }
     }
   }
