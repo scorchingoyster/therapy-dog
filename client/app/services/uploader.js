@@ -45,6 +45,11 @@ const Upload = Ember.Object.extend(Ember.Evented, {
     };
     
     this.xhr.open('POST', '/' + ENV.APP.apiNamespace + '/uploads', true);
+    
+    if (ENV.APP.spoofRemoteUser) {
+      this.xhr.setRequestHeader('remote_user', ENV.APP.spoofRemoteUser);
+    }
+    
     this.xhr.send(formData);
 
     this.set('progress', Ember.Object.create({ loaded: 0, total: 0 }));
