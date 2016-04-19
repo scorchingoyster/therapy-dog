@@ -25,6 +25,10 @@ export default Ember.Component.extend(FocusEntryAction, {
   actions: {
     clear: function() {
       this.set('entry.value', '');
+    },
+
+    focusEntry: function() {
+      this.$('input').first().focus();
     }
   }
 });
