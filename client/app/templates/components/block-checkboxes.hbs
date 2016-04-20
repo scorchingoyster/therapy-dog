@@ -1,10 +1,16 @@
-<label>{{entry.block.label}}</label>
+<h2>{{entry.block.label}}</h2>
 
-{{#each entry.block.options as |option|}}
+{{#each entry.block.options as |option index|}}
   {{#if option.value}}
-    {{check-box value=option.value groupValue=entry.value}} {{option.label}}
+    <label>
+      {{check-box value=option.value groupValue=entry.value}}
+      {{option.label}}
+    </label>
   {{else}}
-    {{check-box value=option groupValue=entry.value}} {{option}}
+    <label>
+      {{check-box value=option groupValue=entry.value}}
+      {{option}}
+    </label>
   {{/if}}
 {{/each}}
 

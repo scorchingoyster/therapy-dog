@@ -1,8 +1,9 @@
 <h2>{{entry.block.name}}</h2>
 
-{{input type="checkbox" checked=entry.value}}
-
-<label>{{entry.block.prompt}}</label>
+<label>
+  {{input type="checkbox" checked=entry.value}}
+  {{sanitize-html entry.block.prompt}}
+</label>
 
 <ul class="errors">
   {{#if entry.invalid}}

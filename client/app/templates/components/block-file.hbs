@@ -1,4 +1,4 @@
-<label>{{entry.block.label}}</label>
+<label for={{object-guid entry}}>{{entry.block.label}}</label>
 
 {{#each uploads as |upload|}}
 
@@ -45,7 +45,7 @@
 {{#if acceptsNewUpload}}
   <div class="new-upload">
     <div class="choose-file-wrapper">
-      <input type="file" onchange={{action "choose" value="target.files"}} multiple={{if isMultiple "multiple" ""}}>
+      <input type="file" onchange={{action "choose" value="target.files"}} multiple={{if isMultiple "multiple" ""}} id={{object-guid entry}}>
       {{#if isMultiple}}
         Choose Files…
       {{else}}

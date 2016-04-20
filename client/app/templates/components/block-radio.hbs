@@ -1,14 +1,23 @@
-<label>{{entry.block.label}}</label>
+<h2>{{entry.block.label}}</h2>
 
-{{#each entry.block.options as |option|}}
+{{#each entry.block.options as |option index|}}
   {{#if option.value}}
-    {{radio-button value=option.value groupValue=entry.value}} {{option.label}}
+    <label>
+      {{radio-button value=option.value groupValue=entry.value name=(object-guid entry)}}
+      {{option.label}}
+    </label>
   {{else}}
-    {{radio-button value=option groupValue=entry.value}} {{option}}
+    <label>
+      {{radio-button value=option groupValue=entry.value name=(object-guid entry)}}
+      {{option}}
+    </label>
   {{/if}}
 {{/each}}
 {{#if entry.block.allowBlank}}
-  {{radio-button value="" groupValue=entry.value}} <i>No response</i>
+  <label class="blank">
+    {{radio-button value="" groupValue=entry.value name=(object-guid entry)}}
+    No response
+  </label>
 {{/if}}
 
 {{entry-error-messages entry=entry}}
