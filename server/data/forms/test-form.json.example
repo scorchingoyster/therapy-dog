@@ -154,26 +154,140 @@
       "prompt": "I agree to the terms in the agreement."
     }
   ],
+  
+  "bundle": {
+    "type": "aggregate",
+    "main": {
+      "upload": "article",
+      "metadata": ["article", "hidden"]
+    },
+    "supplemental": [
+      {
+        "context": "supplemental",
+        "upload": "file",
+        "metadata": ["supplemental"]
+      }
+    ]
+  },
 
-  "templates": [
+  "metadata": [
     {
       "id": "article",
-      "type": "xml",
-      "template": "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { info.title -> (element 'titleInfo') (element 'title'); element 'originInfo' { info.pubdate -> element 'dateIssued'; info.version -> element 'edition'; issuance -> element 'issuance'; } element 'originInfo' eventType='publisher' { publisher -> element 'publisher'; element 'place' { location -> element 'placeTerm' type='text'; } } info.keywords -> (element 'note' displayLabel='Keywords'); element 'subject' { genre -> element 'genre'; } element 'language' { each languages as |language| { language.name -> element 'languageTerm' type='text' } } each authors as |author| { element 'name' { author.first -> element 'namePart' type='given'; author.last -> element 'namePart' type='family'; } } }"
+      "type": "descriptive",
+      "model": "xml",
+      "template": {
+        "type": "structure",
+        "name": "mods",
+        "compact": true,
+        "properties": {
+          "xmlns": { "type": "string", "value": "http://www.loc.gov/mods/v3" }
+        },
+        "children": [
+          {
+            "type": "arrow",
+            "items": { "type": "lookup", "path": ["info", "title"] },
+            "target": [
+              { "type": "structure", "name": "titleInfo" },
+              { "type": "structure", "name": "title" }
+            ]
+          },
+          
+          {
+            "type": "each",
+            "items": { "type": "lookup", "path": ["authors"] },
+            "locals": {
+              "item": "author"
+            },
+            "body": [
+              {
+                "type": "arrow",
+                "items": { "type": "lookup", "path": ["author", "first"] },
+                "target": [
+                  {
+                    "type": "structure",
+                    "name": "namePart",
+                    "properties": {
+                      "type": { "type": "string", "value": "given" }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "arrow",
+                "items": { "type": "lookup", "path": ["author", "last"] },
+                "target": [
+                  {
+                    "type": "structure",
+                    "name": "namePart",
+                    "properties": {
+                      "type": { "type": "string", "value": "family" }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          
+          {
+            "type": "structure",
+            "name": "originInfo",
+            "compact": true,
+            "children": [
+              {
+                "type": "structure",
+                "name": "dateIssued",
+                "children": [
+                  { "type": "lookup", "path": ["info", "pubdate"] }
+                ]
+              },
+              {
+                "type": "structure",
+                "name": "edition",
+                "children": [
+                  { "type": "lookup", "path": ["info", "version"] }
+                ]
+              }
+            ]
+          }
+        ]
+      }
     },
 
     {
-      "id": "access",
-      "type": "xml",
-      "template": "element 'acl:accessControl' xmlns:acl='http://cdr.unc.edu/definitions/acl' acl:published='false';"
+      "id": "hidden",
+      "type": "access-control",
+      "model": "xml",
+      "template": {
+        "type": "structure",
+        "name": "accessControl",
+        "properties": {
+          "xmlns": { "type": "string", "value": "http://cdr.unc.edu/definitions/acl" },
+          "published": { "type": "string", "value": "false" }
+        }
+      }
     },
 
     {
       "id": "supplemental",
-      "type": "xml",
-      "template": "element 'mods' xmlns='http://www.loc.gov/mods/v3' @compact=true { s.description -> element 'abstract'; }"
+      "type": "descriptive",
+      "model": "xml",
+      "template": {
+        "type": "structure",
+        "name": "mods",
+        "compact": true,
+        "properties": {
+          "xmlns": { "type": "string", "value": "http://www.loc.gov/mods/v3" }
+        },
+        "children": [
+          {
+            "type": "arrow",
+            "items": { "type": "lookup", "path": ["description"] },
+            "target": [
+              { "type": "structure", "name": "abstract" }
+            ]
+          }
+        ]
+      }
     }
-  ],
-  
-  "bundle": "item type='Aggregate Work' label=info.title { link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#article'; metadata type='descriptive' { partial 'article'; } metadata type='access-control' { partial 'access'; } item type='File' fragment='article' label=article.name { file { article; } } each supplemental as |s| { if s.file { item type='File' label=s.file.name { metadata { partial 'supplemental'; } file { s.file; } } } } }"
+  ]
 }
