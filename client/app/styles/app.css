@@ -248,6 +248,13 @@
 }
 
 
+/* select blocks */
+
+.block.select select {
+  max-width: 100%;
+}
+
+
 /* section blocks */
 
 .section h2 {
