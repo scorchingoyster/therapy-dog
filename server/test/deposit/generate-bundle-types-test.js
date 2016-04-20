@@ -79,4 +79,179 @@ describe('Bundle generation', function() {
       assert.equal(metadata.contents.render().toString(), '<mods><titleInfo><title>My Thesis</title></titleInfo></mods>');
     });
   });
+  
+  describe('using the "aggregate" type', function() {
+    let form = new Form('test', {
+      children: [
+        { type: 'text', key: 'title' },
+        { type: 'file', key: 'thesis' },
+        { type: 'file', key: 'supplemental', multiple: true }
+      ],
+      bundle: {
+        type: 'aggregate',
+        main: {
+          upload: 'thesis',
+          metadata: ['description']
+        },
+        supplemental: [
+          {
+            upload: 'supplemental'
+          }
+        ]
+      },
+      metadata: [
+        {
+          id: 'description',
+          type: 'descriptive',
+          model: 'xml',
+          template: {
+            type: 'structure',
+            name: 'mods',
+            children: [
+              {
+                type: 'arrow',
+                items: { type: 'lookup', path: ['title'] },
+                target: [
+                  { type: 'structure', name: 'titleInfo' },
+                  { type: 'structure', name: 'title' }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    });
+
+    let buffer = new Buffer('lorem ipsum');
+    let thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
+    let dataset = buildTestUpload('dataset.csv', 'text/csv', buffer);
+    let appendix = buildTestUpload('appendix.pdf', 'application/pdf', buffer);
+
+    let values = {
+      title: 'My Thesis',
+      thesis: thesis,
+      supplemental: [dataset, appendix]
+    };
+
+    let bundle = generateBundle(form, values);
+    
+    it('should generate the correct number of items, files, metadata', function() {
+      assert.equal(bundle.items.length, 4);
+      assert.equal(bundle.files.length, 3);
+      assert.equal(bundle.metadata.length, 1);
+    });
+    
+    it('should have an "Aggregate Work" item at the root', function() {
+      let aggregate = bundle.children[0];
+      assert.equal(aggregate.type, 'Aggregate Work');
+    });
+    
+    it('should have "File" items under the "Aggregate Work" item', function() {
+      let aggregate = bundle.children[0];
+      assert.ok(aggregate.children.find(i => i.type === 'File' && i.label === 'thesis.pdf'));
+      assert.ok(aggregate.children.find(i => i.type === 'File' && i.label === 'dataset.csv'));
+      assert.ok(aggregate.children.find(i => i.type === 'File' && i.label === 'appendix.pdf'));
+    });
+    
+    it('should have a link from the "Aggregate Work" item to the main "File" item', function() {
+      let aggregate = bundle.children[0];
+      let main = aggregate.children.find(i => i.label === 'thesis.pdf');
+      let link = aggregate.children.find(i => i instanceof Link);
+      assert.equal(link.rel, 'http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject');
+      assert.deepEqual(link.items, [main]);
+    });
+    
+    it('should generate metadata for the main item', function() {
+      let main = bundle.items.find(i => i.label === 'thesis.pdf');
+      let metadata = main.children.find(i => i instanceof Metadata);
+      assert.equal(metadata.type, 'descriptive');
+      assert.equal(metadata.contents.render().toString(), '<mods><titleInfo><title>My Thesis</title></titleInfo></mods>');
+    });
+  });
+  
+  describe('using the "aggregate" type with supplemental files and metadata in a section', function() {
+    let form = new Form('test', {
+      children: [
+        { type: 'file', key: 'thesis' },
+        {
+          type: 'section',
+          key: 'supplemental',
+          children: [
+            { type: 'file', key: 'file' },
+            { type: 'text', key: 'abstract' }
+          ]
+        }
+      ],
+      bundle: {
+        type: 'aggregate',
+        main: {
+          upload: 'thesis'
+        },
+        supplemental: [
+          {
+            context: 'supplemental',
+            upload: 'file',
+            metadata: ['description']
+          }
+        ]
+      },
+      metadata: [
+        {
+          id: 'description',
+          type: 'descriptive',
+          model: 'xml',
+          template: {
+            type: 'structure',
+            name: 'mods',
+            children: [
+              {
+                type: 'arrow',
+                items: { type: 'lookup', path: ['abstract'] },
+                target: [
+                  { type: 'structure', name: 'abstract' }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    });
+
+    let buffer = new Buffer('lorem ipsum');
+    let thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
+    let dataset = buildTestUpload('dataset.csv', 'text/csv', buffer);
+    let appendix = buildTestUpload('appendix.pdf', 'application/pdf', buffer);
+
+    let values = {
+      thesis: thesis,
+      supplemental: [
+        { abstract: 'Dataset', file: dataset },
+        { abstract: 'Appendix', file: appendix }
+      ]
+    };
+
+    let bundle = generateBundle(form, values);
+    
+    it('should generate the correct number of items, files, metadata', function() {
+      assert.equal(bundle.items.length, 4);
+      assert.equal(bundle.files.length, 3);
+      assert.equal(bundle.metadata.length, 2);
+    });
+
+    it('should generate metadata for the supplemental items', function() {
+      let aggregate = bundle.children[0];
+      
+      let item, metadata;
+      
+      item = aggregate.children.find(i => i.type === 'File' && i.label === 'dataset.csv');
+      metadata = item.children.find(i => i instanceof Metadata);
+      assert.equal(metadata.contents.render().toString(), '<mods><abstract>Dataset</abstract></mods>');
+      assert.equal(metadata.type, 'descriptive');
+      
+      item = aggregate.children.find(i => i.type === 'File' && i.label === 'appendix.pdf');
+      metadata = item.children.find(i => i instanceof Metadata);
+      assert.equal(metadata.contents.render().toString(), '<mods><abstract>Appendix</abstract></mods>');
+      assert.equal(metadata.type, 'descriptive');
+    });
+  });
 });

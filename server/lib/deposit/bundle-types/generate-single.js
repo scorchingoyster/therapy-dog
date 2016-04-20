@@ -8,35 +8,54 @@ const Link = require('../../bundle/model').Link;
 const Metadata = require('../../bundle/model').Metadata;
 const Bundle = require('../../bundle/model').Bundle;
 
-function findValues(object, key) {
-  if (key in object) {
-    return [object[key]];
-  } else {
-    return Object.keys(object).reduce(function(result, k) {
-      if (Array.isArray(object[k])) {
-        return result.concat(object[k].map(o => findValues(o, key)));
-      } else if (typeof object[k] === 'object') {
-        return result.concat(findValues(object[k], key));
-      } else {
-        return result;
-      }
-    }, []);
+/*
+
+Generates a bundle containing a 'File' item, optionally with metadata.
+
+The bundle specification looks like this:
+
+  {
+    type: 'single',
+    context: String?
+    upload: String,
+    metadata: [String]?
   }
-}
+
+A metadata specification looks like this:
+
+  {
+    id: String,
+    type: String,
+    model: String,
+    template: Object
+  }
+
+*/
 
 module.exports = function(form, values) {
-  let uploads = findValues(values, form.bundle.upload);
-  let upload = uploads[0];
+  let context;
+  if (form.bundle.context) {
+    context = values[form.bundle.context];
+  } else {
+    context = values;
+  }
   
-  let file = new File([upload], {});
-  
-  let metadata = form.bundle.metadata.map(function(id) {
-    let spec = form.metadata.find(m => m.id === id);
-    let root = Arrow.evaluate(spec.template, values);
-    let xml = new XML(root);
+  let upload = context[form.bundle.upload];
 
-    return new Metadata([xml], { type: spec.type });
-  });
+  let file = new File([upload], {});
+
+  let metadata;
+  if (form.bundle.metadata) {
+    metadata = form.bundle.metadata.map(function(id) {
+      let spec = form.metadata.find(m => m.id === id);
+      let root = Arrow.evaluate(spec.template, context);
+      let xml = new XML(root);
+    
+      return new Metadata([xml], { type: spec.type });
+    });
+  } else {
+    metadata = [];
+  }
   
   let item = new Item([file].concat(metadata), { type: 'File', label: upload.name });
   

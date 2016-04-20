@@ -202,4 +202,69 @@ describe('Submission generation', function() {
       });
     });
   });
+  
+  describe('with the "aggregate" bundle type', function() {
+    let form = new Form('test', {
+      children: [
+        { type: 'text', key: 'title' },
+        { type: 'file', key: 'thesis' },
+        { type: 'file', key: 'supplemental', multiple: true }
+      ],
+      bundle: {
+        type: 'aggregate',
+        main: {
+          upload: 'thesis'
+        },
+        supplemental: [
+          {
+            upload: 'supplemental'
+          }
+        ]
+      },
+      metadata: []
+    });
+
+    let buffer = new Buffer('lorem ipsum');
+    let thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
+    let dataset = buildTestUpload('dataset.csv', 'text/csv', buffer);
+    let appendix = buildTestUpload('appendix.pdf', 'application/pdf', buffer);
+
+    let values = {
+      thesis: thesis,
+      supplemental: [dataset, appendix]
+    };
+
+    let bundle = generateBundle(form, values);
+    let submission = generateSubmission(form, bundle);
+    let doc = submission.then(function(submission) {
+      return new DOMParser().parseFromString(submission['mets.xml'].toString());
+    });
+
+    it('should generate a structLink element with a link from the Aggregate Work div to the File div', function() {
+      let bundleAggregateItem = bundle.children[0];
+      let bundleMainItem = bundle.items.find(i => i.label === 'thesis.pdf');
+
+      return doc.then(function(doc) {
+        let smLink = select1('/mets:mets/mets:structLink/mets:smLink', doc);
+        assert.ok(smLink);
+        assert.equal(select1('@xlink:arcrole', smLink).value, 'http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject');
+        assert.equal(select1('@xlink:from', smLink).value, '#' + bundleAggregateItem.id);
+        assert.equal(select1('@xlink:to', smLink).value, '#' + bundleMainItem.id);
+      });
+    });
+    
+    it('should generate a div elements for the aggregate item', function() {
+      return doc.then(function(doc) {
+        let aggregateDiv = select1('/mets:mets/mets:structMap/mets:div', doc);
+        assert.ok(aggregateDiv);
+        assert.equal(aggregateDiv.getAttribute('TYPE'), 'Aggregate Work');
+
+        let fileDivs = select('mets:div', aggregateDiv);
+        assert.equal(fileDivs.length, 3);
+        assert.ok(fileDivs.find(d => d.getAttribute('LABEL') === 'thesis.pdf' && d.getAttribute('TYPE') === 'File'));
+        assert.ok(fileDivs.find(d => d.getAttribute('LABEL') === 'dataset.csv' && d.getAttribute('TYPE') === 'File'));
+        assert.ok(fileDivs.find(d => d.getAttribute('LABEL') === 'appendix.pdf' && d.getAttribute('TYPE') === 'File'));
+      });
+    });
+  });
 });

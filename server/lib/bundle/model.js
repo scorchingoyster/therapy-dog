@@ -138,6 +138,7 @@ exports.Metadata = Metadata;
 
 class Link {
   constructor(options) {
+    this.items = options.items;
     this.href = options.href;
     this.rel = options.rel;
   }
@@ -178,7 +179,7 @@ class Bundle {
     }, {});
 
     this.links.forEach(function(link) {
-      if (link.href[0] === '#') {
+      if (link.href && link.href[0] === '#') {
         link.items = itemsByFragment[link.href.slice(1)] || [];
       }
     });
