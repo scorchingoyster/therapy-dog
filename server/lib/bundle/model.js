@@ -5,6 +5,7 @@ const fs = require('fs');
 const uuid = require('uuid');
 const Upload = require('../models/upload');
 const XMLElement = require('../arrow/documents/xml/model').XMLElement;
+const XML = require('../arrow2/models/xml');
 
 class Item {
   constructor(children, options) {
@@ -118,8 +119,10 @@ class Metadata {
   constructor(children, options) {
     if (children.length === 1 && children[0] instanceof XMLElement) {
       this.contents = children[0];
+    } else if (children.length === 1 && children[0] instanceof XML) {
+      this.contents = children[0];
     } else {
-      throw new Error('Metadata must contain a single XML element.');
+      throw new Error('Metadata must contain a single instance of XMLElement or XML.');
     }
 
     this.id = '_' + uuid.v4();

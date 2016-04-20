@@ -179,6 +179,14 @@ class Form {
   }
 
   /**
+    @property metadata
+    @type {Array}
+  */
+  get metadata() {
+    return this.attributes.metadata;
+  }
+
+  /**
     Return a JSON API resource object representing this form.
 
     @method getResourceObject

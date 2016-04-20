@@ -1,0 +1,205 @@
+'use strict';
+
+const assert = require('assert');
+const xpath = require('xpath');
+const DOMParser = require('xmldom').DOMParser;
+const Form = require('../../lib/models/form');
+const generateSubmission = require('../../lib/deposit/generate-submission');
+const generateBundle = require('../../lib/deposit/generate-bundle');
+const buildTestUpload = require('./test-helpers').buildTestUpload;
+
+const select = xpath.useNamespaces({
+  mets: 'http://www.loc.gov/METS/',
+  mods: 'http://www.loc.gov/mods/v3',
+  xlink: 'http://www.w3.org/1999/xlink',
+  acl: 'http://cdr.unc.edu/definitions/acl'
+});
+const select1 = function(e, doc) { return select(e, doc, true); };
+
+describe('Submission generation', function() {
+  describe('using the "single" bundle type', function() {
+    let form = new Form('test', {
+      children: [
+        { type: 'text', key: 'title' },
+        { type: 'file', key: 'thesis' }
+      ],
+      bundle: {
+        type: 'single',
+        upload: 'thesis',
+        metadata: ['description', 'unpublished']
+      },
+      metadata: [
+        {
+          id: 'description',
+          type: 'descriptive',
+          model: 'xml',
+          template: {
+            type: 'structure',
+            name: 'mods',
+            properties: {
+              xmlns: { type: 'string', value: 'http://www.loc.gov/mods/v3' }
+            },
+            children: [
+              {
+                type: 'arrow',
+                items: { type: 'lookup', path: ['title'] },
+                target: [
+                  { type: 'structure', name: 'titleInfo' },
+                  { type: 'structure', name: 'title' }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          id: 'unpublished',
+          type: 'access-control',
+          model: 'xml',
+          template: {
+            type: 'structure',
+            name: 'accessControl',
+            properties: {
+              xmlns: { type: 'string', value: 'http://cdr.unc.edu/definitions/acl' },
+              published: { type: 'string', value: 'false' }
+            }
+          }
+        }
+      ]
+    });
+
+    let buffer = new Buffer('lorem ipsum');
+    let thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
+
+    let values = {
+      thesis: thesis,
+      title: 'My Thesis'
+    };
+
+    let bundle = generateBundle(form, values);
+    let submission = generateSubmission(form, bundle);
+    let doc = submission.then(function(submission) {
+      return new DOMParser().parseFromString(submission['mets.xml'].toString());
+    });
+
+    it('should contain METS XML as a Buffer, and the upload\'s path', function() {
+      let bundleFile = bundle.files[0];
+
+      return submission.then(function(submission) {
+        assert.ok(submission['mets.xml'] instanceof Buffer);
+        assert.equal(submission[bundleFile.id], bundleFile.contents.path);
+      });
+    });
+
+    it('should generate a mets element with the correct profile', function() {
+      return doc.then(function(doc) {
+        let mets = select1('/mets:mets', doc);
+        assert.equal(mets.getAttribute('PROFILE'), 'http://cdr.unc.edu/METS/profiles/Simple');
+      });
+    });
+
+    it('should generate a metsHdr element', function() {
+      return doc.then(function(doc) {
+        let metsHdr = select1('/mets:mets/mets:metsHdr', doc);
+        assert.ok(metsHdr);
+        assert.ok(metsHdr.getAttribute('CREATEDATE'));
+
+        let agent = select1('mets:agent', metsHdr);
+        assert.ok(agent);
+        assert.ok(agent.getAttribute('ROLE'));
+        assert.ok(agent.getAttribute('TYPE'));
+
+        let name = select1('mets:name', agent);
+        assert.ok(name);
+      });
+    });
+
+    it('should generate a dmdSec element', function() {
+      let bundleMetadata = bundle.metadata.find(m => m.type === 'descriptive');
+
+      return doc.then(function(doc) {
+        let dmdSec = select1('/mets:mets/mets:dmdSec', doc);
+        assert.ok(dmdSec);
+        assert.equal(dmdSec.getAttribute('ID'), bundleMetadata.id);
+
+        let mdWrap = select1('mets:mdWrap', dmdSec);
+        assert.ok(mdWrap);
+        assert.equal(mdWrap.getAttribute('MDTYPE'), 'MODS');
+
+        let mods = select1('mets:xmlData/mods:mods', mdWrap);
+        assert.ok(mods);
+
+        let title = select1('mods:titleInfo/mods:title/text()', mods);
+        assert.ok(title);
+        assert.equal(title, 'My Thesis');
+      });
+    });
+
+    it('should generate an amdSec element', function() {
+      let bundleMetadata = bundle.metadata.find(m => m.type === 'access-control');
+
+      return doc.then(function(doc) {
+        let amdSec = select1('/mets:mets/mets:amdSec', doc);
+        assert.ok(amdSec);
+
+        let rightsMD = select1('mets:rightsMD', amdSec);
+        assert.equal(rightsMD.getAttribute('ID'), bundleMetadata.id);
+
+        let mdWrap = select1('mets:mdWrap', rightsMD);
+        assert.ok(mdWrap);
+        assert.equal(mdWrap.getAttribute('MDTYPE'), 'OTHER');
+
+        let accessControl = select1('mets:xmlData/acl:accessControl', mdWrap);
+        assert.ok(accessControl);
+        assert.equal(accessControl.getAttribute('published'), 'false');
+      });
+    });
+
+    it('should generate a file element', function() {
+      let bundleFile = bundle.files[0];
+
+      return doc.then(function(doc) {
+        let file = select1('/mets:mets/mets:fileSec/mets:fileGrp/mets:file', doc);
+        assert.ok(file);
+        assert.equal(file.getAttribute('ID'), bundleFile.id);
+        assert.equal(file.getAttribute('MIMETYPE'), 'application/pdf');
+        assert.equal(file.getAttribute('CHECKSUM'), '80a751fde577028640c419000e33eba6');
+        assert.equal(file.getAttribute('CHECKSUMTYPE'), 'MD5');
+        assert.equal(file.getAttribute('SIZE'), '11');
+
+        let flocat = select1('mets:FLocat', file);
+        assert.ok(flocat);
+        assert.equal(select1('@xlink:href', flocat).value, bundleFile.id);
+      });
+    });
+
+    it('should generate a div element linked to the file element and metadata elements', function() {
+      let bundleItem = bundle.items[0];
+      let bundleFile = bundle.files[0];
+      let bundleDescriptiveMetadata = bundle.metadata.find(m => m.type === 'descriptive');
+      let bundleAccessControlMetadata = bundle.metadata.find(m => m.type === 'access-control');
+
+      return doc.then(function(doc) {
+        let div = select1('/mets:mets/mets:structMap/mets:div', doc);
+        assert.ok(div);
+        assert.equal(div.getAttribute('ID'), bundleItem.id);
+        assert.equal(div.getAttribute('TYPE'), 'File');
+        assert.equal(div.getAttribute('LABEL'), 'thesis.pdf');
+        assert.equal(div.getAttribute('DMDID'), bundleDescriptiveMetadata.id);
+        assert.equal(div.getAttribute('ADMID'), bundleAccessControlMetadata.id);
+
+        let fptr = select1('mets:fptr', div);
+        assert.ok(fptr);
+        assert.equal(fptr.getAttribute('FILEID'), bundleFile.id);
+      });
+    });
+
+    it('should generate sections in order', function() {
+      return doc.then(function(doc) {
+        let sections = select('/mets:mets/*', doc);
+        let names = sections.map(function(s) { return s.tagName; });
+
+        assert.deepEqual(['metsHdr', 'dmdSec', 'amdSec', 'fileSec', 'structMap'], names);
+      });
+    });
+  });
+});
