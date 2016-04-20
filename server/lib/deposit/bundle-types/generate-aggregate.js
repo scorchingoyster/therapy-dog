@@ -85,21 +85,37 @@ function generateOneFileItem(itemSpec, metadataSpecs, values) {
   return items[0];
 }
 
-module.exports = function(form, values) {
-  let main = generateOneFileItem(form.bundle.main, form.metadata, values);
+function generateAgreementFileItem(agreements, values) {
+  let contents = agreements.map(function(key) {
+    let agreement = values[key];
+    return `${agreement.name}\n${agreement.uri}\n${agreement.prompt}\n`;
+  }).join('\n');
   
-  let supplemental;
+  let file = new File([contents], { mimetype: 'text/plain' });
+  
+  return new Item([file], { type: 'File', label: 'agreements.txt' });
+}
+
+module.exports = function(form, values) {
+  let children = [];
+  
+  let main = generateOneFileItem(form.bundle.main, form.metadata, values);
+  children = children.concat(main);
+  
   if (form.bundle.supplemental) {
-    supplemental = form.bundle.supplemental.reduce(function(result, itemSpec) {
+    let supplemental = form.bundle.supplemental.reduce(function(result, itemSpec) {
       return result.concat(generateFileItems(itemSpec, form.metadata, values));
     }, []);
-  } else {
-    supplemental = [];
+    children = children.concat(supplemental);
   }
   
   let link = new Link({ items: [main], rel: 'http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' });
+  children = children.concat(link);
   
-  let children = [main, link].concat(supplemental);
+  if (form.bundle.agreements) {
+    let agreement = generateAgreementFileItem(form.bundle.agreements, values);
+    children = children.concat(agreement);
+  }
   
   let aggregate = new Item(children, { type: 'Aggregate Work' });
   

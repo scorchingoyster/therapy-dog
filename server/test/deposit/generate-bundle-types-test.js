@@ -5,6 +5,7 @@ const Form = require('../../lib/models/form');
 const generateBundle = require('../../lib/deposit/generate-bundle');
 const Link = require('../../lib/bundle/model').Link;
 const Metadata = require('../../lib/bundle/model').Metadata;
+const File = require('../../lib/bundle/model').File;
 const buildTestUpload = require('./test-helpers').buildTestUpload;
 
 describe('Bundle generation', function() {
@@ -252,6 +253,57 @@ describe('Bundle generation', function() {
       metadata = item.children.find(i => i instanceof Metadata);
       assert.equal(metadata.contents.render().toString(), '<mods><abstract>Appendix</abstract></mods>');
       assert.equal(metadata.type, 'descriptive');
+    });
+  });
+
+  describe('using the "aggregate" type with agreements', function() {
+    let form = new Form('test', {
+      children: [
+        { type: 'file', key: 'thesis' },
+        {
+          type: 'agreement',
+          key: 'agreement',
+          name: 'Deposit Agreement',
+          uri: 'http://example.com/agreement',
+          prompt: 'I agree to the terms.'
+        }
+      ],
+      bundle: {
+        type: 'aggregate',
+        main: {
+          upload: 'thesis'
+        },
+        agreements: ['agreement']
+      },
+      metadata: []
+    });
+
+    let buffer = new Buffer('lorem ipsum');
+    let thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
+
+    let values = {
+      thesis: thesis,
+      agreement: {
+        name: 'Deposit Agreement',
+        uri: 'http://example.com/agreement',
+        prompt: 'I agree to the terms.'
+      }
+    };
+
+    let bundle = generateBundle(form, values);
+    
+    it('should generate the correct number of items, files, metadata', function() {
+      assert.equal(bundle.items.length, 3);
+      assert.equal(bundle.files.length, 2);
+      assert.equal(bundle.metadata.length, 0);
+    });
+
+    it('should generate a file containing a record of the agreements', function() {
+      let aggregate = bundle.children[0];
+      let item = aggregate.children.find(i => i.type === 'File' && i.label === 'agreements.txt');
+      let file = item.children.find(i => i instanceof File);
+      
+      assert.equal(file.contents.toString(), 'Deposit Agreement\nhttp://example.com/agreement\nI agree to the terms.\n');
     });
   });
 });
