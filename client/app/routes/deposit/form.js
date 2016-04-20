@@ -24,10 +24,16 @@ export default Ember.Route.extend({
       };
       
       let promise = new Ember.RSVP.Promise(function(resolve, reject) {
+        let headers = {};
+        if (ENV.APP.spoofRemoteUser) {
+          headers['remote_user'] = ENV.APP.spoofRemoteUser;
+        }
+        
         $.ajax('/' + ENV.APP.apiNamespace + '/deposits', {
           method: 'POST',
           contentType: 'application/json',
-          data: JSON.stringify(payload)
+          data: JSON.stringify(payload),
+          headers
         })
         .done(function(data) {
           resolve(data);
