@@ -17,23 +17,52 @@ const select = xpath.useNamespaces({
 const select1 = function(e, doc) { return select(e, doc, true); };
 
 describe('Submission generation', function() {
-  describe('with metadata and files', function() {
+  describe('using the "single" bundle type', function() {
     let form = new Form('test', {
-      blocks: [
-        { type: 'file', key: 'thesis' },
-        { type: 'text', key: 'title' }
+      children: [
+        { type: 'text', key: 'title' },
+        { type: 'file', key: 'thesis' }
       ],
-      bundle: 'item type="File" label=title { file { thesis; }; metadata type="descriptive" { partial "thesis"; }; metadata type="access-control" { partial "unpublished"; } }',
-      templates: [
+      bundle: {
+        type: 'single',
+        upload: 'thesis',
+        metadata: ['description', 'unpublished']
+      },
+      metadata: [
         {
-          id: 'thesis',
-          type: 'xml',
-          template: 'element "mods" xmlns="http://www.loc.gov/mods/v3" @compact=true { title -> (element "titleInfo") (element "title"); }'
+          id: 'description',
+          type: 'descriptive',
+          model: 'xml',
+          template: {
+            type: 'structure',
+            name: 'mods',
+            properties: {
+              xmlns: { type: 'string', value: 'http://www.loc.gov/mods/v3' }
+            },
+            children: [
+              {
+                type: 'arrow',
+                items: { type: 'lookup', path: ['title'] },
+                target: [
+                  { type: 'structure', name: 'titleInfo' },
+                  { type: 'structure', name: 'title' }
+                ]
+              }
+            ]
+          }
         },
         {
           id: 'unpublished',
-          type: 'xml',
-          template: 'element "accessControl" xmlns="http://cdr.unc.edu/definitions/acl" published="false" {}'
+          type: 'access-control',
+          model: 'xml',
+          template: {
+            type: 'structure',
+            name: 'accessControl',
+            properties: {
+              xmlns: { type: 'string', value: 'http://cdr.unc.edu/definitions/acl' },
+              published: { type: 'string', value: 'false' }
+            }
+          }
         }
       ]
     });
@@ -53,9 +82,11 @@ describe('Submission generation', function() {
     });
 
     it('should contain METS XML as a Buffer, and the upload\'s path', function() {
+      let bundleFile = bundle.files[0];
+
       return submission.then(function(submission) {
         assert.ok(submission['mets.xml'] instanceof Buffer);
-        assert.equal(submission[bundle.files[0].id], bundle.files[0].contents.path);
+        assert.equal(submission[bundleFile.id], bundleFile.contents.path);
       });
     });
 
@@ -83,10 +114,12 @@ describe('Submission generation', function() {
     });
 
     it('should generate a dmdSec element', function() {
+      let bundleMetadata = bundle.metadata.find(m => m.type === 'descriptive');
+
       return doc.then(function(doc) {
         let dmdSec = select1('/mets:mets/mets:dmdSec', doc);
         assert.ok(dmdSec);
-        assert.equal(dmdSec.getAttribute('ID'), bundle.children[0].children[1].id);
+        assert.equal(dmdSec.getAttribute('ID'), bundleMetadata.id);
 
         let mdWrap = select1('mets:mdWrap', dmdSec);
         assert.ok(mdWrap);
@@ -102,12 +135,14 @@ describe('Submission generation', function() {
     });
 
     it('should generate an amdSec element', function() {
+      let bundleMetadata = bundle.metadata.find(m => m.type === 'access-control');
+
       return doc.then(function(doc) {
         let amdSec = select1('/mets:mets/mets:amdSec', doc);
         assert.ok(amdSec);
 
         let rightsMD = select1('mets:rightsMD', amdSec);
-        assert.equal(rightsMD.getAttribute('ID'), bundle.children[0].children[2].id);
+        assert.equal(rightsMD.getAttribute('ID'), bundleMetadata.id);
 
         let mdWrap = select1('mets:mdWrap', rightsMD);
         assert.ok(mdWrap);
@@ -120,10 +155,12 @@ describe('Submission generation', function() {
     });
 
     it('should generate a file element', function() {
+      let bundleFile = bundle.files[0];
+
       return doc.then(function(doc) {
         let file = select1('/mets:mets/mets:fileSec/mets:fileGrp/mets:file', doc);
         assert.ok(file);
-        assert.equal(file.getAttribute('ID'), bundle.children[0].children[0].id);
+        assert.equal(file.getAttribute('ID'), bundleFile.id);
         assert.equal(file.getAttribute('MIMETYPE'), 'application/pdf');
         assert.equal(file.getAttribute('CHECKSUM'), '80a751fde577028640c419000e33eba6');
         assert.equal(file.getAttribute('CHECKSUMTYPE'), 'MD5');
@@ -131,23 +168,28 @@ describe('Submission generation', function() {
 
         let flocat = select1('mets:FLocat', file);
         assert.ok(flocat);
-        assert.equal(select1('@xlink:href', flocat).value, bundle.files[0].id);
+        assert.equal(select1('@xlink:href', flocat).value, bundleFile.id);
       });
     });
 
     it('should generate a div element linked to the file element and metadata elements', function() {
+      let bundleItem = bundle.items[0];
+      let bundleFile = bundle.files[0];
+      let bundleDescriptiveMetadata = bundle.metadata.find(m => m.type === 'descriptive');
+      let bundleAccessControlMetadata = bundle.metadata.find(m => m.type === 'access-control');
+
       return doc.then(function(doc) {
         let div = select1('/mets:mets/mets:structMap/mets:div', doc);
         assert.ok(div);
-        assert.equal(div.getAttribute('ID'), bundle.children[0].id);
+        assert.equal(div.getAttribute('ID'), bundleItem.id);
         assert.equal(div.getAttribute('TYPE'), 'File');
-        assert.equal(div.getAttribute('LABEL'), 'My Thesis');
-        assert.equal(div.getAttribute('DMDID'), bundle.children[0].children[1].id);
-        assert.equal(div.getAttribute('ADMID'), bundle.children[0].children[2].id);
+        assert.equal(div.getAttribute('LABEL'), 'thesis.pdf');
+        assert.equal(div.getAttribute('DMDID'), bundleDescriptiveMetadata.id);
+        assert.equal(div.getAttribute('ADMID'), bundleAccessControlMetadata.id);
 
         let fptr = select1('mets:fptr', div);
         assert.ok(fptr);
-        assert.equal(fptr.getAttribute('FILEID'), bundle.children[0].children[0].id);
+        assert.equal(fptr.getAttribute('FILEID'), bundleFile.id);
       });
     });
 
@@ -160,67 +202,36 @@ describe('Submission generation', function() {
       });
     });
   });
-
-  describe('with multiple access control metadata elements', function() {
+  
+  describe('with the "aggregate" bundle type', function() {
     let form = new Form('test', {
-      children: [],
-      bundle: 'item type="Folder" label="My Folder" { item type="Folder" label="A" { metadata type="access-control" { partial "unpublished"; } }; item type="Folder" label="B" { metadata type="access-control" { partial "unpublished"; } } }',
-      templates: [
-        {
-          id: 'unpublished',
-          type: 'xml',
-          template: 'element "accessControl" xmlns="http://cdr.unc.edu/definitions/acl" published="false" {}'
-        }
-      ]
-    });
-
-    let values = {};
-
-    let bundle = generateBundle(form, values);
-    let submission = generateSubmission(form, bundle);
-    let doc = submission.then(function(submission) {
-      return new DOMParser().parseFromString(submission['mets.xml'].toString());
-    });
-
-    it('should generate an amdSec element', function() {
-      return doc.then(function(doc) {
-        let amdSec = select('/mets:mets/mets:amdSec', doc);
-        assert.equal(amdSec.length, 1);
-
-        let rightsMD = select('mets:rightsMD', amdSec[0]);
-        assert.equal(rightsMD.length, 2);
-        assert.equal(rightsMD[0].getAttribute('ID'), bundle.children[0].children[0].children[0].id);
-        assert.equal(rightsMD[1].getAttribute('ID'), bundle.children[0].children[1].children[0].id);
-      });
-    });
-
-    it('should generate div elements linked to the metadata elements', function() {
-      return doc.then(function(doc) {
-        let inner = select('/mets:mets/mets:structMap/mets:div/mets:div', doc);
-        assert.equal(inner.length, 2);
-
-        assert.equal(inner[0].getAttribute('TYPE'), 'Folder');
-        assert.equal(inner[0].getAttribute('LABEL'), 'A');
-        assert.equal(inner[0].getAttribute('ADMID'), bundle.children[0].children[0].children[0].id);
-
-        assert.equal(inner[1].getAttribute('TYPE'), 'Folder');
-        assert.equal(inner[1].getAttribute('LABEL'), 'B');
-        assert.equal(inner[1].getAttribute('ADMID'), bundle.children[0].children[1].children[0].id);
-      });
-    });
-  });
-
-  describe('with links', function() {
-    let form = new Form('test', {
-      blocks: [
-        { type: 'text', key: 'title' }
+      children: [
+        { type: 'text', key: 'title' },
+        { type: 'file', key: 'thesis' },
+        { type: 'file', key: 'supplemental', multiple: true }
       ],
-      bundle: 'item kind="Aggregate Work" label=title { link rel="http://example.com/blah" href="#thesis"; item kind="File" fragment="thesis" }',
-      templates: []
+      bundle: {
+        type: 'aggregate',
+        main: {
+          upload: 'thesis'
+        },
+        supplemental: [
+          {
+            upload: 'supplemental'
+          }
+        ]
+      },
+      metadata: []
     });
+
+    let buffer = new Buffer('lorem ipsum');
+    let thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
+    let dataset = buildTestUpload('dataset.csv', 'text/csv', buffer);
+    let appendix = buildTestUpload('appendix.pdf', 'application/pdf', buffer);
 
     let values = {
-      title: 'My Thesis'
+      thesis: thesis,
+      supplemental: [dataset, appendix]
     };
 
     let bundle = generateBundle(form, values);
@@ -230,55 +241,29 @@ describe('Submission generation', function() {
     });
 
     it('should generate a structLink element with a link from the Aggregate Work div to the File div', function() {
+      let bundleAggregateItem = bundle.children[0];
+      let bundleMainItem = bundle.items.find(i => i.label === 'thesis.pdf');
+
       return doc.then(function(doc) {
         let smLink = select1('/mets:mets/mets:structLink/mets:smLink', doc);
         assert.ok(smLink);
-        assert.equal(select1('@xlink:arcrole', smLink).value, 'http://example.com/blah');
-        assert.equal(select1('@xlink:from', smLink).value, '#' + bundle.children[0].id);
-        assert.equal(select1('@xlink:to', smLink).value, '#' + bundle.children[0].children[1].id);
+        assert.equal(select1('@xlink:arcrole', smLink).value, 'http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject');
+        assert.equal(select1('@xlink:from', smLink).value, '#' + bundleAggregateItem.id);
+        assert.equal(select1('@xlink:to', smLink).value, '#' + bundleMainItem.id);
       });
     });
-  });
-
-  describe('with literal file contents', function() {
-    let form = new Form('test', {
-      bundle: 'item kind="File" { file { agreement.terms; "\\n"; agreement.date; "\\n"; agreement.agent; "\\n"; } }',
-      templates: []
-    });
-
-    let values = {
-      agreement: {
-        terms: 'You agree to the terms, etc.',
-        date: '2016-01-01',
-        agent: 'someone'
-      }
-    };
-
-    let bundle = generateBundle(form, values);
-    let submission = generateSubmission(form, bundle);
-    let doc = submission.then(function(submission) {
-      return new DOMParser().parseFromString(submission['mets.xml'].toString());
-    });
-
-    it('should contain the literal contents as a buffer', function() {
-      return submission.then(function(submission) {
-        assert.equal(submission[bundle.files[0].id].toString(), 'You agree to the terms, etc.\n2016-01-01\nsomeone\n');
-      });
-    });
-
-    it('should generate a file element', function() {
+    
+    it('should generate a div elements for the aggregate item', function() {
       return doc.then(function(doc) {
-        let file = select1('/mets:mets/mets:fileSec/mets:fileGrp/mets:file', doc);
-        assert.ok(file);
-        assert.equal(file.getAttribute('ID'), bundle.children[0].children[0].id);
-        assert.equal(file.getAttribute('MIMETYPE'), 'text/plain');
-        assert.equal(file.getAttribute('CHECKSUM'), '3257dcd83a3042bdae7b3700c196769a');
-        assert.equal(file.getAttribute('CHECKSUMTYPE'), 'MD5');
-        assert.equal(file.getAttribute('SIZE'), '48');
+        let aggregateDiv = select1('/mets:mets/mets:structMap/mets:div', doc);
+        assert.ok(aggregateDiv);
+        assert.equal(aggregateDiv.getAttribute('TYPE'), 'Aggregate Work');
 
-        let flocat = select1('mets:FLocat', file);
-        assert.ok(flocat);
-        assert.equal(select1('@xlink:href', flocat).value, bundle.files[0].id);
+        let fileDivs = select('mets:div', aggregateDiv);
+        assert.equal(fileDivs.length, 3);
+        assert.ok(fileDivs.find(d => d.getAttribute('LABEL') === 'thesis.pdf' && d.getAttribute('TYPE') === 'File'));
+        assert.ok(fileDivs.find(d => d.getAttribute('LABEL') === 'dataset.csv' && d.getAttribute('TYPE') === 'File'));
+        assert.ok(fileDivs.find(d => d.getAttribute('LABEL') === 'appendix.pdf' && d.getAttribute('TYPE') === 'File'));
       });
     });
   });

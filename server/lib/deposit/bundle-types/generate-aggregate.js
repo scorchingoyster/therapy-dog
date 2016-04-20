@@ -1,7 +1,7 @@
 'use strict';
 
-const Arrow = require('../../arrow2');
-const XML = require('../../arrow2/models/xml');
+const Arrow = require('../../arrow');
+const XML = require('../../arrow/models/xml');
 const Item = require('../../bundle/model').Item;
 const File = require('../../bundle/model').File;
 const Link = require('../../bundle/model').Link;

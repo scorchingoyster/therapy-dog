@@ -1,7 +1,7 @@
 'use strict';
 
 const Xmlbuilder = require('xmlbuilder');
-const XML = require('../../lib/arrow2/models/xml');
+const XML = require('../../lib/arrow/models/xml');
 const equal = require('assert').equal;
 
 describe('XML', function() {

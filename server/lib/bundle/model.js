@@ -4,8 +4,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const uuid = require('uuid');
 const Upload = require('../models/upload');
-const XMLElement = require('../arrow/documents/xml/model').XMLElement;
-const XML = require('../arrow2/models/xml');
+const XML = require('../arrow/models/xml');
 
 class Item {
   constructor(children, options) {
@@ -117,12 +116,10 @@ exports.File = File;
 
 class Metadata {
   constructor(children, options) {
-    if (children.length === 1 && children[0] instanceof XMLElement) {
-      this.contents = children[0];
-    } else if (children.length === 1 && children[0] instanceof XML) {
+    if (children.length === 1 && children[0] instanceof XML) {
       this.contents = children[0];
     } else {
-      throw new Error('Metadata must contain a single instance of XMLElement or XML.');
+      throw new Error('Metadata must contain a single instance of the Arrow XML model.');
     }
 
     this.id = '_' + uuid.v4();

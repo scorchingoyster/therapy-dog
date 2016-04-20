@@ -1,6 +1,6 @@
 'use strict';
 
-const Arrow = require('../../lib/arrow2');
+const Arrow = require('../../lib/arrow');
 const deepEqual = require('assert').deepEqual;
 
 describe('Compact', function() {
