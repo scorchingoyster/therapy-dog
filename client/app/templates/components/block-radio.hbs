@@ -1,23 +1,23 @@
 <h2>{{entry.block.label}}</h2>
 
-<table>
-  {{#each entry.block.options as |option index|}}
-    <tr>
-      {{#if option.value}}
-        <td>{{radio-button value=option.value groupValue=entry.value id=(concat (object-guid entry) "-" index) name=(object-guid entry)}}</td>
-        <td><label for={{concat (object-guid entry) "-" index}}>{{option.label}}</label></td>
-      {{else}}
-        <td>{{radio-button value=option groupValue=entry.value id=(concat (object-guid entry) "-" index) name=(object-guid entry)}}</td>
-        <td><label for={{concat (object-guid entry) "-" index}}>{{option}}</label></td>
-      {{/if}}
-    </tr>
-  {{/each}}
-  {{#if entry.block.allowBlank}}
-    <tr class="blank">
-      <td>{{radio-button value="" groupValue=entry.value id=(concat (object-guid entry) "-blank") name=(object-guid entry)}}</td>
-      <td><label for={{concat (object-guid entry) "-blank"}}>No response</label></td>
-    </tr>
+{{#each entry.block.options as |option index|}}
+  {{#if option.value}}
+    <label>
+      {{radio-button value=option.value groupValue=entry.value name=(object-guid entry)}}
+      {{option.label}}
+    </label>
+  {{else}}
+    <label>
+      {{radio-button value=option groupValue=entry.value name=(object-guid entry)}}
+      {{option}}
+    </label>
   {{/if}}
-</table>
+{{/each}}
+{{#if entry.block.allowBlank}}
+  <label class="blank">
+    {{radio-button value="" groupValue=entry.value name=(object-guid entry)}}
+    No response
+  </label>
+{{/if}}
 
 {{entry-error-messages entry=entry}}

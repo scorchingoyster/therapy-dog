@@ -1,11 +1,9 @@
 <h2>{{entry.block.name}}</h2>
 
-<table>
-  <tr>
-    <td>{{input type="checkbox" checked=entry.value id=(object-guid entry)}}</td>
-    <td><label for={{object-guid entry}}>{{sanitize-html entry.block.prompt}}</label></td>
-  </tr>
-</table>
+<label>
+  {{input type="checkbox" checked=entry.value}}
+  {{sanitize-html entry.block.prompt}}
+</label>
 
 <ul class="errors">
   {{#if entry.invalid}}
