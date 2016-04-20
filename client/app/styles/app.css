@@ -37,6 +37,11 @@
   text-align: center;
 }
 
+.required-example {
+  font-weight: bold;
+  color: red;
+}
+
 
 /* title and description */
 

@@ -9,6 +9,7 @@
 <div id="form">
   <h1>{{form.title}}</h1>
   <p>{{sanitize-html form.description}}</p>
+  <p>Fields marked with <span class="required-example">*</span> are required.</p>
   
   {{object-entry entry=model}}
   
