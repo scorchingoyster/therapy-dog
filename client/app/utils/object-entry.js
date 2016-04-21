@@ -1,10 +1,6 @@
 import Ember from 'ember';
 
 export default Ember.Object.extend({
-  isValid: Ember.computed(function() {
-    return true;
-  }),
-  
   flatten() {
     let value = this.get('value');
     
