@@ -26,8 +26,6 @@ module.exports = function(defaults) {
   
   app.import(path.join(app.bowerDirectory, 'DOMPurify/dist/purify.min.js'));
   
-  app.import(path.join(app.bowerDirectory, 'ember-validations/index.js'));
-  
   app.import(path.join(app.bowerDirectory, 'jquery-ui/jquery-ui.js'));
   app.import(path.join(app.bowerDirectory, 'jquery-ui/ui/datepicker.js'));
   app.import(path.join(app.bowerDirectory, 'jquery-ui/ui/autocomplete.js'));

@@ -5,8 +5,4 @@
   {{sanitize-html entry.block.prompt}}
 </label>
 
-<ul class="errors">
-  {{#if entry.invalid}}
-    <li>You must agree to the {{entry.block.name}}.</li>
-  {{/if}}
-</ul>
+{{entry-error-messages entry=entry}}

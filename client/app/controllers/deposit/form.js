@@ -14,17 +14,17 @@ export default Ember.Controller.extend({
     let firstBadEntry;
     
     model.forEach(function(entry) {
-      entry.set("attempted", true);
-      
-      if (!entry.get("isValid") && !firstBadEntry) {
+      if (entry.get("invalid") && !firstBadEntry) {
         firstBadEntry = entry;
       }
     });
     
     if (firstBadEntry) {
-      this.get("entryEvents").trigger("focus", firstBadEntry);
+      this.get('entryEvents').trigger('focus', firstBadEntry);
+      this.set('model.hasInvalidEntries', true);
       return false;
     } else {
+      this.set('model.hasInvalidEntries', false);
       return true;
     }
   },

@@ -17,10 +17,6 @@ export default Ember.Component.extend(FocusEntryAction, {
       this.set('entry.value', this.get('entry.block.defaultValue') || firstValue);
     }
   },
-
-  focusOut: function() {
-    this.set('entry.attempted', true);
-  },
   
   actions: {
     clear: function() {

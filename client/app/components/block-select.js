@@ -22,10 +22,6 @@ export default Ember.Component.extend(FocusEntryAction, {
     }
   },
   
-  focusOut: function() {
-    this.set('entry.attempted', true);
-  },
-  
   actions: {
     focusEntry: function() {
       this.$('select').focus();
