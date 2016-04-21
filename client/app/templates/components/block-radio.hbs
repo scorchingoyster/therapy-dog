@@ -13,11 +13,5 @@
     </label>
   {{/if}}
 {{/each}}
-{{#if entry.block.allowBlank}}
-  <label class="blank">
-    {{radio-button value="" groupValue=entry.value name=(object-guid entry)}}
-    No response
-  </label>
-{{/if}}
 
 {{entry-error-messages entry=entry}}
