@@ -3,11 +3,8 @@ import ObjectEntry from 'therapy-dog/utils/object-entry';
 
 export default Ember.Component.extend({
   classNames: ['block', 'section'],
-  classNameBindings: ['repeat', 'invalid'],
+  classNameBindings: ['repeat'],
   repeat: Ember.computed.alias('entry.block.repeat'),
-  invalid: Ember.computed('entry.errors', 'entry.attempted', function() {
-    return !Ember.isEmpty(this.get('entry.errors')) && this.get('entry.attempted');
-  }),
   
   didReceiveAttrs() {
     this._super(...arguments);

@@ -6,7 +6,7 @@
   <button {{action "dump"}}>Dump</button>
 </div>
 
-<div id="form">
+<div id="form" class={{if model.hasInvalidEntries "invalid" ""}}>
   <h1>{{form.title}}</h1>
   <p>{{sanitize-html form.description}}</p>
   <p>Fields marked with <span class="required-example">*</span> are required.</p>

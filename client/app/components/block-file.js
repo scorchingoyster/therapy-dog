@@ -13,10 +13,6 @@ export default Ember.Component.extend(FocusEntryAction, {
   invalid: Ember.computed.alias('entry.invalid'),
   isMultiple: Ember.computed.alias('entry.block.multiple'),
   
-  focusOut: function() {
-    this.set('entry.attempted', true);
-  },
-  
   uploader: Ember.inject.service(),
 
   didReceiveAttrs() {
