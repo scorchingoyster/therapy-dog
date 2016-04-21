@@ -10,7 +10,6 @@ const Upload = Ember.Object.extend(Ember.Evented, {
     formData.append('file', this.get('_file'), this.get('name'));
     
     this.xhr = new XMLHttpRequest();
-    this.xhr.responseType = 'json';
     
     this.xhr.upload.onprogress = (e) => {
       let { loaded, total } = e;
@@ -33,7 +32,12 @@ const Upload = Ember.Object.extend(Ember.Evented, {
     
     this.xhr.onload = () => {
       if (this.xhr.status === 200) {
-        let response = Object.assign({}, this.xhr.response.data.attributes, { id: this.xhr.response.data.id });
+        let json = JSON.parse(this.xhr.responseText);
+        
+        // TODO: replace with Ember.assign after upgrading to 2.5
+        let response = json.data.attributes;
+        response.id = json.data.id;
+        
         this.trigger('complete', response);
         this.set('response', response);
         this.set('loading', false);
