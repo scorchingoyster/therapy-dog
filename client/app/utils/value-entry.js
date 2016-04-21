@@ -1,40 +1,35 @@
 import Ember from 'ember';
 
-export default Ember.Object.extend(Ember.Validations.Mixin, {
-  init() {
-    let validations = this.get('block.validations');
+export default Ember.Object.extend({
+  required: Ember.computed('block.type', 'block.required', function() {
+    let type = this.get('block.type');
+    let required = this.get('block.required');
     
-    if (validations && validations.format) {
-      if (Ember.typeOf(validations.format) === 'string') {
-        validations.format = new RegExp(validations.format);
-      } else if (Ember.typeOf(validations.format.with) === 'string') {
-        validations.format.with = new RegExp(validations.format.with);
-      }
-    }
-    
-    if (validations) {
-      this.validations = { value: validations };
-    } else {
-      this.validations = {};
-    }
-    
-    if (this.get('block.type') === 'agreement') {
-      this.validations = { value: { acceptance: true } };
-    }
-    
-    this._super(...arguments);
-  },
-  
-  required: Ember.computed('block.validations', 'block.type', function() {
-    if (this.get('block.type') === 'agreement') {
+    if (type === 'agreement') {
+      return true;
+    } else if (required) {
       return true;
     } else {
-      return Ember.isPresent(this.get('block.validations.presence'));
+      return false;
     }
   }),
   
-  invalid: Ember.computed('isValid', 'attempted', function() {
-    return !this.get('isValid') && this.get('attempted');
+  invalid: Ember.computed('errors', function() {
+    return !Ember.isEmpty(this.get('errors'));
+  }),
+  
+  errors: Ember.computed('block.required', 'block.type', 'value', 'value.[]', function() {
+    let type = this.get('block.type');
+    let required = this.get('block.required');
+    let value = this.get('value');
+    
+    if (type === 'agreement' && !value) {
+      return [`You must agree to the ${this.get('block.name')} before depositing.`];
+    } else if (required && Ember.isEmpty(value)) {
+      return [`This field is required.`];
+    } else {
+      return [];
+    }
   }),
   
   flatten() {

@@ -13,9 +13,7 @@
           "key": "title",
           "type": "text",
           "label": "Title",
-          "validations": {
-            "presence": true
-          }
+          "required": true
         },
         {
           "key": "keywords",
@@ -89,8 +87,7 @@
         { "label": "Germany", "value": "de" },
         { "label": "Great Britain", "value": "gb" },
         { "label": "United States", "value": "us" }
-      ],
-      "allowBlank": true
+      ]
     },
     {
       "key": "issuance",
@@ -108,17 +105,13 @@
           "key": "first",
           "type": "text",
           "label": "First Name",
-          "validations": {
-            "presence": true
-          }
+          "required": true
         },
         {
           "key": "last",
           "type": "text",
           "label": "Last Name",
-          "validations": {
-            "presence": true
-          }
+          "required": true
         }
       ]
     },
@@ -126,9 +119,7 @@
       "key": "article",
       "type": "file",
       "label": "Article",
-      "validations": {
-        "presence": true
-      }
+      "required": true
     },
     {
       "key": "supplemental",
