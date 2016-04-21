@@ -25,6 +25,10 @@ export default Ember.Object.extend({
     
     if (type === 'agreement' && !value) {
       return [`You must agree to the ${this.get('block.name')} before depositing.`];
+    } else if (type === 'file' && required && Ember.isEmpty(value)) {
+      return [`This file is required.`];
+    } else if (type === 'checkboxes' && required && Ember.isEmpty(value)) {
+      return [`Please check at least one option.`];
     } else if (required && Ember.isEmpty(value)) {
       return [`This field is required.`];
     } else {
