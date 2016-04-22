@@ -119,15 +119,10 @@
 }
 
 .block .errors {
-  display: none;
   list-style: none;
   padding: 0;
   margin: 8px 0;
   color: #c00;
-}
-
-#form.invalid .block .errors {
-  display: inherit;
 }
 
 
@@ -136,6 +131,7 @@
 .block.text label,
 .block.date label,
 .block.select label,
+.block.email label,
 .block.file label,
 .block.checkboxes h2,
 .block.radio h2,
@@ -152,6 +148,7 @@
 .section .block.file label,
 .section .block.checkboxes h2,
 .section .block.radio h2,
+.section .block.email h2,
 .section .block.agreement h2 {
   margin: 8px 0;
   font-size: 14px;
@@ -164,6 +161,7 @@
 .block.file.required label:after,
 .block.checkboxes.required h2:after,
 .block.radio.required h2:after,
+.block.email.required h2:after,
 .block.agreement.required h2:after {
   color: red;
   content: " *";
@@ -172,7 +170,8 @@
 
 /* text blocks */
 
-.block.text input {
+.block.text input,
+.block.email input {
   display: block;
   margin: 8px 0;
   font-size: 16px;
@@ -181,7 +180,8 @@
   border: 1px solid #ccc;
 }
 
-#form.invalid .block.text.invalid > input {
+.block.text.invalid > input,
+.block.email.invalid > input{
   border: 1px solid #c00;
 }
 
@@ -195,7 +195,7 @@
   border: 1px solid #ccc;
 }
 
-#form.invalid .block.text.invalid > textarea {
+.block.text.invalid > textarea {
   border: 1px solid #c00;
 }
 
@@ -237,6 +237,10 @@
   margin-top: 3px;
 }
 
+.block.radio label.blank {
+  font-style: italic;
+}
+
 
 /* date blocks */
 
@@ -249,7 +253,7 @@
   border: 1px solid #ccc;
 }
 
-#form.invalid .block.date.invalid > input {
+.block.date.invalid > input {
   border: 1px solid #c00;
 }
 
@@ -342,8 +346,8 @@
   justify-content: flex-start;
 }
 
-#form.invalid .block.file.invalid .upload,
-#form.invalid .block.file.invalid .new-upload {
+.block.file.invalid .upload,
+.block.file.invalid .new-upload {
   border: 1px solid #c00;
 }
 
