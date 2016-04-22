@@ -119,10 +119,15 @@
 }
 
 .block .errors {
+  display: none;
   list-style: none;
   padding: 0;
   margin: 8px 0;
   color: #c00;
+}
+
+#form.invalid .block .errors {
+  display: inherit;
 }
 
 
@@ -180,8 +185,8 @@
   border: 1px solid #ccc;
 }
 
-.block.text.invalid > input,
-.block.email.invalid > input{
+#form.invalid .block.text.invalid > input,
+#form.invalid .block.email.invalid > input {
   border: 1px solid #c00;
 }
 
@@ -195,7 +200,7 @@
   border: 1px solid #ccc;
 }
 
-.block.text.invalid > textarea {
+#form.invalid .block.text.invalid > textarea {
   border: 1px solid #c00;
 }
 
@@ -237,10 +242,6 @@
   margin-top: 3px;
 }
 
-.block.radio label.blank {
-  font-style: italic;
-}
-
 
 /* date blocks */
 
@@ -253,7 +254,7 @@
   border: 1px solid #ccc;
 }
 
-.block.date.invalid > input {
+#form.invalid .block.date.invalid > input {
   border: 1px solid #c00;
 }
 
@@ -346,8 +347,8 @@
   justify-content: flex-start;
 }
 
-.block.file.invalid .upload,
-.block.file.invalid .new-upload {
+#form.invalid .block.file.invalid .upload,
+#form.invalid .block.file.invalid .new-upload {
   border: 1px solid #c00;
 }
 
