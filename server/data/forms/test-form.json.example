@@ -141,6 +141,12 @@
       ]
     },
     {
+      "key": "email",
+      "type": "email",
+      "label": "Email Address",
+      "required": true
+    },
+    {
       "type": "agreement",
       "key": "agreement",
       "name": "Deposit Agreement",

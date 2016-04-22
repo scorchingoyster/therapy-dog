@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
 export default Ember.Object.extend({
   required: Ember.computed('block.type', 'block.required', function() {
@@ -31,6 +32,8 @@ export default Ember.Object.extend({
       return [`Please check at least one option.`];
     } else if (required && Ember.isEmpty(value)) {
       return [`This field is required.`];
+    } else if (type === 'email' && !EMAIL_REGEX.test(value)) {
+      return [`The entered value is not a valid email address.`];
     } else {
       return [];
     }

@@ -217,6 +217,8 @@ class Form {
     return mapValues(this.children, values, function(block, value) {
       if (block.type === 'text') {
         return String(value);
+      } else if (block.type === 'email') {
+        return String(value);
       } else if (block.type === 'date') {
         return String(value);
       } else if (block.type === 'select') {
