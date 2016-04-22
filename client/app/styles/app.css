@@ -151,9 +151,9 @@
 .section .block.date label,
 .section .block.select label,
 .section .block.file label,
+.section .block.email label,
 .section .block.checkboxes h2,
 .section .block.radio h2,
-.section .block.email h2,
 .section .block.agreement h2 {
   margin: 8px 0;
   font-size: 14px;
@@ -164,9 +164,9 @@
 .block.date.required label:after,
 .block.select.required label:after,
 .block.file.required label:after,
+.block.email.required label:after,
 .block.checkboxes.required h2:after,
 .block.radio.required h2:after,
-.block.email.required h2:after,
 .block.agreement.required h2:after {
   color: red;
   content: " *";
