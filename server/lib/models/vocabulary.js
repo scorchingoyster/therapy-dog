@@ -3,6 +3,7 @@
 const path = require('path');
 const fs = require('fs');
 const glob = require('glob');
+const typify = require('typify').create();
 const VocabularyNotFoundError = require('../errors').VocabularyNotFoundError;
 const logging = require('../logging');
 const config = require('../../config');
@@ -25,6 +26,11 @@ if (config.VOCABULARIES_DIRECTORY) {
   });
 }
 
+// Define type aliases for checking attributes in the Vocabulary constructor.
+typify.alias('vocabulary_objects', '{ terms: array map, valueKey: string, labelKey: string }');
+typify.alias('vocabulary_strings', '{ terms: array string }');
+typify.alias('vocabulary', 'vocabulary_strings | vocabulary_objects');
+
 /**
   @class Vocabulary
   @constructor
@@ -33,6 +39,8 @@ if (config.VOCABULARIES_DIRECTORY) {
 */
 class Vocabulary {
   constructor(id, attributes) {
+    typify.assert('vocabulary', attributes);
+
     this.id = id;
     this.attributes = attributes;
   }

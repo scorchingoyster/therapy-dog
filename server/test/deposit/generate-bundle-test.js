@@ -11,6 +11,8 @@ const buildTestUpload = require('./test-helpers').buildTestUpload;
 describe('Bundle generation', function() {
   describe('using the "single" type', function() {
     let form = new Form('test', {
+      destination: 'uuid:1234',
+      title: 'Test',
       children: [
         { type: 'text', key: 'title' },
         { type: 'file', key: 'thesis' }
@@ -83,6 +85,8 @@ describe('Bundle generation', function() {
   
   describe('using the "aggregate" type', function() {
     let form = new Form('test', {
+      destination: 'uuid:1234',
+      title: 'Test',
       children: [
         { type: 'text', key: 'title' },
         { type: 'file', key: 'thesis' },
@@ -172,6 +176,8 @@ describe('Bundle generation', function() {
   
   describe('using the "aggregate" type with supplemental files and metadata in a section', function() {
     let form = new Form('test', {
+      destination: 'uuid:1234',
+      title: 'Test',
       children: [
         { type: 'file', key: 'thesis' },
         {
@@ -258,6 +264,8 @@ describe('Bundle generation', function() {
 
   describe('using the "aggregate" type with agreements', function() {
     let form = new Form('test', {
+      destination: 'uuid:1234',
+      title: 'Test',
       children: [
         { type: 'file', key: 'thesis' },
         {

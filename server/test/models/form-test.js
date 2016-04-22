@@ -18,6 +18,23 @@ describe('Form', function() {
     });
   });
 
+  it('constructor throws a TypeError when passed invalid attributes', function() {
+    // Missing the 'upload' property in bundle.
+    let invalid = {
+      destination: 'uuid:1234',
+      title: 'My Form',
+      children: [
+        { type: 'file', key: 'main' }
+      ],
+      bundle: {
+        type: 'single'
+      },
+      metadata: []
+    };
+
+    assert.throws(() => { new Form(null, invalid); }, TypeError);
+  });
+
   describe('#getResourceObject()', function() {
     it('converts object array vocabularies to options arrays', function() {
       return Form.findById('article')

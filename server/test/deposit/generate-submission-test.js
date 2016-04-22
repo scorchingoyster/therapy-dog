@@ -19,6 +19,8 @@ const select1 = function(e, doc) { return select(e, doc, true); };
 describe('Submission generation', function() {
   describe('using the "single" bundle type', function() {
     let form = new Form('test', {
+      destination: 'uuid:1234',
+      title: 'Test',
       children: [
         { type: 'text', key: 'title' },
         { type: 'file', key: 'thesis' }
@@ -205,6 +207,8 @@ describe('Submission generation', function() {
   
   describe('with the "aggregate" bundle type', function() {
     let form = new Form('test', {
+      destination: 'uuid:1234',
+      title: 'Test',
       children: [
         { type: 'text', key: 'title' },
         { type: 'file', key: 'thesis' },

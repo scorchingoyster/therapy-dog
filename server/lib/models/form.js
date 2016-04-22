@@ -3,6 +3,7 @@
 const path = require('path');
 const fs = require('fs');
 const glob = require('glob');
+const typify = require('typify').create();
 const Upload = require('./upload');
 const Vocabulary = require('./vocabulary');
 const FormNotFoundError = require('../errors').FormNotFoundError;
@@ -26,6 +27,42 @@ if (config.FORMS_DIRECTORY) {
     });
   });
 }
+
+// Define type aliases for checking attributes in the Form constructor.
+typify.mutual({
+  'form_agreement': '{ type: "agreement", key: string, name: string, uri: string, prompt: string }',
+  'form_options': 'string | array string | array { label: string, value: string }',
+  'form_checkboxes': '{ type: "checkboxes", key: string, label: string?, options: form_options, required: boolean?, defaultValue: (array string)? }',
+  'form_date': '{ type: "date", key: string, label: string, precision: ("year" | "month" | "day")?, required: boolean? }',
+  'form_file': '{ type: "file", key: string, label: string?, required: boolean?, multiple: boolean? }',
+  'form_radio': '{ type: "radio", key: string, label: string?, options: form_options, required: boolean?, defaultValue: string? }',
+  'form_section': '{ type: "section", key: string, label: string?, children: array form_block, repeat: boolean? }',
+  'form_select': '{ type: "select", key: string, label: string?, options: form_options, required: boolean?, allowBlank: boolean?, defaultValue: string? }',
+  'form_text': '{ type: "text", key: string, label: string?, options: form_options?, required: boolean?, defaultValue: string?, placeholder: string?, size: ("line" | "paragraph")? }',
+  'form_block': 'form_agreement | form_checkboxes | form_date | form_file | form_radio | form_section | form_select | form_text'
+});
+
+typify.alias('bundle_single', '{ type: "single", context: string?, upload: string, metadata: (array string)? }');
+typify.alias('bundle_items', '{ context: string?, upload: string, metadata: (array string)? }');
+typify.alias('bundle_aggregate', '{ type: "aggregate", rel: string?, main: bundle_items, supplemental: (array bundle_items)?, agreements: (array string)? }');
+typify.alias('bundle', 'bundle_aggregate | bundle_single');
+
+typify.mutual({
+  'template_string': '{ type: "string", value: string }',
+  'template_lookup': '{ type: "lookup", path: array string }',
+  'template_structure': '{ type: "structure", name: string, properties: (map template_node)?, children: (array template_node)? }',
+  'template_each': '{ type: "each", items: template_lookup, locals: map string, body: array template_node }',
+  'template_present': '{ name: "present", value: template_lookup }',
+  'template_predicate': 'template_present',
+  'template_choice': '{ predicates: array template_predicate, body: array template_node }',
+  'template_choose': '{ type: "choose", choices: array template_choice, otherwise: (array template_node)? }',
+  'template_arrow': '{ type: "arrow", items: template_lookup, target: array template_structure }',
+  'template_node': 'template_string | template_lookup | template_structure | template_each | template_choose | template_arrow'
+});
+
+typify.alias('metadata', '{ id: string, type: ("descriptive" | "access-control"), model: "xml", template: template_structure }');
+
+typify.alias('form', '{ destination: string, title: string, description: string?, children: array form_block, bundle: bundle, metadata: array metadata }');
 
 /**
   Traverse the given blocks and values, yielding non-section blocks and their
@@ -126,6 +163,8 @@ function transformOptionValue(options, value) {
 */
 class Form {
   constructor(id, attributes) {
+    typify.assert('form', attributes);
+
     this.id = id;
     this.attributes = attributes;
   }

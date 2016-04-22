@@ -8,30 +8,13 @@ const Link = require('../../bundle/model').Link;
 const Metadata = require('../../bundle/model').Metadata;
 const Bundle = require('../../bundle/model').Bundle;
 
-/*
+/**
+  Generates a bundle containing a 'File' item, optionally with metadata.
 
-Generates a bundle containing a 'File' item, optionally with metadata.
-
-The bundle specification looks like this:
-
-  {
-    type: 'single',
-    context: String?
-    upload: String,
-    metadata: [String]?
-  }
-
-A metadata specification looks like this:
-
-  {
-    id: String,
-    type: String,
-    model: String,
-    template: Object
-  }
-
+  @method generateSingle
+  @param {Form} form
+  @param {Object} values
 */
-
 module.exports = function(form, values) {
   let context;
   if (form.bundle.context) {

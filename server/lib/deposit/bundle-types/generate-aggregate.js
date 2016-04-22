@@ -8,29 +8,6 @@ const Link = require('../../bundle/model').Link;
 const Metadata = require('../../bundle/model').Metadata;
 const Bundle = require('../../bundle/model').Bundle;
 
-/*
-
-Generates a bundle containing an 'Aggregate Work' item, which contains a main file and optional supplemental files, each optionally with metadata. The aggregate item is linked to the main item via the relationship defined by rel, if present.
-
-The bundle specification looks like this:
-
-  {
-    type: 'aggregate',
-    rel: String?,
-    main: {
-      context: String?,
-      upload: String,
-      metadata: [String]?
-    },
-    supplemental: {
-      context: String?,
-      upload: String,
-      metadata: [String]?
-    }?
-  }
-
-*/
-
 function toArray(array) {
   if (Array.isArray(array)) {
     return array;
@@ -96,6 +73,16 @@ function generateAgreementFileItem(agreements, values) {
   return new Item([file], { type: 'File', label: 'agreements.txt' });
 }
 
+/**
+  Generate a bundle containing an 'Aggregate Work' item, which contains a main
+  file and optional supplemental files, each optionally with metadata. The
+  aggregate item is linked to the main item via the relationship defined by
+  rel, if present.
+
+  @method generateAggregate
+  @param {Form} form
+  @param {Object} values
+*/
 module.exports = function(form, values) {
   let children = [];
   
