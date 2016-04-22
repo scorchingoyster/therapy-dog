@@ -1,8 +1,10 @@
 'use strict';
 
 const path = require('path');
+const fs = require('fs');
 const glob = require('glob');
 const VocabularyNotFoundError = require('../errors').VocabularyNotFoundError;
+const logging = require('../logging');
 const config = require('../../config');
 
 const VOCABULARIES = {};
@@ -10,8 +12,15 @@ const VOCABULARIES = {};
 if (config.VOCABULARIES_DIRECTORY) {
   glob(path.join(config.VOCABULARIES_DIRECTORY, '*.json'), function(err, filenames) {
     filenames.forEach(function(filename) {
-      let id = path.basename(filename, '.json');
-      VOCABULARIES[id] = new Vocabulary(id, require(filename));
+      try {
+        let id = path.basename(filename, '.json');
+        let attributes = JSON.parse(fs.readFileSync(filename, 'utf8'));
+
+        VOCABULARIES[id] = new Vocabulary(id, attributes);
+      } catch (e) {
+        logging.error('Error loading vocabulary: ' + filename);
+        logging.error(e.stack);
+      }
     });
   });
 }

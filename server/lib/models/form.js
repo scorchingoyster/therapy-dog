@@ -1,10 +1,12 @@
 'use strict';
 
 const path = require('path');
+const fs = require('fs');
 const glob = require('glob');
 const Upload = require('./upload');
 const Vocabulary = require('./vocabulary');
 const FormNotFoundError = require('../errors').FormNotFoundError;
+const logging = require('../logging');
 const config = require('../../config');
 
 const FORMS = {};
@@ -12,8 +14,15 @@ const FORMS = {};
 if (config.FORMS_DIRECTORY) {
   glob(path.join(config.FORMS_DIRECTORY, '*.json'), function(err, filenames) {
     filenames.forEach(function(filename) {
-      let id = path.basename(filename, '.json');
-      FORMS[id] = new Form(id, require(filename));
+      try {
+        let id = path.basename(filename, '.json');
+        let attributes = JSON.parse(fs.readFileSync(filename, 'utf8'));
+
+        FORMS[id] = new Form(id, attributes);
+      } catch (e) {
+        logging.error('Error loading form: ' + filename);
+        logging.error(e.stack);
+      }
     });
   });
 }
