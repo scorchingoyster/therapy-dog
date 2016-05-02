@@ -5,6 +5,19 @@ const fs = require('fs');
 const uuid = require('uuid');
 const Upload = require('../../models/upload');
 
+/**
+  @module deposit
+  @submodule bundle
+*/
+
+/**
+  @class File
+  @constructor
+  @param {Upload|Buffer} contents
+  @param {Object} options
+  @param {String} [options.name]
+  @param {String} [options.mimetype]
+*/
 class File {
   constructor(contents, options) {
     if (contents instanceof Upload) {
@@ -20,14 +33,36 @@ class File {
     this._mimetype = options.mimetype;
   }
 
+  /**
+    @property contents
+    @type {Upload|Buffer}
+  */
+
+  /**
+    @property id
+    @type {String}
+  */
+
+  /**
+    @property isUpload
+    @type {Boolean}
+  */
   get isUpload() {
     return this.contents instanceof Upload;
   }
 
+  /**
+    @property isBuffer
+    @type {Boolean}
+  */
   get isBuffer() {
     return this.contents instanceof Buffer;
   }
 
+  /**
+    @property name
+    @type {String}
+  */
   get name() {
     if (this._name) {
       return this._name;
@@ -40,6 +75,10 @@ class File {
     }
   }
 
+  /**
+    @property mimetype
+    @type {String}
+  */
   get mimetype() {
     if (this._mimetype) {
       return this._mimetype;
@@ -52,6 +91,10 @@ class File {
     }
   }
 
+  /**
+    @property size
+    @type {Number}
+  */
   get size() {
     if (this.isUpload) {
       return this.contents.size;
@@ -60,6 +103,12 @@ class File {
     }
   }
 
+  /**
+    @method getHashDigest
+    @param {String} algorithm
+    @param {String} [encoding='utf8']
+    @return {Promise}
+  */
   getHashDigest(algorithm, encoding) {
     if (this.isUpload) {
       let path = this.contents.path;

@@ -5,6 +5,10 @@ const evaluate = require('./evaluate');
 const compact = require('./compact');
 const flatten = require('./flatten');
 
+/**
+  @module arrow
+*/
+
 typify.mutual({
   'expression_string': '{ type: "string", value: string }',
   'expression_lookup': '{ type: "lookup", path: array string }',
@@ -18,7 +22,20 @@ typify.mutual({
   'expression': 'expression_string | expression_lookup | expression_structure | expression_each | expression_choose | expression_arrow'
 });
 
+/**
+  @class Arrow
+  @constructor
+  @param {Object} expression
+*/
 class Arrow {
+  /**
+    Check that the expression is a valid Arrow expression.
+
+    @method check
+    @static
+    @param {Object} expression
+    @return {Boolean}
+  */
   static check(expression) {
     return typify.check('expression', expression);
   }
@@ -29,6 +46,13 @@ class Arrow {
     this.expression = expression;
   }
 
+  /**
+    Evaluate this template using the context.
+
+    @method evaluate
+    @param {Object} result
+    @return {any}
+  */
   evaluate(context) {
     let result = evaluate(this.expression, context);
     result = compact(result);

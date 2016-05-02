@@ -5,6 +5,19 @@ const File = require('./file');
 const Metadata = require('./metadata');
 const Link = require('./link');
 
+/**
+  @module deposit
+  @submodule bundle
+*/
+
+/**
+  @class Item
+  @constructor
+  @param {Array} children
+  @param {Object} options
+  @param {String} [options.type]
+  @param {String} [options.label]
+*/
 class Item {
   constructor(children, options) {
     children.forEach(function(child) {
@@ -18,6 +31,26 @@ class Item {
     this.type = options.type;
     this.label = options.label;
   }
+
+  /**
+    @property children
+    @type Array
+  */
+
+  /**
+    @property id
+    @type String
+  */
+
+  /**
+    @property type
+    @type String
+  */
+
+  /**
+    @property label
+    @type String
+  */
 }
 
 module.exports = Item;

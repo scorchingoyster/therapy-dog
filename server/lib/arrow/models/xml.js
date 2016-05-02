@@ -2,6 +2,11 @@
 
 const Xmlbuilder = require('xmlbuilder');
 
+/**
+  @module arrow
+  @submodule arrow-models
+*/
+
 function renderElementStructure(node, parent) {
   let element = parent.element(node.type);
 
@@ -53,11 +58,28 @@ function renderBody(body, parent) {
   });
 }
 
+/**
+  @class XML
+  @constructor
+  @param {Object} root
+*/
 class XML {
   constructor(root) {
     this.root = root;
   }
 
+  /**
+    @property root
+    @type Object
+  */
+
+  /**
+    Render the elements described by root, optionally using builder as a parent.
+
+    @method evaluate
+    @param {Object} [builder]
+    @return {Object}
+  */
   render(builder) {
     if (builder) {
       renderNode(this.root, builder);

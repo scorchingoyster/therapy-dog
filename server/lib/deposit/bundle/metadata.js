@@ -3,6 +3,18 @@
 const uuid = require('uuid');
 const XML = require('../../arrow/models/xml');
 
+/**
+  @module deposit
+  @submodule bundle
+*/
+
+/**
+  @class Metadata
+  @constructor
+  @param {XML} contents
+  @param {Object} options
+  @param {String} [options.type]
+*/
 class Metadata {
   constructor(contents, options) {
     if (contents instanceof XML) {
@@ -15,9 +27,28 @@ class Metadata {
     this.type = options.type;
   }
 
+  /**
+    @property contents
+    @type XML
+  */
+
+  /**
+    @property isXML
+    @type Boolean
+  */
   get isXML() {
     return true;
   }
+
+  /**
+    @property id
+    @type String
+  */
+
+  /**
+    @property type
+    @type String
+  */
 }
 
 module.exports = Metadata;

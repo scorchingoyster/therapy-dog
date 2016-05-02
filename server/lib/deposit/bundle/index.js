@@ -5,6 +5,11 @@ const Item = require('./item');
 const Metadata = require('./metadata');
 const Link = require('./link');
 
+/**
+  @module deposit
+  @submodule bundle
+*/
+
 function collectNodes(parent, constructor) {
   return parent.children.reduce(function(items, child) {
     if (child instanceof constructor) {
@@ -19,6 +24,11 @@ function collectNodes(parent, constructor) {
   }, []);
 }
 
+/**
+  @class Bundle
+  @constructor
+  @param {Array} children
+*/
 class Bundle {
   constructor(children) {
     children.forEach(function(child) {
@@ -30,18 +40,39 @@ class Bundle {
     this.children = children;
   }
 
+  /**
+    @property children
+    @type {Array}
+  */
+
+  /**
+    @property files
+    @type {Array}
+  */
   get files() {
     return collectNodes(this, File);
   }
 
+  /**
+    @property items
+    @type {Array}
+  */
   get items() {
     return collectNodes(this, Item);
   }
 
+  /**
+    @property metadata
+    @type {Array}
+  */
   get metadata() {
     return collectNodes(this, Metadata);
   }
 
+  /**
+    @property links
+    @type {Array}
+  */
   get links() {
     return collectNodes(this, Link);
   }
