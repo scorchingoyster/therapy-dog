@@ -20,7 +20,7 @@ function renderAttributeStructure(node, parent) {
     value = node.properties.value;
   } else {
     value = node.children.reduce(function(result, child) {
-      return result + String(child);
+      return result + child;
     }, '');
   }
 
@@ -35,8 +35,12 @@ function renderStructure(node, parent) {
   }
 }
 
+function isStructure(node) {
+  return typeof node === 'object' && typeof node.type === 'string' && typeof node.properties === 'object' && Array.isArray(node.children);
+}
+
 function renderNode(node, parent) {
-  if (typeof node === 'object') {
+  if (isStructure(node)) {
     return renderStructure(node, parent);
   } else {
     return parent.text(node);

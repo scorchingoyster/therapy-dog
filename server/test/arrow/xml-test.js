@@ -58,4 +58,60 @@ describe('XML', function() {
 
     equal(builder.toString(), '<xmlData><mods><note>This is a thing</note></mods></xmlData>');
   });
+
+  it('should render number data values as strings', function() {
+    let root = {
+      type: 'values',
+      properties: {
+        property: 123
+      },
+      children: [
+        123,
+        {
+          type: '@childAttrWithChildren',
+          properties: {},
+          children: [123]
+        },
+        {
+          type: '@childAttrWithValueProperty',
+          properties: {
+            value: 123
+          },
+          children: []
+        }
+      ]
+    };
+
+    let xml = new XML(root);
+
+    equal(xml.render().toString(), '<values property="123" childAttrWithChildren="123" childAttrWithValueProperty="123">123</values>');
+  });
+
+  it('should render object data values as strings', function() {
+    let root = {
+      type: 'values',
+      properties: {
+        property: { a: 1 }
+      },
+      children: [
+        { a: 1 },
+        {
+          type: '@childAttrWithChildren',
+          properties: {},
+          children: [{ a: 1 }]
+        },
+        {
+          type: '@childAttrWithValueProperty',
+          properties: {
+            value: { a: 1 }
+          },
+          children: []
+        }
+      ]
+    };
+
+    let xml = new XML(root);
+
+    equal(xml.render().toString(), '<values property="[object Object]" childAttrWithChildren="[object Object]" childAttrWithValueProperty="[object Object]">[object Object]</values>');
+  });
 });
