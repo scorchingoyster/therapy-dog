@@ -76,8 +76,8 @@ function generateAgreementFileItem(agreements, values) {
 /**
   Generate a bundle containing an 'Aggregate Work' item, which contains a main
   file and optional supplemental files, each optionally with metadata. The
-  aggregate item is linked to the main item via the relationship defined by
-  rel, if present.
+  aggregate item is linked to the main item via the CDR defaultWebObject
+  relationship.
 
   @method generateAggregate
   @param {Form} form
