@@ -39,12 +39,13 @@ typify.mutual({
   'form_options': 'string | array string | array { label: string, value: string }',
   'form_checkboxes': '{ type: "checkboxes", key: string, label: string?, options: form_options, required: boolean?, defaultValue: (array string)? }',
   'form_date': '{ type: "date", key: string, label: string, precision: ("year" | "month" | "day")?, required: boolean? }',
+  'form_email': '{ type: "email", key: string, label: string, required: boolean?, defaultValue: string?, placeholder: string? }',
   'form_file': '{ type: "file", key: string, label: string?, required: boolean?, multiple: boolean? }',
   'form_radio': '{ type: "radio", key: string, label: string?, options: form_options, required: boolean?, defaultValue: string? }',
   'form_section': '{ type: "section", key: string, label: string?, children: array form_block, repeat: boolean? }',
   'form_select': '{ type: "select", key: string, label: string?, options: form_options, required: boolean?, allowBlank: boolean?, defaultValue: string? }',
   'form_text': '{ type: "text", key: string, label: string?, options: form_options?, required: boolean?, defaultValue: string?, placeholder: string?, size: ("line" | "paragraph")? }',
-  'form_block': 'form_agreement | form_checkboxes | form_date | form_file | form_radio | form_section | form_select | form_text'
+  'form_block': 'form_agreement | form_checkboxes | form_date | form_email | form_file | form_radio | form_section | form_select | form_text'
 });
 
 typify.alias('bundle_single', '{ type: "single", context: string?, upload: string, metadata: (array string)? }');
