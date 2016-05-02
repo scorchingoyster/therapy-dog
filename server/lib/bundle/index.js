@@ -1,30 +1,64 @@
 'use strict';
 
-const Arrow = require('../arrow');
-const Item = require('./model').Item;
-const File = require('./model').File;
-const Link = require('./model').Link;
-const Metadata = require('./model').Metadata;
-const Bundle = require('./model').Bundle;
+const File = require('./file');
+const Item = require('./item');
+const Metadata = require('./metadata');
+const Link = require('./link');
 
-module.exports = {
-  item: Arrow.helper(function(params, hash, body) {
-    return new Item(body(), hash);
-  }),
+function collectNodes(parent, constructor) {
+  return parent.children.reduce(function(items, child) {
+    if (child instanceof constructor) {
+      items = items.concat(child);
+    }
 
-  file: Arrow.helper(function(params, hash, body) {
-    return new File(body(), hash);
-  }),
+    if (child instanceof Item) {
+      return items.concat(collectNodes(child, constructor));
+    } else {
+      return items;
+    }
+  }, []);
+}
 
-  link: Arrow.helper(function(params, hash) {
-    return new Link(hash);
-  }),
+class Bundle {
+  constructor(children) {
+    children.forEach(function(child) {
+      if (!(child instanceof Item)) {
+        throw new Error('A bundle may only contain items at the top level.');
+      }
+    });
 
-  metadata: Arrow.helper(function(params, hash, body) {
-    return new Metadata(body(), hash);
-  }),
+    this.children = children;
 
-  document: Arrow.helper(function(params, hash, body) {
-    return new Bundle(body());
-  })
-};
+    let itemsByFragment = this.items.reduce(function(result, item) {
+      if (!result.hasOwnProperty(item.fragment)) {
+        result[item.fragment] = [];
+      }
+      result[item.fragment].push(item);
+      return result;
+    }, {});
+
+    this.links.forEach(function(link) {
+      if (link.href && link.href[0] === '#') {
+        link.items = itemsByFragment[link.href.slice(1)] || [];
+      }
+    });
+  }
+
+  get files() {
+    return collectNodes(this, File);
+  }
+
+  get items() {
+    return collectNodes(this, Item);
+  }
+
+  get metadata() {
+    return collectNodes(this, Metadata);
+  }
+
+  get links() {
+    return collectNodes(this, Link);
+  }
+}
+
+module.exports = Bundle;

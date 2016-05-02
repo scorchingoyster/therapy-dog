@@ -2,10 +2,10 @@
 
 const Arrow = require('../../arrow');
 const XML = require('../../arrow/models/xml');
-const Item = require('../../bundle/model').Item;
-const File = require('../../bundle/model').File;
-const Metadata = require('../../bundle/model').Metadata;
-const Bundle = require('../../bundle/model').Bundle;
+const Item = require('../../bundle/item');
+const File = require('../../bundle/file');
+const Metadata = require('../../bundle/metadata');
+const Bundle = require('../../bundle');
 
 /**
   Generates a bundle containing a 'File' item, optionally with metadata.
