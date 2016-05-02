@@ -4,7 +4,6 @@ const Arrow = require('../../arrow');
 const XML = require('../../arrow/models/xml');
 const Item = require('../../bundle/model').Item;
 const File = require('../../bundle/model').File;
-const Link = require('../../bundle/model').Link;
 const Metadata = require('../../bundle/model').Metadata;
 const Bundle = require('../../bundle/model').Bundle;
 
@@ -22,7 +21,7 @@ module.exports = function(form, values) {
   } else {
     context = values;
   }
-  
+
   let upload = context[form.bundle.upload];
 
   let file = new File([upload], {});
@@ -33,14 +32,14 @@ module.exports = function(form, values) {
       let spec = form.metadata.find(m => m.id === id);
       let root = Arrow.evaluate(spec.template, context);
       let xml = new XML(root);
-    
+
       return new Metadata([xml], { type: spec.type });
     });
   } else {
     metadata = [];
   }
-  
+
   let item = new Item([file].concat(metadata), { type: 'File', label: upload.name });
-  
+
   return new Bundle([item], {});
-}
+};

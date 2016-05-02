@@ -25,40 +25,40 @@ function generateFileItems(itemSpec, metadataSpecs, values) {
   } else {
     contexts = toArray(values);
   }
-  
+
   return contexts.reduce(function(result, context) {
     let uploads = toArray(context[itemSpec.upload]);
-    
+
     let items = uploads.map(function(upload) {
       let file = new File([upload], {});
-    
+
       let metadata;
       if (itemSpec.metadata) {
         metadata = itemSpec.metadata.map(function(id) {
           let spec = metadataSpecs.find(m => m.id === id);
           let root = Arrow.evaluate(spec.template, context);
           let xml = new XML(root);
-    
+
           return new Metadata([xml], { type: spec.type });
         });
       } else {
         metadata = [];
       }
-    
+
       return new Item([file].concat(metadata), { type: 'File', label: upload.name });
     });
-    
+
     return result.concat(items);
   }, []);
 }
 
 function generateOneFileItem(itemSpec, metadataSpecs, values) {
   let items = generateFileItems(itemSpec, metadataSpecs, values);
-  
+
   if (items.length !== 1) {
     throw new Error('Expected item spec to generate exactly one item, instead got ' + items.length);
   }
-  
+
   return items[0];
 }
 
@@ -67,9 +67,9 @@ function generateAgreementFileItem(agreements, values) {
     let agreement = values[key];
     return `${agreement.name}\n${agreement.uri}\n${agreement.prompt}\n`;
   }).join('\n');
-  
+
   let file = new File([contents], { mimetype: 'text/plain' });
-  
+
   return new Item([file], { type: 'File', label: 'agreements.txt' });
 }
 
@@ -85,26 +85,26 @@ function generateAgreementFileItem(agreements, values) {
 */
 module.exports = function(form, values) {
   let children = [];
-  
+
   let main = generateOneFileItem(form.bundle.main, form.metadata, values);
   children = children.concat(main);
-  
+
   if (form.bundle.supplemental) {
     let supplemental = form.bundle.supplemental.reduce(function(result, itemSpec) {
       return result.concat(generateFileItems(itemSpec, form.metadata, values));
     }, []);
     children = children.concat(supplemental);
   }
-  
+
   let link = new Link({ items: [main], rel: 'http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' });
   children = children.concat(link);
-  
+
   if (form.bundle.agreements) {
     let agreement = generateAgreementFileItem(form.bundle.agreements, values);
     children = children.concat(agreement);
   }
-  
+
   let aggregate = new Item(children, { type: 'Aggregate Work' });
-  
+
   return new Bundle([aggregate], {});
-}
+};

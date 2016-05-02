@@ -204,7 +204,7 @@ describe('Submission generation', function() {
       });
     });
   });
-  
+
   describe('with the "aggregate" bundle type', function() {
     let form = new Form('test', {
       destination: 'uuid:1234',
@@ -256,7 +256,7 @@ describe('Submission generation', function() {
         assert.equal(select1('@xlink:to', smLink).value, '#' + bundleMainItem.id);
       });
     });
-    
+
     it('should generate a div elements for the aggregate item', function() {
       return doc.then(function(doc) {
         let aggregateDiv = select1('/mets:mets/mets:structMap/mets:div', doc);
