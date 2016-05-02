@@ -11,6 +11,10 @@ const FormNotFoundError = require('../errors').FormNotFoundError;
 const logging = require('../logging');
 const config = require('../../config');
 
+/**
+  @module models
+*/
+
 const FORMS = {};
 
 if (config.FORMS_DIRECTORY) {
@@ -66,7 +70,7 @@ typify.alias('form', '{ destination: string, title: string, description: string?
   @param {Array} blocks
   @param {Object} values
   @param {Function} iterator
-  @return {Promise<Object>}
+  @return {Promise}
 */
 function mapValues(blocks, values, iterator) {
   let result = {};
@@ -111,7 +115,7 @@ function mapValues(blocks, values, iterator) {
   @method resolveVocabularies
   @private
   @param {Array} blocks
-  @return {Promise<Array>}
+  @return {Promise}
 */
 function resolveVocabularies(blocks) {
   return Promise.all(blocks.map(function(block) {
@@ -150,6 +154,7 @@ function transformOptionValue(options, value) {
 /**
   @class Form
   @constructor
+  @private
   @param {String} id
   @param {Object} attributes
 */
@@ -221,7 +226,7 @@ class Form {
     Return a JSON API resource object representing this form.
 
     @method getResourceObject
-    @return {Promise<Object>}
+    @return {Promise}
   */
   getResourceObject() {
     let options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
@@ -259,7 +264,7 @@ class Form {
 
     @method transformValues
     @param {Object} values
-    @return {Promise<Object>}
+    @return {Promise}
   */
   transformValues(values) {
     return mapValues(this.children, values, function(block, value) {
@@ -304,7 +309,7 @@ class Form {
 
     @method findAll
     @static
-    @return {Promise<Array<Form>>}
+    @return {Promise}
   */
   static findAll() {
     return new Promise(function(resolve) {
@@ -320,7 +325,7 @@ class Form {
     @method findById
     @static
     @param {String} id
-    @return {Promise<Form>}
+    @return {Promise}
   */
   static findById(id) {
     return new Promise(function(resolve, reject) {
