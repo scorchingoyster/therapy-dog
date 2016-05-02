@@ -146,12 +146,10 @@ function collectSmLinks(bundle) {
   bundle.items.forEach(function(item) {
     item.children.forEach(function(child) {
       if (child instanceof Link) {
-        if (child.items) {
-          child.items.map(function(target) {
-            result.push({ arcrole: child.rel, from: '#' + item.id, to: '#' + target.id });
-          });
+        if (child.target instanceof Item) {
+          result.push({ arcrole: child.rel, from: '#' + item.id, to: '#' + child.target.id });
         } else {
-          result.push({ arcrole: child.rel, from: '#' + item.id, to: child.href });
+          result.push({ arcrole: child.rel, from: '#' + item.id, to: child.target });
         }
       }
     });

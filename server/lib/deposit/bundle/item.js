@@ -17,7 +17,6 @@ class Item {
     this.id = '_' + uuid.v4();
     this.type = options.type;
     this.label = options.label;
-    this.fragment = options.fragment;
   }
 }
 

@@ -96,7 +96,7 @@ module.exports = function(form, values) {
     children = children.concat(supplemental);
   }
 
-  let link = new Link({ items: [main], rel: 'http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' });
+  let link = new Link(main, 'http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject');
   children = children.concat(link);
 
   if (form.bundle.agreements) {

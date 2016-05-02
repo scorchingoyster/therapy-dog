@@ -28,20 +28,6 @@ class Bundle {
     });
 
     this.children = children;
-
-    let itemsByFragment = this.items.reduce(function(result, item) {
-      if (!result.hasOwnProperty(item.fragment)) {
-        result[item.fragment] = [];
-      }
-      result[item.fragment].push(item);
-      return result;
-    }, {});
-
-    this.links.forEach(function(link) {
-      if (link.href && link.href[0] === '#') {
-        link.items = itemsByFragment[link.href.slice(1)] || [];
-      }
-    });
   }
 
   get files() {

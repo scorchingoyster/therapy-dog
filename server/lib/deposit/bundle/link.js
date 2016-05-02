@@ -1,10 +1,9 @@
 'use strict';
 
 class Link {
-  constructor(options) {
-    this.items = options.items;
-    this.href = options.href;
-    this.rel = options.rel;
+  constructor(target, rel) {
+    this.target = target;
+    this.rel = rel;
   }
 }
 

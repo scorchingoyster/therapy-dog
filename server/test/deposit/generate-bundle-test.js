@@ -163,7 +163,7 @@ describe('Bundle generation', function() {
       let main = aggregate.children.find(i => i.label === 'thesis.pdf');
       let link = aggregate.children.find(i => i instanceof Link);
       assert.equal(link.rel, 'http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject');
-      assert.deepEqual(link.items, [main]);
+      assert.deepEqual(link.target, main);
     });
 
     it('should generate metadata for the main item', function() {
