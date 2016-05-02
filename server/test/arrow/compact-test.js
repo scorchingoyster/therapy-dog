@@ -5,7 +5,7 @@ const deepEqual = require('assert').deepEqual;
 
 describe('Compact', function() {
   describe('with lookup nodes', function() {
-    let expression = {
+    let template = new Arrow({
       type: 'structure',
       name: 'mods',
       compact: true,
@@ -31,7 +31,7 @@ describe('Compact', function() {
           ]
         }
       ]
-    };
+    });
 
     it('should remove children with all absent data', function() {
       let context = {};
@@ -42,7 +42,7 @@ describe('Compact', function() {
         children: []
       };
 
-      deepEqual(Arrow.evaluate(expression, context), expected);
+      deepEqual(template.evaluate(context), expected);
     });
 
     it('should consider empty strings absent data', function() {
@@ -54,7 +54,7 @@ describe('Compact', function() {
         children: []
       };
 
-      deepEqual(Arrow.evaluate(expression, context), expected);
+      deepEqual(template.evaluate(context), expected);
     });
 
     it('should not remove children with both present and absent data', function() {
@@ -83,12 +83,12 @@ describe('Compact', function() {
         ]
       };
 
-      deepEqual(Arrow.evaluate(expression, context), expected);
+      deepEqual(template.evaluate(context), expected);
     });
   });
 
   it('should compact at multiple levels if specified', function() {
-    let expression = {
+    let template = new Arrow({
       type: 'structure',
       name: 'mods',
       compact: true,
@@ -115,7 +115,7 @@ describe('Compact', function() {
           ]
         }
       ]
-    };
+    });
 
     let context = { pubdate: '2016' };
 
@@ -137,11 +137,11 @@ describe('Compact', function() {
       ]
     };
 
-    deepEqual(Arrow.evaluate(expression, context), expected);
+    deepEqual(template.evaluate(context), expected);
   });
 
   it('should remove structures containing only strings and absent data', function() {
-    let expression = {
+    let template = new Arrow({
       type: 'structure',
       name: 'mods',
       compact: true,
@@ -176,7 +176,7 @@ describe('Compact', function() {
           ]
         }
       ]
-    };
+    });
 
     let context = {};
 
@@ -186,11 +186,11 @@ describe('Compact', function() {
       children: []
     };
 
-    deepEqual(Arrow.evaluate(expression, context), expected);
+    deepEqual(template.evaluate(context), expected);
   });
 
   it('should not remove structures containing only strings', function() {
-    let expression = {
+    let template = new Arrow({
       type: 'structure',
       name: 'mods',
       compact: true,
@@ -203,7 +203,7 @@ describe('Compact', function() {
           ]
         }
       ]
-    };
+    });
 
     let context = {};
 
@@ -219,6 +219,6 @@ describe('Compact', function() {
       ]
     };
 
-    deepEqual(Arrow.evaluate(expression, context), expected);
+    deepEqual(template.evaluate(context), expected);
   });
 });

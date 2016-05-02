@@ -36,7 +36,7 @@ function generateFileItems(itemSpec, metadataSpecs, values) {
       if (itemSpec.metadata) {
         metadata = itemSpec.metadata.map(function(id) {
           let spec = metadataSpecs.find(m => m.id === id);
-          let root = Arrow.evaluate(spec.template, context);
+          let root = new Arrow(spec.template).evaluate(context);
           let xml = new XML(root);
 
           return new Metadata([xml], { type: spec.type });

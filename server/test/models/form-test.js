@@ -38,6 +38,33 @@ describe('Form', function() {
     }, TypeError);
   });
 
+  it('constructor throws a TypeError when passed invalid metadata template in attributes', function() {
+    let invalid = {
+      destination: 'uuid:1234',
+      title: 'My Form',
+      children: [
+        { type: 'file', key: 'main' }
+      ],
+      bundle: {
+        type: 'single',
+        upload: 'main'
+      },
+      metadata: [
+        {
+          id: 'mods',
+          type: 'descriptive',
+          model: 'xml',
+          template: { invalid: 'template' }
+        }
+      ]
+    };
+
+    assert.throws(function() {
+      /*jshint nonew: false */
+      new Form(null, invalid);
+    }, TypeError);
+  });
+
   describe('#getResourceObject()', function() {
     it('converts object array vocabularies to options arrays', function() {
       return Form.findById('article')

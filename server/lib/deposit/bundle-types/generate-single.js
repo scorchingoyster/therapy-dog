@@ -30,7 +30,7 @@ module.exports = function(form, values) {
   if (form.bundle.metadata) {
     metadata = form.bundle.metadata.map(function(id) {
       let spec = form.metadata.find(m => m.id === id);
-      let root = Arrow.evaluate(spec.template, context);
+      let root = new Arrow(spec.template).evaluate(context);
       let xml = new XML(root);
 
       return new Metadata([xml], { type: spec.type });

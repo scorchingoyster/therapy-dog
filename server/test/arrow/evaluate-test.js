@@ -5,17 +5,17 @@ const deepEqual = require('assert').deepEqual;
 
 describe('Evaluate', function() {
   it('should evaluate a string expression', function() {
-    let expression = { type: 'string', value: 'Lorem ipsum' };
+    let template = new Arrow({ type: 'string', value: 'Lorem ipsum' });
 
     let context = {};
 
     let expected = 'Lorem ipsum';
 
-    deepEqual(Arrow.evaluate(expression, context), expected);
+    deepEqual(template.evaluate(context), expected);
   });
 
   it('should evaluate a structure expression', function() {
-    let expression = {
+    let template = new Arrow({
       type: 'structure',
       name: 'namePart',
       properties: {
@@ -24,7 +24,7 @@ describe('Evaluate', function() {
       children: [
         { type: 'string', value: 'Someone' }
       ]
-    };
+    });
 
     let context = {};
 
@@ -34,27 +34,27 @@ describe('Evaluate', function() {
       children: ['Someone']
     };
 
-    deepEqual(Arrow.evaluate(expression, context), expected);
+    deepEqual(template.evaluate(context), expected);
   });
 
   it('should evaluate a lookup expression', function() {
-    let expression = { type: 'lookup', path: ['title'] };
+    let template = new Arrow({ type: 'lookup', path: ['title'] });
 
     let context = { title: 'Lorem ipsum' };
 
-    deepEqual(Arrow.evaluate(expression, context), 'Lorem ipsum');
+    deepEqual(template.evaluate(context), 'Lorem ipsum');
   });
 
   it('should evaluate a lookup expression with a path to an undefined value', function() {
-    let expression = { type: 'lookup', path: ['affiliation'] };
+    let template = new Arrow({ type: 'lookup', path: ['affiliation'] });
 
     let context = {};
 
-    deepEqual(Arrow.evaluate(expression, context), undefined);
+    deepEqual(template.evaluate(context), undefined);
   });
 
   it('should evaluate an each expression', function() {
-    let expression = {
+    let template = new Arrow({
       type: 'each',
       items: { type: 'lookup', path: ['authors'] },
       locals: {
@@ -63,7 +63,7 @@ describe('Evaluate', function() {
       body: [
         { type: 'lookup', path: ['author', 'first'] }
       ]
-    };
+    });
 
     let context = {
       authors: [
@@ -74,11 +74,11 @@ describe('Evaluate', function() {
 
     let expected = ['Someone', 'Another'];
 
-    deepEqual(Arrow.evaluate(expression, context), expected);
+    deepEqual(template.evaluate(context), expected);
   });
 
   it('should evaluate an each expression which looks up something undefined', function() {
-    let expression = {
+    let template = new Arrow({
       type: 'each',
       items: { type: 'lookup', path: ['authors'] },
       locals: {
@@ -87,15 +87,15 @@ describe('Evaluate', function() {
       body: [
         { type: 'lookup', path: ['author', 'first'] }
       ]
-    };
+    });
 
     let context = {};
 
-    deepEqual(Arrow.evaluate(expression, context), undefined);
+    deepEqual(template.evaluate(context), undefined);
   });
 
   it('should evaluate a choose expression', function() {
-    let expression = {
+    let template = new Arrow({
       type: 'choose',
       choices: [
         {
@@ -118,22 +118,22 @@ describe('Evaluate', function() {
       otherwise: [
         { type: 'string', value: 'nothing' }
       ]
-    };
+    });
 
-    deepEqual(Arrow.evaluate(expression, { stuff: '123', other: '456' }), ['stuff']);
-    deepEqual(Arrow.evaluate(expression, { other: '456' }), ['other']);
-    deepEqual(Arrow.evaluate(expression, {}), ['nothing']);
+    deepEqual(template.evaluate({ stuff: '123', other: '456' }), ['stuff']);
+    deepEqual(template.evaluate({ other: '456' }), ['other']);
+    deepEqual(template.evaluate({}), ['nothing']);
   });
 
   it('should evaluate an arrow expression', function() {
-    let expression = {
+    let template = new Arrow({
       type: 'arrow',
       items: { type: 'lookup', path: ['roles'] },
       target: [
         { type: 'structure', name: 'role' },
         { type: 'structure', name: 'roleTerm' }
       ]
-    };
+    });
 
     let context = { roles: ['Author', 'Editor'] };
 
@@ -162,18 +162,18 @@ describe('Evaluate', function() {
       }
     ];
 
-    deepEqual(Arrow.evaluate(expression, context), expected);
+    deepEqual(template.evaluate(context), expected);
   });
 
   it('should evaluate an arrow expression which looks up a string', function() {
-    let expression = {
+    let template = new Arrow({
       type: 'arrow',
       items: { type: 'lookup', path: ['role'] },
       target: [
         { type: 'structure', name: 'role' },
         { type: 'structure', name: 'roleTerm' }
       ]
-    };
+    });
 
     let context = { role: 'Author' };
 
@@ -191,21 +191,21 @@ describe('Evaluate', function() {
       }
     ];
 
-    deepEqual(Arrow.evaluate(expression, context), expected);
+    deepEqual(template.evaluate(context), expected);
   });
 
   it('should evaluate an arrow expression which looks up something undefined', function() {
-    let expression = {
+    let template = new Arrow({
       type: 'arrow',
       items: { type: 'lookup', path: ['role'] },
       target: [
         { type: 'structure', name: 'role' },
         { type: 'structure', name: 'roleTerm' }
       ]
-    };
+    });
 
     let context = {};
 
-    deepEqual(Arrow.evaluate(expression, context), undefined);
+    deepEqual(template.evaluate(context), undefined);
   });
 });

@@ -6,6 +6,7 @@ const glob = require('glob');
 const typify = require('typify').create();
 const Upload = require('./upload');
 const Vocabulary = require('./vocabulary');
+const Arrow = require('../arrow');
 const FormNotFoundError = require('../errors').FormNotFoundError;
 const logging = require('../logging');
 const config = require('../../config');
@@ -47,20 +48,11 @@ typify.alias('bundle_items', '{ context: string?, upload: string, metadata: (arr
 typify.alias('bundle_aggregate', '{ type: "aggregate", rel: string?, main: bundle_items, supplemental: (array bundle_items)?, agreements: (array string)? }');
 typify.alias('bundle', 'bundle_aggregate | bundle_single');
 
-typify.mutual({
-  'template_string': '{ type: "string", value: string }',
-  'template_lookup': '{ type: "lookup", path: array string }',
-  'template_structure': '{ type: "structure", name: string, properties: (map template_node)?, children: (array template_node)? }',
-  'template_each': '{ type: "each", items: template_lookup, locals: map string, body: array template_node }',
-  'template_present': '{ name: "present", value: template_lookup }',
-  'template_predicate': 'template_present',
-  'template_choice': '{ predicates: array template_predicate, body: array template_node }',
-  'template_choose': '{ type: "choose", choices: array template_choice, otherwise: (array template_node)? }',
-  'template_arrow': '{ type: "arrow", items: template_lookup, target: array template_structure }',
-  'template_node': 'template_string | template_lookup | template_structure | template_each | template_choose | template_arrow'
+typify.type('arrow_expression', function(t) {
+  return Arrow.check(t);
 });
 
-typify.alias('metadata', '{ id: string, type: ("descriptive" | "access-control"), model: "xml", template: template_structure }');
+typify.alias('metadata', '{ id: string, type: ("descriptive" | "access-control"), model: "xml", template: arrow_expression }');
 
 typify.alias('form', '{ destination: string, title: string, description: string?, children: array form_block, bundle: bundle, metadata: array metadata }');
 
