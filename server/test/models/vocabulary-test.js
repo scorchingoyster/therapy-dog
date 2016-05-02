@@ -17,6 +17,9 @@ describe('Vocabulary', function() {
       terms: [{ code: 'eng', name: 'English' }]
     };
 
-    assert.throws(() => { new Vocabulary(null, invalid); }, TypeError);
+    assert.throws(function() {
+      /*jshint nonew: false */
+      new Vocabulary(null, invalid);
+    }, TypeError);
   });
 });

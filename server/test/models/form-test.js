@@ -32,7 +32,10 @@ describe('Form', function() {
       metadata: []
     };
 
-    assert.throws(() => { new Form(null, invalid); }, TypeError);
+    assert.throws(function() {
+      /*jshint nonew: false */
+      new Form(null, invalid);
+    }, TypeError);
   });
 
   describe('#getResourceObject()', function() {
