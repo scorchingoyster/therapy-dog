@@ -33,7 +33,7 @@ describe('Bundle', function() {
       assert.equal(file.name, 'numbers.txt');
       assert.equal(file.mimetype, 'text/markdown');
     });
-    
+
     it('should throw a TypeError if something other than an Upload or Buffer is passed for contents', function() {
       assert.throws(function() {
         /*jshint nonew: false */
