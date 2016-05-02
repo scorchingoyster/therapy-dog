@@ -9,16 +9,10 @@ class File {
   constructor(children, options) {
     if (children.length === 1 && children[0] instanceof Upload) {
       this.contents = children[0];
+    } else if (children.length === 1 && children[0] instanceof Buffer) {
+      this.contents = children[0];
     } else {
-      this.contents = Buffer.concat(children.map(function(child) {
-        let type = Object.prototype.toString.call(child);
-
-        if (type !== '[object String]' && type !== '[object Number]') {
-          throw new Error('A file must contain either a single Upload, or zero or more strings or numbers.');
-        }
-
-        return new Buffer(String(child));
-      }));
+      throw new Error('A file must contain a single Upload or Buffer.');
     }
 
     this.id = '_' + uuid.v4();

@@ -63,10 +63,10 @@ function generateOneFileItem(itemSpec, metadataSpecs, values) {
 }
 
 function generateAgreementFileItem(agreements, values) {
-  let contents = agreements.map(function(key) {
+  let contents = new Buffer(agreements.map(function(key) {
     let agreement = values[key];
     return `${agreement.name}\n${agreement.uri}\n${agreement.prompt}\n`;
-  }).join('\n');
+  }).join('\n'));
 
   let file = new File([contents], { mimetype: 'text/plain' });
 
