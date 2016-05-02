@@ -11,15 +11,17 @@ describe('Vocabulary', function() {
     });
   });
 
-  it('constructor throws a TypeError when passed invalid attributes', function() {
-    // Missing the labelKey and valueKey properties.
-    let invalid = {
-      terms: [{ code: 'eng', name: 'English' }]
-    };
+  describe('constructor', function() {
+    it('throws a TypeError when passed invalid attributes', function() {
+      // Missing the labelKey and valueKey properties.
+      let invalid = {
+        terms: [{ code: 'eng', name: 'English' }]
+      };
 
-    assert.throws(function() {
-      /*jshint nonew: false */
-      new Vocabulary(null, invalid);
-    }, TypeError);
+      assert.throws(function() {
+        /*jshint nonew: false */
+        new Vocabulary(null, invalid);
+      }, TypeError);
+    });
   });
 });
