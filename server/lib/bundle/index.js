@@ -23,7 +23,7 @@ class Bundle {
   constructor(children) {
     children.forEach(function(child) {
       if (!(child instanceof Item)) {
-        throw new Error('A bundle may only contain items at the top level.');
+        throw new TypeError('A bundle may only contain items at the top level');
       }
     });
 

@@ -9,7 +9,7 @@ class Item {
   constructor(children, options) {
     children.forEach(function(child) {
       if (!(child instanceof Item || child instanceof File || child instanceof Metadata || child instanceof Link)) {
-        throw new Error('An item may only contain items, files, metadata, and links.');
+        throw new TypeError('An item may only contain items, files, metadata, and links');
       }
     });
 
