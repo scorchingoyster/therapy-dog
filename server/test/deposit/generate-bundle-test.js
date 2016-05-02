@@ -3,9 +3,9 @@
 const assert = require('assert');
 const Form = require('../../lib/models/form');
 const generateBundle = require('../../lib/deposit/generate-bundle');
-const Link = require('../../lib/bundle/link');
-const Metadata = require('../../lib/bundle/metadata');
-const File = require('../../lib/bundle/file');
+const Link = require('../../lib/deposit/bundle/link');
+const Metadata = require('../../lib/deposit/bundle/metadata');
+const File = require('../../lib/deposit/bundle/file');
 const buildTestUpload = require('./test-helpers').buildTestUpload;
 
 describe('Bundle generation', function() {

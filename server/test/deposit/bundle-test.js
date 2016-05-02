@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('assert');
-const File = require('../../lib/bundle/file');
+const File = require('../../lib/deposit/bundle/file');
 const buildTestUpload = require('./test-helpers').buildTestUpload;
 
 describe('Bundle', function() {

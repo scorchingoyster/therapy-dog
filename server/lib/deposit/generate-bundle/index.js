@@ -1,7 +1,7 @@
 'use strict';
 
-const generateSingle = require('./bundle-types/generate-single');
-const generateAggregate = require('./bundle-types/generate-aggregate');
+const generateSingle = require('./generate-single');
+const generateAggregate = require('./generate-aggregate');
 
 module.exports = function(form, values) {
   if (form.bundle.type === 'single') {

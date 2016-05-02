@@ -1,10 +1,10 @@
 'use strict';
 
 const Xmlbuilder = require('xmlbuilder');
-const Link = require('../bundle/link');
-const Item = require('../bundle/item');
-const File = require('../bundle/file');
-const Metadata = require('../bundle/metadata');
+const Link = require('./bundle/link');
+const Item = require('./bundle/item');
+const File = require('./bundle/file');
+const Metadata = require('./bundle/metadata');
 
 // metsHdr
 

@@ -1,7 +1,7 @@
 'use strict';
 
 const uuid = require('uuid');
-const XML = require('../arrow/models/xml');
+const XML = require('../../arrow/models/xml');
 
 class Metadata {
   constructor(contents, options) {

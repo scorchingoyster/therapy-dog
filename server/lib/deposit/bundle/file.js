@@ -3,7 +3,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const uuid = require('uuid');
-const Upload = require('../models/upload');
+const Upload = require('../../models/upload');
 
 class File {
   constructor(contents, options) {
