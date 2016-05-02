@@ -30,7 +30,7 @@ function generateFileItems(itemSpec, metadataSpecs, values) {
     let uploads = toArray(context[itemSpec.upload]);
 
     let items = uploads.map(function(upload) {
-      let file = new File([upload], {});
+      let file = new File(upload, {});
 
       let metadata;
       if (itemSpec.metadata) {
@@ -39,7 +39,7 @@ function generateFileItems(itemSpec, metadataSpecs, values) {
           let root = new Arrow(spec.template).evaluate(context);
           let xml = new XML(root);
 
-          return new Metadata([xml], { type: spec.type });
+          return new Metadata(xml, { type: spec.type });
         });
       } else {
         metadata = [];
@@ -68,7 +68,7 @@ function generateAgreementFileItem(agreements, values) {
     return `${agreement.name}\n${agreement.uri}\n${agreement.prompt}\n`;
   }).join('\n'));
 
-  let file = new File([contents], { mimetype: 'text/plain' });
+  let file = new File(contents, { mimetype: 'text/plain' });
 
   return new Item([file], { type: 'File', label: 'agreements.txt' });
 }

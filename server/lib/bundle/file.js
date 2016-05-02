@@ -6,13 +6,13 @@ const uuid = require('uuid');
 const Upload = require('../models/upload');
 
 class File {
-  constructor(children, options) {
-    if (children.length === 1 && children[0] instanceof Upload) {
-      this.contents = children[0];
-    } else if (children.length === 1 && children[0] instanceof Buffer) {
-      this.contents = children[0];
+  constructor(contents, options) {
+    if (contents instanceof Upload) {
+      this.contents = contents;
+    } else if (contents instanceof Buffer) {
+      this.contents = contents;
     } else {
-      throw new Error('A file must contain a single Upload or Buffer.');
+      throw new TypeError('A file must contain either an Upload or a Buffer');
     }
 
     this.id = '_' + uuid.v4();

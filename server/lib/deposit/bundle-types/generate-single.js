@@ -24,7 +24,7 @@ module.exports = function(form, values) {
 
   let upload = context[form.bundle.upload];
 
-  let file = new File([upload], {});
+  let file = new File(upload, {});
 
   let metadata;
   if (form.bundle.metadata) {
@@ -33,7 +33,7 @@ module.exports = function(form, values) {
       let root = new Arrow(spec.template).evaluate(context);
       let xml = new XML(root);
 
-      return new Metadata([xml], { type: spec.type });
+      return new Metadata(xml, { type: spec.type });
     });
   } else {
     metadata = [];

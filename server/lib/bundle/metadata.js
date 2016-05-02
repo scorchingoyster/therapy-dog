@@ -4,11 +4,11 @@ const uuid = require('uuid');
 const XML = require('../arrow/models/xml');
 
 class Metadata {
-  constructor(children, options) {
-    if (children.length === 1 && children[0] instanceof XML) {
-      this.contents = children[0];
+  constructor(contents, options) {
+    if (contents instanceof XML) {
+      this.contents = contents;
     } else {
-      throw new Error('Metadata must contain a single instance of the Arrow XML model.');
+      throw new TypeError('Metadata must contain an instance of the Arrow XML model');
     }
 
     this.id = '_' + uuid.v4();
