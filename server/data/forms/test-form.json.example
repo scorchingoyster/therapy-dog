@@ -49,10 +49,7 @@
     {
       "key": "serial",
       "type": "text",
-      "label": "Serial Number",
-      "validations": {
-        "format": { "with": "^[A-Z]{2}-\\d{3}$", "message": "must be a valid serial number (for example, AA-123)", "allowBlank": true }
-      }
+      "label": "Serial Number"
     },
     {
       "key": "languages",
