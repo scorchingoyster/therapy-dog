@@ -10,6 +10,5 @@ node_modules/jscs
 node_modules/jshint
 node_modules/mocha
 node_modules/nodemon
-node_modules/regenerate
 node_modules/xmldom
 node_modules/xpath
