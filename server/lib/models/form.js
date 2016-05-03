@@ -50,7 +50,7 @@ typify.mutual({
 
 typify.alias('bundle_single', '{ type: "single", context: string?, upload: string, metadata: (array string)? }');
 typify.alias('bundle_items', '{ context: string?, upload: string, metadata: (array string)? }');
-typify.alias('bundle_aggregate', '{ type: "aggregate", rel: string?, main: bundle_items, supplemental: (array bundle_items)?, agreements: (array string)? }');
+typify.alias('bundle_aggregate', '{ type: "aggregate", main: bundle_items, supplemental: (array bundle_items)?, agreements: (array string)? }');
 typify.alias('bundle', 'bundle_aggregate | bundle_single');
 
 typify.type('arrow_expression', function(t) {
