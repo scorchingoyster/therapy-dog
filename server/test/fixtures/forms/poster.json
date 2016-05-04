@@ -1,10 +1,21 @@
 {
+  "destination": "uuid:1234",
   "title": "Poster Form",
   "children": [
     {
       "type": "text",
       "key": "title",
       "label": "Title"
+    },
+    {
+      "type": "file",
+      "key": "poster",
+      "label": "Poster"
     }
-  ]
+  ],
+  "bundle": {
+    "type": "single",
+    "upload": "poster"
+  },
+  "metadata": []
 }

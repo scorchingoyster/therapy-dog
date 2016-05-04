@@ -3,293 +3,315 @@
 const assert = require('assert');
 const Form = require('../../lib/models/form');
 const generateBundle = require('../../lib/deposit/generate-bundle');
+const Link = require('../../lib/deposit/bundle/link');
+const Metadata = require('../../lib/deposit/bundle/metadata');
+const File = require('../../lib/deposit/bundle/file');
 const buildTestUpload = require('./test-helpers').buildTestUpload;
 
 describe('Bundle generation', function() {
-  describe('files', function() {
-    describe('with upload bodies', function() {
-      let form = new Form('test', {
-        bundle: 'item label=thesis.name { thesis -> file }',
-        templates: []
-      });
+  describe('using the "single" type', function() {
+    let form = new Form('test', {
+      destination: 'uuid:1234',
+      title: 'Test',
+      children: [
+        { type: 'text', key: 'title' },
+        { type: 'file', key: 'thesis' }
+      ],
+      bundle: {
+        type: 'single',
+        upload: 'thesis',
+        metadata: ['description']
+      },
+      metadata: [
+        {
+          id: 'description',
+          type: 'descriptive',
+          model: 'xml',
+          template: {
+            type: 'structure',
+            name: 'mods',
+            children: [
+              {
+                type: 'arrow',
+                items: { type: 'lookup', path: ['title'] },
+                target: [
+                  { type: 'structure', name: 'titleInfo' },
+                  { type: 'structure', name: 'title' }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    });
 
-      let buffer = new Buffer('lorem ipsum');
-      let thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
+    let buffer = new Buffer('lorem ipsum');
+    let thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
 
-      let values = {
-        thesis: thesis
-      };
+    let values = {
+      title: 'My Thesis',
+      thesis: thesis
+    };
 
-      let bundle = generateBundle(form, values);
+    let bundle = generateBundle(form, values);
+
+    it('should generate the correct number of items, files, metadata', function() {
+      assert.equal(bundle.items.length, 1);
+      assert.equal(bundle.files.length, 1);
+      assert.equal(bundle.metadata.length, 1);
+    });
+
+    it('should have a "File" item at the root', function() {
       let item = bundle.children[0];
-      let file = bundle.children[0].children[0];
-
-      it('should set item\'s label using the upload\'s name', function() {
-        assert.equal(item.label, 'thesis.pdf');
-      });
-
-      it('should set contents for an upload body', function() {
-        assert.ok(file.isUpload);
-        assert.equal(file.contents, thesis);
-      });
-
-      it('should set mimetype to the upload\'s type if not given', function() {
-        assert.equal(file.mimetype, 'application/pdf');
-      });
-
-      it('should set name to the upload\'s name if not given', function() {
-        assert.equal(file.name, 'thesis.pdf');
-      });
-
-      it('should set size for uploads', function() {
-        assert.equal(file.size, buffer.length);
-      });
-
-      it('should calculate hash digests for uploads', function() {
-        return file.getHashDigest('md5', 'hex').then(function(digest) {
-          assert.equal(digest, '80a751fde577028640c419000e33eba6');
-        });
-      });
+      assert.equal(item.label, 'thesis.pdf');
+      assert.equal(item.type, 'File');
     });
 
-    describe('with literal bodies', function() {
-      let form = new Form('test', {
-        bundle: 'item { file { "lorem ipsum" } }',
-        templates: []
-      });
-
-      let bundle = generateBundle(form, {});
-      let file = bundle.children[0].children[0];
-
-      it('should set contents to a buffer for a literal body', function() {
-        assert.ok(file.isBuffer);
-        assert.equal(file.contents.toString(), 'lorem ipsum');
-      });
-
-      it('should set mimetype for a literal body to \'text/plain\' if not given', function() {
-        assert.equal(file.mimetype, 'text/plain');
-      });
-
-      it('should set name to \'untitled.txt\' for a literal body if not given', function() {
-        assert.equal(file.name, 'untitled.txt');
-      });
-
-      it('should set size for literal bodies', function() {
-        assert.equal(file.size, 11);
-      });
-
-      it('should calculate hash digests for literal bodies', function() {
-        return file.getHashDigest('md5', 'hex').then(function(digest) {
-          assert.equal(digest, '80a751fde577028640c419000e33eba6');
-        });
-      });
+    it('should make the properties from the upload available on the file', function() {
+      let file = bundle.files[0];
+      assert.equal(file.name, 'thesis.pdf');
+      assert.equal(file.mimetype, 'application/pdf');
+      assert.equal(file.contents, thesis);
+      assert.equal(file.size, buffer.length);
     });
 
-    it('should set contents to a zero-length buffer for an empty literal body', function() {
-      let form = new Form('test', {
-        bundle: 'item { file }',
-        templates: []
-      });
-
-      let bundle = generateBundle(form, {});
-      let file = bundle.children[0].children[0];
-
-      assert.ok(file.isBuffer);
-      assert.equal(file.contents.toString(), '');
-    });
-
-    describe('with overridden mimetype and name', function() {
-      let form = new Form('test', {
-        bundle: 'item { file name="stuff.md" mimetype="text/markdown" { "# lorem ipsum" } }',
-        templates: []
-      });
-
-      let bundle = generateBundle(form, {});
-      let file = bundle.children[0].children[0];
-
-      it('should set mimetype if given', function() {
-        assert.equal(file.mimetype, 'text/markdown');
-      });
-
-      it('should set name if given', function() {
-        assert.equal(file.name, 'stuff.md');
-      });
-    });
-
-    it('should throw an error if body is invalid', function() {
-      let form = new Form('test', {
-        bundle: 'item { file { "hello"; file } }',
-        templates: []
-      });
-
-      assert.throws(function() {
-        generateBundle(form, {});
-      });
-    });
-  });
-
-  describe('metadata', function() {
-    let form = new Form('test', {
-      bundle: 'item { partial "thesis" -> metadata type="descriptive" }',
-      templates: [
-        {
-          id: 'thesis',
-          type: 'xml',
-          template: 'element "info" { title -> element "title" }'
-        }
-      ]
-    });
-
-    let values = {
-      title: 'My Thesis'
-    };
-
-    let bundle = generateBundle(form, values);
-    let metadata = bundle.children[0].children[0];
-
-    it('should set contents for an Arrow XML partial body', function() {
-      assert.ok(metadata.isXML);
-      assert.equal(metadata.contents.name, 'info');
-    });
-
-    it('should set the type property', function() {
+    it('should generate metadata for the item', function() {
+      let item = bundle.children[0];
+      let metadata = item.children.find(i => i instanceof Metadata);
       assert.equal(metadata.type, 'descriptive');
-    });
-
-    it('should throw an error if body is invalid', function() {
-      let form = new Form('test', {
-        bundle: 'item { metadata { "hello!" } }',
-        templates: []
-      });
-
-      assert.throws(function() {
-        generateBundle(form, {});
-      });
+      assert.equal(metadata.contents.render().toString(), '<mods><titleInfo><title>My Thesis</title></titleInfo></mods>');
     });
   });
 
-  describe('items', function() {
+  describe('using the "aggregate" type', function() {
     let form = new Form('test', {
-      bundle: 'item label="A" type="Folder" { link rel="http://example.com/" href="#b"; item fragment="b" label="B" type="File"; item label="C" type="File" }',
-      templates: [
-        {
-          id: 'thesis',
-          type: 'xml',
-          template: 'element "info" { title -> element "title" }'
-        }
-      ]
-    });
-
-    let values = {
-      title: 'My Thesis'
-    };
-
-    let bundle = generateBundle(form, values);
-
-    it('should set the label property', function() {
-      assert.equal(bundle.children[0].label, 'A');
-    });
-
-    it('should set the type property', function() {
-      assert.equal(bundle.children[0].type, 'Folder');
-      assert.equal(bundle.children[0].children[1].type, 'File');
-    });
-
-    it('should throw an error if body is invalid', function() {
-      let form = {
-        bundle: 'item { "hello!" }',
-        templates: []
-      };
-
-      assert.throws(function() {
-        generateBundle(form, {});
-      });
-    });
-  });
-
-  describe('links', function() {
-    it('should resolve fragments to item references', function() {
-      let form = new Form('test', {
-        bundle: 'item { link rel="x" href="#a"; item fragment="a" }',
-        templates: []
-      });
-
-      let bundle = generateBundle(form, {});
-
-      assert.equal(bundle.links.length, 1);
-      assert.equal(bundle.links[0].items.length, 1);
-      assert.equal(bundle.links[0].items[0], bundle.children[0].children[1]);
-      assert.equal(bundle.children[0].children[0].items[0], bundle.children[0].children[1]);
-    });
-
-    it('should resolve fragments to nothing if an item can\'t be found', function() {
-      let form = new Form('test', {
-        bundle: 'item { link rel="y" href="#b"; item fragment="a" }',
-        templates: []
-      });
-
-      let bundle = generateBundle(form, {});
-
-      assert.equal(bundle.links.length, 1);
-      assert.equal(bundle.links[0].items.length, 0);
-    });
-
-    it('should resolve fragments to multiple items', function() {
-      let form = new Form('test', {
-        bundle: 'item { link rel="x" href="#stuff"; item fragment="stuff" label="a" } item fragment="stuff" label="b"',
-        templates: []
-      });
-
-      let bundle = generateBundle(form, {});
-      assert.equal(bundle.links.length, 1);
-      assert.equal(bundle.links[0].items[0], bundle.children[0].children[1]);
-      assert.equal(bundle.links[0].items[1], bundle.children[1]);
-    });
-
-    it('should leave other href values intact', function() {
-      let form = new Form('test', {
-        bundle: 'item { link rel="x" href="http://whatever" }',
-        templates: []
-      });
-
-      let bundle = generateBundle(form, {});
-
-      assert.equal(bundle.links.length, 1);
-      assert.equal(bundle.links[0].items, null);
-      assert.equal(bundle.links[0].href, 'http://whatever');
-    });
-  });
-
-  describe('documents', function() {
-    it('should make all files, items, metadata, and links available as a flattened array', function() {
-      let form = new Form('test', {
-        bundle: 'item { link rel="x" href="#a"; item { file { "xyz" }; partial "stuff" -> metadata } }',
-        templates: [
+      destination: 'uuid:1234',
+      title: 'Test',
+      children: [
+        { type: 'text', key: 'title' },
+        { type: 'file', key: 'thesis' },
+        { type: 'file', key: 'supplemental', multiple: true }
+      ],
+      bundle: {
+        type: 'aggregate',
+        main: {
+          upload: 'thesis',
+          metadata: ['description']
+        },
+        supplemental: [
           {
-            id: 'stuff',
-            type: 'xml',
-            template: 'element "blah";'
+            upload: 'supplemental'
           }
         ]
-      });
-
-      let bundle = generateBundle(form, {});
-
-      assert.equal(bundle.files.length, 1);
-      assert.equal(bundle.items.length, 2);
-      assert.equal(bundle.metadata.length, 1);
-      assert.equal(bundle.links.length, 1);
+      },
+      metadata: [
+        {
+          id: 'description',
+          type: 'descriptive',
+          model: 'xml',
+          template: {
+            type: 'structure',
+            name: 'mods',
+            children: [
+              {
+                type: 'arrow',
+                items: { type: 'lookup', path: ['title'] },
+                target: [
+                  { type: 'structure', name: 'titleInfo' },
+                  { type: 'structure', name: 'title' }
+                ]
+              }
+            ]
+          }
+        }
+      ]
     });
 
-    it('should throw an error if any of document children are not items', function() {
-      let form = new Form('test', {
-        bundle: 'link rel="x" href="http://whatever"',
-        templates: []
-      });
+    let buffer = new Buffer('lorem ipsum');
+    let thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
+    let dataset = buildTestUpload('dataset.csv', 'text/csv', buffer);
+    let appendix = buildTestUpload('appendix.pdf', 'application/pdf', buffer);
 
-      assert.throws(function() {
-        generateBundle(form, {});
-      });
+    let values = {
+      title: 'My Thesis',
+      thesis: thesis,
+      supplemental: [dataset, appendix]
+    };
+
+    let bundle = generateBundle(form, values);
+
+    it('should generate the correct number of items, files, metadata', function() {
+      assert.equal(bundle.items.length, 4);
+      assert.equal(bundle.files.length, 3);
+      assert.equal(bundle.metadata.length, 1);
+    });
+
+    it('should have an "Aggregate Work" item at the root', function() {
+      let aggregate = bundle.children[0];
+      assert.equal(aggregate.type, 'Aggregate Work');
+    });
+
+    it('should have "File" items under the "Aggregate Work" item', function() {
+      let aggregate = bundle.children[0];
+      assert.ok(aggregate.children.find(i => i.type === 'File' && i.label === 'thesis.pdf'));
+      assert.ok(aggregate.children.find(i => i.type === 'File' && i.label === 'dataset.csv'));
+      assert.ok(aggregate.children.find(i => i.type === 'File' && i.label === 'appendix.pdf'));
+    });
+
+    it('should have a link from the "Aggregate Work" item to the main "File" item', function() {
+      let aggregate = bundle.children[0];
+      let main = aggregate.children.find(i => i.label === 'thesis.pdf');
+      let link = aggregate.children.find(i => i instanceof Link);
+      assert.equal(link.rel, 'http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject');
+      assert.deepEqual(link.target, main);
+    });
+
+    it('should generate metadata for the main item', function() {
+      let main = bundle.items.find(i => i.label === 'thesis.pdf');
+      let metadata = main.children.find(i => i instanceof Metadata);
+      assert.equal(metadata.type, 'descriptive');
+      assert.equal(metadata.contents.render().toString(), '<mods><titleInfo><title>My Thesis</title></titleInfo></mods>');
+    });
+  });
+
+  describe('using the "aggregate" type with supplemental files and metadata in a section', function() {
+    let form = new Form('test', {
+      destination: 'uuid:1234',
+      title: 'Test',
+      children: [
+        { type: 'file', key: 'thesis' },
+        {
+          type: 'section',
+          key: 'supplemental',
+          children: [
+            { type: 'file', key: 'file' },
+            { type: 'text', key: 'abstract' }
+          ]
+        }
+      ],
+      bundle: {
+        type: 'aggregate',
+        main: {
+          upload: 'thesis'
+        },
+        supplemental: [
+          {
+            context: 'supplemental',
+            upload: 'file',
+            metadata: ['description']
+          }
+        ]
+      },
+      metadata: [
+        {
+          id: 'description',
+          type: 'descriptive',
+          model: 'xml',
+          template: {
+            type: 'structure',
+            name: 'mods',
+            children: [
+              {
+                type: 'arrow',
+                items: { type: 'lookup', path: ['abstract'] },
+                target: [
+                  { type: 'structure', name: 'abstract' }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    });
+
+    let buffer = new Buffer('lorem ipsum');
+    let thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
+    let dataset = buildTestUpload('dataset.csv', 'text/csv', buffer);
+    let appendix = buildTestUpload('appendix.pdf', 'application/pdf', buffer);
+
+    let values = {
+      thesis: thesis,
+      supplemental: [
+        { abstract: 'Dataset', file: dataset },
+        { abstract: 'Appendix', file: appendix }
+      ]
+    };
+
+    let bundle = generateBundle(form, values);
+
+    it('should generate the correct number of items, files, metadata', function() {
+      assert.equal(bundle.items.length, 4);
+      assert.equal(bundle.files.length, 3);
+      assert.equal(bundle.metadata.length, 2);
+    });
+
+    it('should generate metadata for the supplemental items', function() {
+      let aggregate = bundle.children[0];
+
+      let item, metadata;
+
+      item = aggregate.children.find(i => i.type === 'File' && i.label === 'dataset.csv');
+      metadata = item.children.find(i => i instanceof Metadata);
+      assert.equal(metadata.contents.render().toString(), '<mods><abstract>Dataset</abstract></mods>');
+      assert.equal(metadata.type, 'descriptive');
+
+      item = aggregate.children.find(i => i.type === 'File' && i.label === 'appendix.pdf');
+      metadata = item.children.find(i => i instanceof Metadata);
+      assert.equal(metadata.contents.render().toString(), '<mods><abstract>Appendix</abstract></mods>');
+      assert.equal(metadata.type, 'descriptive');
+    });
+  });
+
+  describe('using the "aggregate" type with agreements', function() {
+    let form = new Form('test', {
+      destination: 'uuid:1234',
+      title: 'Test',
+      children: [
+        { type: 'file', key: 'thesis' },
+        {
+          type: 'agreement',
+          key: 'agreement',
+          name: 'Deposit Agreement',
+          uri: 'http://example.com/agreement',
+          prompt: 'I agree to the terms.'
+        }
+      ],
+      bundle: {
+        type: 'aggregate',
+        main: {
+          upload: 'thesis'
+        },
+        agreements: ['agreement']
+      },
+      metadata: []
+    });
+
+    let buffer = new Buffer('lorem ipsum');
+    let thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
+
+    let values = {
+      thesis: thesis,
+      agreement: {
+        name: 'Deposit Agreement',
+        uri: 'http://example.com/agreement',
+        prompt: 'I agree to the terms.'
+      }
+    };
+
+    let bundle = generateBundle(form, values);
+
+    it('should generate the correct number of items, files, metadata', function() {
+      assert.equal(bundle.items.length, 3);
+      assert.equal(bundle.files.length, 2);
+      assert.equal(bundle.metadata.length, 0);
+    });
+
+    it('should generate a file containing a record of the agreements', function() {
+      let aggregate = bundle.children[0];
+      let item = aggregate.children.find(i => i.type === 'File' && i.label === 'agreements.txt');
+      let file = item.children.find(i => i instanceof File);
+
+      assert.equal(file.contents.toString(), 'Deposit Agreement\nhttp://example.com/agreement\nI agree to the terms.\n');
     });
   });
 });

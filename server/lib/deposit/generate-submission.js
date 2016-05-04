@@ -1,10 +1,10 @@
 'use strict';
 
 const Xmlbuilder = require('xmlbuilder');
-const Link = require('../bundle/model').Link;
-const Item = require('../bundle/model').Item;
-const File = require('../bundle/model').File;
-const Metadata = require('../bundle/model').Metadata;
+const Link = require('./bundle/link');
+const Item = require('./bundle/item');
+const File = require('./bundle/file');
+const Metadata = require('./bundle/metadata');
 
 // metsHdr
 
@@ -146,12 +146,10 @@ function collectSmLinks(bundle) {
   bundle.items.forEach(function(item) {
     item.children.forEach(function(child) {
       if (child instanceof Link) {
-        if (child.items) {
-          child.items.map(function(target) {
-            result.push({ arcrole: child.rel, from: '#' + item.id, to: '#' + target.id });
-          });
+        if (child.target instanceof Item) {
+          result.push({ arcrole: child.rel, from: '#' + item.id, to: '#' + child.target.id });
         } else {
-          result.push({ arcrole: child.rel, from: '#' + item.id, to: child.href });
+          result.push({ arcrole: child.rel, from: '#' + item.id, to: child.target });
         }
       }
     });

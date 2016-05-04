@@ -1,4 +1,5 @@
 {
+  "destination": "uuid:1234",
   "title": "Article Form",
   "children": [
     {
@@ -33,6 +34,16 @@
       "name": "Deposit Agreement",
       "uri": "http://example.com/agreement",
       "prompt": "I agree to the terms in the agreement."
+    },
+    {
+      "type": "file",
+      "key": "article",
+      "label": "Article"
     }
-  ]
+  ],
+  "bundle": {
+    "type": "single",
+    "upload": "article"
+  },
+  "metadata": []
 }

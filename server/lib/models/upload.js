@@ -2,11 +2,16 @@
 
 const UploadNotFoundError = require('../errors').UploadNotFoundError;
 
+/**
+  @module models
+*/
+
 const UPLOADS = {};
 
 /**
   @class Upload
   @constructor
+  @private
   @param {String} id
   @param {Object} attributes
 */
@@ -60,7 +65,7 @@ class Upload {
     Return a JSON API resource object representing this upload.
 
     @method getResourceObject
-    @return {Promise<Object>}
+    @return {Promise}
   */
   getResourceObject() {
     return new Promise((resolve) => {
@@ -82,7 +87,7 @@ class Upload {
     @method findById
     @static
     @param {String} id
-    @return {Promise<Upload>}
+    @return {Promise}
   */
   static findById(id) {
     return new Promise(function(resolve, reject) {
@@ -101,7 +106,7 @@ class Upload {
     @method createFromFile
     @static
     @param {Object} file
-    @return {Promise<Upload>}
+    @return {Promise}
   */
   static createFromFile(file) {
     return new Promise(function(resolve) {

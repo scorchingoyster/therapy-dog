@@ -3,11 +3,17 @@
 const path = require('path');
 const fs = require('fs');
 const glob = require('glob');
+const typify = require('typify').create();
 const Upload = require('./upload');
 const Vocabulary = require('./vocabulary');
+const Arrow = require('../arrow');
 const FormNotFoundError = require('../errors').FormNotFoundError;
 const logging = require('../logging');
 const config = require('../../config');
+
+/**
+  @module models
+*/
 
 const FORMS = {};
 
@@ -27,6 +33,34 @@ if (config.FORMS_DIRECTORY) {
   });
 }
 
+// Define type aliases for checking attributes in the Form constructor.
+typify.mutual({
+  'form_agreement': '{ type: "agreement", key: string, name: string, uri: string, prompt: string }',
+  'form_options': 'string | array string | array { label: string, value: string }',
+  'form_checkboxes': '{ type: "checkboxes", key: string, label: string?, options: form_options, required: boolean?, defaultValue: (array string)? }',
+  'form_date': '{ type: "date", key: string, label: string, precision: ("year" | "month" | "day")?, required: boolean? }',
+  'form_email': '{ type: "email", key: string, label: string, required: boolean?, defaultValue: string?, placeholder: string? }',
+  'form_file': '{ type: "file", key: string, label: string?, required: boolean?, multiple: boolean? }',
+  'form_radio': '{ type: "radio", key: string, label: string?, options: form_options, required: boolean?, defaultValue: string? }',
+  'form_section': '{ type: "section", key: string, label: string?, children: array form_block, repeat: boolean? }',
+  'form_select': '{ type: "select", key: string, label: string?, options: form_options, required: boolean?, allowBlank: boolean?, defaultValue: string? }',
+  'form_text': '{ type: "text", key: string, label: string?, options: form_options?, required: boolean?, defaultValue: string?, placeholder: string?, size: ("line" | "paragraph")? }',
+  'form_block': 'form_agreement | form_checkboxes | form_date | form_email | form_file | form_radio | form_section | form_select | form_text'
+});
+
+typify.alias('bundle_single', '{ type: "single", context: string?, upload: string, metadata: (array string)? }');
+typify.alias('bundle_items', '{ context: string?, upload: string, metadata: (array string)? }');
+typify.alias('bundle_aggregate', '{ type: "aggregate", main: bundle_items, supplemental: (array bundle_items)?, agreements: (array string)? }');
+typify.alias('bundle', 'bundle_aggregate | bundle_single');
+
+typify.type('arrow_expression', function(t) {
+  return Arrow.check(t);
+});
+
+typify.alias('metadata', '{ id: string, type: ("descriptive" | "access-control"), model: "xml", template: arrow_expression }');
+
+typify.alias('form', '{ destination: string, title: string, description: string?, children: array form_block, bundle: bundle, metadata: array metadata }');
+
 /**
   Traverse the given blocks and values, yielding non-section blocks and their
   values to the iterator. Collect the results from the iterator in an object.
@@ -37,7 +71,7 @@ if (config.FORMS_DIRECTORY) {
   @param {Array} blocks
   @param {Object} values
   @param {Function} iterator
-  @return {Promise<Object>}
+  @return {Promise}
 */
 function mapValues(blocks, values, iterator) {
   let result = {};
@@ -82,7 +116,7 @@ function mapValues(blocks, values, iterator) {
   @method resolveVocabularies
   @private
   @param {Array} blocks
-  @return {Promise<Array>}
+  @return {Promise}
 */
 function resolveVocabularies(blocks) {
   return Promise.all(blocks.map(function(block) {
@@ -121,11 +155,14 @@ function transformOptionValue(options, value) {
 /**
   @class Form
   @constructor
+  @private
   @param {String} id
   @param {Object} attributes
 */
 class Form {
   constructor(id, attributes) {
+    typify.assert('form', attributes);
+
     this.id = id;
     this.attributes = attributes;
   }
@@ -179,10 +216,18 @@ class Form {
   }
 
   /**
+    @property metadata
+    @type {Array}
+  */
+  get metadata() {
+    return this.attributes.metadata;
+  }
+
+  /**
     Return a JSON API resource object representing this form.
 
     @method getResourceObject
-    @return {Promise<Object>}
+    @return {Promise}
   */
   getResourceObject() {
     let options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
@@ -220,7 +265,7 @@ class Form {
 
     @method transformValues
     @param {Object} values
-    @return {Promise<Object>}
+    @return {Promise}
   */
   transformValues(values) {
     return mapValues(this.children, values, function(block, value) {
@@ -265,7 +310,7 @@ class Form {
 
     @method findAll
     @static
-    @return {Promise<Array<Form>>}
+    @return {Promise}
   */
   static findAll() {
     return new Promise(function(resolve) {
@@ -281,7 +326,7 @@ class Form {
     @method findById
     @static
     @param {String} id
-    @return {Promise<Form>}
+    @return {Promise}
   */
   static findById(id) {
     return new Promise(function(resolve, reject) {

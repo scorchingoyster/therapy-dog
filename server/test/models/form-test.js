@@ -18,6 +18,55 @@ describe('Form', function() {
     });
   });
 
+  describe('constructor', function() {
+    it('throws a TypeError when passed invalid attributes', function() {
+      // Missing the 'upload' property in bundle.
+      let invalid = {
+        destination: 'uuid:1234',
+        title: 'My Form',
+        children: [
+          { type: 'file', key: 'main' }
+        ],
+        bundle: {
+          type: 'single'
+        },
+        metadata: []
+      };
+
+      assert.throws(function() {
+        /*jshint nonew: false */
+        new Form(null, invalid);
+      }, TypeError);
+    });
+
+    it('throws a TypeError when passed invalid metadata template in attributes', function() {
+      let invalid = {
+        destination: 'uuid:1234',
+        title: 'My Form',
+        children: [
+          { type: 'file', key: 'main' }
+        ],
+        bundle: {
+          type: 'single',
+          upload: 'main'
+        },
+        metadata: [
+          {
+            id: 'mods',
+            type: 'descriptive',
+            model: 'xml',
+            template: { invalid: 'template' }
+          }
+        ]
+      };
+
+      assert.throws(function() {
+        /*jshint nonew: false */
+        new Form(null, invalid);
+      }, TypeError);
+    });
+  });
+
   describe('#getResourceObject()', function() {
     it('converts object array vocabularies to options arrays', function() {
       return Form.findById('article')

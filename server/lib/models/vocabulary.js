@@ -3,9 +3,14 @@
 const path = require('path');
 const fs = require('fs');
 const glob = require('glob');
+const typify = require('typify').create();
 const VocabularyNotFoundError = require('../errors').VocabularyNotFoundError;
 const logging = require('../logging');
 const config = require('../../config');
+
+/**
+  @module models
+*/
 
 const VOCABULARIES = {};
 
@@ -25,14 +30,22 @@ if (config.VOCABULARIES_DIRECTORY) {
   });
 }
 
+// Define type aliases for checking attributes in the Vocabulary constructor.
+typify.alias('vocabulary_objects', '{ terms: array map, valueKey: string, labelKey: string }');
+typify.alias('vocabulary_strings', '{ terms: array string }');
+typify.alias('vocabulary', 'vocabulary_strings | vocabulary_objects');
+
 /**
   @class Vocabulary
   @constructor
+  @private
   @param {String} id
   @param {Object} attributes
 */
 class Vocabulary {
   constructor(id, attributes) {
+    typify.assert('vocabulary', attributes);
+
     this.id = id;
     this.attributes = attributes;
   }
@@ -75,6 +88,11 @@ class Vocabulary {
     });
   }
 
+  /**
+    @method getTerm
+    @param {String} value
+    @return {String|Object}
+  */
   getTerm(value) {
     return this.terms.find((term) => {
       if (typeof term === 'object') {
@@ -91,7 +109,7 @@ class Vocabulary {
     @method findById
     @static
     @param {String} id
-    @return {Promise<Vocabulary>}
+    @return {Promise}
   */
   static findById(id) {
     return new Promise(function(resolve, reject) {
