@@ -1,11 +1,3 @@
-<div id="debug">
-  {{link-to "Back to list of forms" "forms"}}
-  <button {{action "deposit"}}>Deposit</button>
-  <button {{action "reset"}}>Reset</button>
-  <button {{action "validate"}}>Validate</button>
-  <button {{action "dump"}}>Dump</button>
-</div>
-
 <div id="form" class={{if model.hasInvalidEntries "invalid" ""}}>
   <h1>{{form.title}}</h1>
   <p>{{sanitize-html form.description}}</p>

@@ -1,7 +1,13 @@
-<div id="form">
+<div id="notice">
   {{#if (eq model.status "OK")}}
-    <p>Your deposit completed successfully.</p>
+    <h2>Deposit Successful</h2>
+
+    <p>Your deposit was successful and is being processed.</p>
   {{else}}
+    <h2>Deposit Failed</h2>
+    
     <p>There was an error submitting your deposit.</p>
   {{/if}}
+
+  <p class="button"><a href="/Shibboleth.sso/Logout?return=https%3a%2f%2fcdr.lib.unc.edu%2f">Sign Out</a></p>
 </div>

@@ -1,6 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Route.extend({
+  title: 'Carolina Digital Repository',
+  
   actions: {
     error(error) {
       if (error.isAdapterError && error.errors.any(e => e.status === '401')) {

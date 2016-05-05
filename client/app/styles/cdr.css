@@ -1,0 +1,105 @@
+#header, #footer {
+  font-family: verdana, sans-serif;
+  font-size: 12px;
+  line-height: 17px;
+}
+
+#footer {
+  margin: 0 0 -20px 0;
+}
+
+#footer p {
+  margin: 0;
+}
+
+#header h1 {
+  display: none;
+}
+
+#titlelink {
+  margin-left: -10px;
+}
+
+#footer_uncwell {
+  float: right;
+  margin: -7px 0 0;
+}
+
+.fourcol,.twocol,.threecol {
+  float: left;
+}
+
+.fourcol {
+  width: 240px;
+}
+
+.threecol {
+  width: 720px;
+}
+
+.contentarea {
+  margin: 20px;
+}
+
+.darkest {
+  background-color: #053a53;
+  float: left;
+}
+
+.dark {
+  background-color: #0a5274;
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.left {
+  float: left;
+}
+
+.contentarea {
+  margin: 20px;
+}
+
+.fluid-cap-container {
+  width: 100%; min-width: 960px;
+}
+
+.fluid-cap-highlight {
+  float: left; width: 50%; position: relative; left: 0;
+}
+
+.fluid-cap-contents {
+  width: 960px; float: left; left: 100%; margin-left: -480px; position: relative;
+}
+
+.fluid-cap-right-wrap {
+  width: 100%; float: left; position: relative;
+}
+
+.fluid-cap-left-wrap {
+  width: 100%; float: left; position: relative; right: 240px;
+}
+
+.fluid-cap-left {
+  width: 720px; float: left; position: relative; left: 240px;
+}
+
+.fluid-cap-right {
+  width: 240px; float: left; position: relative; left: 240px;
+}
+
+.dark a,.darkest a {
+  color: #ebf5fa;
+  text-decoration: none;
+}
+
+.dark a:hover,.darkest a:hover {
+  color: #5aabcf;
+}
+
+.dark p,.darkest p {
+  color: #dfebf1;
+}
