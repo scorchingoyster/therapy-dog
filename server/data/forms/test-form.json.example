@@ -157,9 +157,11 @@
   
   "bundle": {
     "type": "aggregate",
-    "main": {
-      "upload": "article",
+    "aggregate": {
       "metadata": ["article", "hidden"]
+    },
+    "main": {
+      "upload": "article"
     },
     "supplemental": [
       {

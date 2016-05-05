@@ -19,8 +19,10 @@ describe('Bundle generation', function() {
       ],
       bundle: {
         type: 'single',
-        upload: 'thesis',
-        metadata: ['description']
+        file: {
+          upload: 'thesis',
+          metadata: ['description']
+        }
       },
       metadata: [
         {
@@ -94,9 +96,11 @@ describe('Bundle generation', function() {
       ],
       bundle: {
         type: 'aggregate',
-        main: {
-          upload: 'thesis',
+        aggregate: {
           metadata: ['description']
+        },
+        main: {
+          upload: 'thesis'
         },
         supplemental: [
           {
@@ -149,6 +153,7 @@ describe('Bundle generation', function() {
     it('should have an "Aggregate Work" item at the root', function() {
       let aggregate = bundle.children[0];
       assert.equal(aggregate.type, 'Aggregate Work');
+      assert.equal(aggregate.label, 'Aggregate Work');
     });
 
     it('should have "File" items under the "Aggregate Work" item', function() {
@@ -166,9 +171,9 @@ describe('Bundle generation', function() {
       assert.deepEqual(link.target, main);
     });
 
-    it('should generate metadata for the main item', function() {
-      let main = bundle.items.find(i => i.label === 'thesis.pdf');
-      let metadata = main.children.find(i => i instanceof Metadata);
+    it('should generate metadata for the "Aggregate Work" item', function() {
+      let aggregate = bundle.children[0];
+      let metadata = aggregate.children.find(i => i instanceof Metadata);
       assert.equal(metadata.type, 'descriptive');
       assert.equal(metadata.contents.render().toString(), '<mods><titleInfo><title>My Thesis</title></titleInfo></mods>');
     });

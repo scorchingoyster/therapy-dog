@@ -15,7 +15,9 @@
   ],
   "bundle": {
     "type": "single",
-    "upload": "poster"
+    "file": {
+      "upload": "poster"
+    }
   },
   "metadata": []
 }
