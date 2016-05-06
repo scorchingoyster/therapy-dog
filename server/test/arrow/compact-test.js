@@ -87,7 +87,7 @@ describe('Compact', function() {
     });
   });
 
-  it('should compact at multiple levels if specified', function() {
+  describe('with multiple levels', function() {
     let template = new Arrow({
       type: 'structure',
       name: 'mods',
@@ -111,33 +111,59 @@ describe('Compact', function() {
               children: [
                 { type: 'lookup', path: ['version'] }
               ]
+            },
+            {
+              type: 'structure',
+              name: 'publisher',
+              children: [
+                { type: 'string', value: 'Someone' }
+              ]
             }
           ]
         }
       ]
     });
 
-    let context = { pubdate: '2016' };
+    it('should compact only deeper structures if one of their descendant lookups is present', function() {
+      let context = { pubdate: '2016' };
 
-    let expected = {
-      type: 'mods',
-      properties: {},
-      children: [
-        {
-          type: 'originInfo',
-          properties: {},
-          children: [
-            {
-              type: 'dateIssued',
-              properties: {},
-              children: ['2016']
-            }
-          ]
-        }
-      ]
-    };
+      let expected = {
+        type: 'mods',
+        properties: {},
+        children: [
+          {
+            type: 'originInfo',
+            properties: {},
+            children: [
+              {
+                type: 'dateIssued',
+                properties: {},
+                children: ['2016']
+              },
+              {
+                type: 'publisher',
+                properties: {},
+                children: ['Someone']
+              }
+            ]
+          }
+        ]
+      };
 
-    deepEqual(template.evaluate(context), expected);
+      deepEqual(template.evaluate(context), expected);
+    });
+
+    it('should compact the shallow structure if none of its descendant lookups are present', function() {
+      let context = {};
+
+      let expected = {
+        type: 'mods',
+        properties: {},
+        children: []
+      };
+
+      deepEqual(template.evaluate(context), expected);
+    });
   });
 
   it('should remove structures containing only strings and absent data', function() {
