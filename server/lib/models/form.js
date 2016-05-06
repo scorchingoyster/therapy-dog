@@ -146,8 +146,22 @@ function transformOptionValue(options, value) {
       return vocabulary.getTerm(value);
     });
   } else if (Array.isArray(options)) {
-    if (options.indexOf(value) !== -1) {
-      return value;
+    // Find the option that matches the value. It may either be a string or a { label, value } object.
+    let option = options.find(function(option) {
+      if (typeof option === 'string') {
+        return value === option;
+      } else {
+        return value === option.value;
+      }
+    });
+
+    // Return the option's value.
+    if (option) {
+      if (typeof option === 'string') {
+        return option;
+      } else {
+        return option.value;
+      }
     }
   }
 }
