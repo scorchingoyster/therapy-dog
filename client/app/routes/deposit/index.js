@@ -3,24 +3,21 @@ import ENV from 'therapy-dog/config/environment';
 /* globals $ */
 
 export default Ember.Route.extend({
-  title: function() {
-    return this.modelFor('deposit').get('form.title');
-  },
-  
-  model() {
-    return this.modelFor('deposit').get('entry');
-  },
-  
-  setupController(controller) {
-    this._super(...arguments);
-    controller.set('form', this.modelFor('deposit').get('form'));
+  renderTemplate: function(controller, model) {
+    if (model.get('authorized')) {
+      this.render('deposit/form', { model });
+    } else {
+      this.render('deposit/login');
+    }
   },
   
   actions: {
     deposit() {
+      let deposit = this.modelFor('deposit');
+      
       let payload = {
-        form: this.modelFor('deposit').get('form.id'),
-        values: this.modelFor('deposit').get('entry').flatten()
+        form: deposit.get('form.id'),
+        values: deposit.get('entry').flatten()
       };
       
       let promise = new Ember.RSVP.Promise(function(resolve, reject) {
@@ -39,14 +36,17 @@ export default Ember.Route.extend({
           resolve(data);
         })
         .fail(function() {
-          reject();
+          resolve({ status: 'ERROR' });
         });
       });
       
-      let proxy = Ember.ObjectProxy.extend(Ember.PromiseProxyMixin).create({ promise });
+      this.render('deposit/loading');
       
-      this.modelFor('deposit').set('result', proxy);
-      this.transitionTo('deposit.result');
+      promise
+      .then((result) => {
+        deposit.set('result', result);
+        this.render('deposit/result', { model: deposit });
+      });
     }
   }
 });

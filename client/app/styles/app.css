@@ -34,15 +34,24 @@ html, body {
   width: 100%;
 }
 
+#body h1 {
+  margin: 32px 0 24px 0;
+  text-align: center;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.2;
+  font-family: "Avenir Next", helvetica, sans-serif;
+}
+
 
 /* notice */
 
 #notice {
   background: #eee;
   text-align: center;
-  padding: 35px 16px 35px 16px;
+  padding: 24px 16px 32px 16px;
   max-width: 700px;
-  margin: 32px auto;
+  margin: 24px auto 32px auto;
 }
 
 #notice h2 {
@@ -101,8 +110,8 @@ html, body {
 
 #form {
   width: 700px;
-  margin: 0 auto;
-  padding: 16px 0;
+  margin: 24px auto 32px auto;
+  padding: 0;
 }
 
 .submit {
@@ -115,16 +124,7 @@ html, body {
 }
 
 
-/* title and description */
-
-#form h1 {
-  margin: 24px 0;
-  text-align: center;
-  font-size: 32px;
-  font-weight: 600;
-  line-height: 1.2;
-  font-family: "Avenir Next", helvetica, sans-serif;
-}
+/* description */
 
 #form p {
   margin: 16px 0;

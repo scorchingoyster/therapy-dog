@@ -1,9 +1,8 @@
-<div id="form" class={{if model.hasInvalidEntries "invalid" ""}}>
-  <h1>{{form.title}}</h1>
-  <p>{{sanitize-html form.description}}</p>
+<div id="form" class={{if model.entry.hasInvalidEntries "invalid" ""}}>
+  <p>{{sanitize-html model.form.description}}</p>
   <p>Fields marked with <span class="required-example">*</span> are required.</p>
   
-  {{object-entry entry=model}}
+  {{object-entry entry=model.entry}}
   
   <p class="submit" {{action "deposit"}}>
     <button disabled={{if uploads.anyLoading "disabled" ""}}>Submit Deposit</button>
