@@ -1,14 +1,9 @@
 import Ember from 'ember';
-import ObjectEntry from 'therapy-dog/utils/object-entry';
 
 export default Ember.Route.extend({
+  deposit: Ember.inject.service(),
+  
   model(params) {
-    return this.store.findRecord('form', params.form_id, { reload: true }).then(function(form) {
-      return Ember.Object.create({
-        authorized: true,
-        form: form,
-        entry: ObjectEntry.create({ block: form })
-      });
-    });
+    return this.get('deposit').get(params.form_id);
   }
 });
