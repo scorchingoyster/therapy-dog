@@ -1,9 +1,10 @@
 'use strict';
 
-let keys = ['HOST', 'PORT', 'SWORD_BASE_URL', 'SWORD_USERNAME', 'SWORD_PASSWORD', 'FORMS_DIRECTORY', 'VOCABULARIES_DIRECTORY', 'UPLOADS_DIRECTORY'];
+let required = ['HOST', 'PORT', 'SWORD_BASE_URL', 'SWORD_USERNAME', 'SWORD_PASSWORD', 'FORMS_DIRECTORY', 'VOCABULARIES_DIRECTORY', 'UPLOADS_DIRECTORY'];
+let optional = [];
 
 if (process.env.NODE_ENV === 'production') {
-  keys.push('LOG_FILENAME');
+  required.push('LOG_FILENAME');
 }
 
 let defaults;
@@ -16,12 +17,12 @@ if (process.env.NODE_ENV === 'production') {
   defaults = require('./development');
 }
 
-let config = keys.reduce(function(hash, key) {
+let config = required.concat(optional).reduce(function(hash, key) {
   hash[key] = process.env[key] || defaults[key];
   return hash;
 }, {});
 
-let missing = keys.filter(function(key) {
+let missing = required.filter(function(key) {
   return !config[key];
 });
 
