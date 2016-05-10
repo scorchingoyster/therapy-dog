@@ -67,7 +67,7 @@ def convert_attributes(element, identifiers, type, path)
       value = { type: "string", value: default_value }
     end
     
-    if name == "value"
+    if name == "value" || name == "mixed"
       value
     else
       if type == :acl
