@@ -120,6 +120,7 @@ def convert_mapped_elements(metadata_block, identifiers, type, path)
       type: "structure",
       name: name,
       properties: properties,
+      compact: true,
       children: convert_child_elements(mapped_element, identifiers, type, path) + convert_attributes(mapped_element, identifiers, type, path)
     }
   end.compact
