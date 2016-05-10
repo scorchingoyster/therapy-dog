@@ -21,6 +21,15 @@
     },
     {
       "type": "select",
+      "key": "review",
+      "label": "Needs Review?",
+      "options": [
+        { "label": "Yes", "value": "yes" },
+        { "label": "No", "value": "no" }
+      ]
+    },
+    {
+      "type": "select",
       "key": "license",
       "label": "License",
       "options": [

@@ -88,10 +88,13 @@ describe('Form', function() {
         return form.getResourceObject({ children: true });
       })
       .then(function(resourceObject) {
-        let roles = resourceObject.attributes.children[2];
+        let roles = resourceObject.attributes.children.find(c => c.key === 'roles');
         assert.deepEqual(roles.options, ['Student', 'Faculty', 'Staff']);
 
-        let license = resourceObject.attributes.children[3];
+        let review = resourceObject.attributes.children.find(c => c.key === 'review');
+        assert.deepEqual(review.options, [{ label: 'Yes', value: 'yes' }, { label: 'No', value: 'no' }]);
+
+        let license = resourceObject.attributes.children.find(c => c.key === 'license');
         assert.deepEqual(license.options, ['CC-BY', 'CC-BY-NC']);
       });
     });
@@ -101,11 +104,12 @@ describe('Form', function() {
     it('transforms values to the correct term', function() {
       return Form.findById('article')
       .then(function(form) {
-        return form.transformValues({ language: 'eng', roles: ['Staff', 'Faculty'] });
+        return form.transformValues({ language: 'eng', roles: ['Staff', 'Faculty'], review: 'no' });
       })
       .then(function(values) {
         assert.deepEqual(values.language, { code: 'eng', name: 'English' });
         assert.deepEqual(values.roles, ['Staff', 'Faculty']);
+        assert.deepEqual(values.review, 'no');
       });
     });
 
@@ -126,6 +130,16 @@ describe('Form', function() {
       })
       .then(function(values) {
         assert.deepEqual(values.roles, ['Student']);
+      });
+    });
+
+    it('does not assign terms not found in a literal options array', function() {
+      return Form.findById('article')
+      .then(function(form) {
+        return form.transformValues({ review: 'maybe' });
+      })
+      .then(function(values) {
+        assert.deepEqual(values.review, undefined);
       });
     });
 
