@@ -138,13 +138,13 @@ def convert_mapping(doc, identifiers, type)
     
     if max_repeat > 1
 
-      elements = convert_mapped_elements(metadata_block, identifiers, type, ["section"])
+      elements = convert_mapped_elements(metadata_block, identifiers, type, ["item"])
     
       if elements.any?
         list << {
           type: "each",
           items: { type: "lookup", path: [id] },
-          locals: { item: "section" },
+          locals: { item: "item" },
           body: elements
         }
       end
