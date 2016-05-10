@@ -38,6 +38,7 @@ export default Ember.Service.extend({
         let deposit = Ember.Object.create({
           authorized: response.meta.authorized,
           mail: response.meta.mail,
+          debug: response.meta.debug,
           form: form,
           entry: ObjectEntry.create({ block: form })
         });
