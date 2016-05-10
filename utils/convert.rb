@@ -570,10 +570,20 @@ def convert_form(xml, form_id)
   
   # Bundles
   
+  aggregate_metadata = []
+  
+  if mods_template
+    aggregate_metadata << "main-mods"
+  end
+  
+  if acl_template
+    aggregate_metadata << "main-acl"
+  end
+  
   output[:bundle] = {
     type: "aggregate",
     aggregate: {
-      metadata: ["main-mods", "main-acl"]
+      metadata: aggregate_metadata
     },
     main: {
       upload: main_file
