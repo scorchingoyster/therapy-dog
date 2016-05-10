@@ -85,10 +85,6 @@ function generateAgreementFileItem(agreements, values) {
 */
 module.exports = function(form, values) {
   let children = [];
-
-  let main = generateOneFileItem(form.bundle.main, form.metadata, values);
-  children = children.concat(main);
-
   if (form.bundle.supplemental) {
     let supplemental = form.bundle.supplemental.reduce(function(result, itemSpec) {
       return result.concat(generateFileItems(itemSpec, form.metadata, values));
@@ -96,15 +92,38 @@ module.exports = function(form, values) {
     children = children.concat(supplemental);
   }
 
-  let link = new Link(main, 'http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject');
-  children = children.concat(link);
+  let main = generateOneFileItem(form.bundle.main, form.metadata, values);
 
+  let link = new Link(main, 'http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject');
+
+  let agreement;
   if (form.bundle.agreements) {
-    let agreement = generateAgreementFileItem(form.bundle.agreements, values);
-    children = children.concat(agreement);
+    agreement = generateAgreementFileItem(form.bundle.agreements, values);
+  } else {
+    agreement = [];
   }
 
-  let aggregate = new Item(children, { type: 'Aggregate Work' });
+  let metadata;
+  if (form.bundle.aggregate && form.bundle.aggregate.metadata) {
+    let context;
+    if (form.bundle.aggregate.context) {
+      context = values[form.bundle.aggregate.context];
+    } else {
+      context = values;
+    }
+
+    metadata = form.bundle.aggregate.metadata.map(function(id) {
+      let spec = form.metadata.find(m => m.id === id);
+      let root = new Arrow(spec.template).evaluate(context);
+      let xml = new XML(root);
+
+      return new Metadata(xml, { type: spec.type });
+    });
+  } else {
+    metadata = [];
+  }
+
+  let aggregate = new Item([].concat(main).concat(children).concat(link).concat(agreement).concat(metadata), { type: 'Aggregate Work', label: 'Aggregate Work' });
 
   return new Bundle([aggregate], {});
 };

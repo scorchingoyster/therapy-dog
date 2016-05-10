@@ -16,19 +16,19 @@ const Bundle = require('../bundle');
 */
 module.exports = function(form, values) {
   let context;
-  if (form.bundle.context) {
-    context = values[form.bundle.context];
+  if (form.bundle.file.context) {
+    context = values[form.bundle.file.context];
   } else {
     context = values;
   }
 
-  let upload = context[form.bundle.upload];
+  let upload = context[form.bundle.file.upload];
 
   let file = new File(upload, {});
 
   let metadata;
-  if (form.bundle.metadata) {
-    metadata = form.bundle.metadata.map(function(id) {
+  if (form.bundle.file.metadata) {
+    metadata = form.bundle.file.metadata.map(function(id) {
       let spec = form.metadata.find(m => m.id === id);
       let root = new Arrow(spec.template).evaluate(context);
       let xml = new XML(root);

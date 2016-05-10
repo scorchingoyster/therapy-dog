@@ -48,9 +48,10 @@ typify.mutual({
   'form_block': 'form_agreement | form_checkboxes | form_date | form_email | form_file | form_radio | form_section | form_select | form_text'
 });
 
-typify.alias('bundle_single', '{ type: "single", context: string?, upload: string, metadata: (array string)? }');
-typify.alias('bundle_items', '{ context: string?, upload: string, metadata: (array string)? }');
-typify.alias('bundle_aggregate', '{ type: "aggregate", main: bundle_items, supplemental: (array bundle_items)?, agreements: (array string)? }');
+typify.alias('bundle_item', '{ context: string?, metadata: (array string)? }');
+typify.alias('bundle_file', 'bundle_item & { upload: string }');
+typify.alias('bundle_single', '{ type: "single", file: bundle_file }');
+typify.alias('bundle_aggregate', '{ type: "aggregate", aggregate: bundle_item?, main: bundle_file?, supplemental: (array bundle_file)?, agreements: (array string)? }');
 typify.alias('bundle', 'bundle_aggregate | bundle_single');
 
 typify.type('arrow_expression', function(t) {

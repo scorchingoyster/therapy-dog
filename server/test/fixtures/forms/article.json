@@ -43,7 +43,9 @@
   ],
   "bundle": {
     "type": "single",
-    "upload": "article"
+    "file": {
+      "upload": "article"
+    }
   },
   "metadata": []
 }

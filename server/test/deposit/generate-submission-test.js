@@ -27,8 +27,10 @@ describe('Submission generation', function() {
       ],
       bundle: {
         type: 'single',
-        upload: 'thesis',
-        metadata: ['description', 'unpublished']
+        file: {
+          upload: 'thesis',
+          metadata: ['description', 'unpublished']
+        }
       },
       metadata: [
         {
