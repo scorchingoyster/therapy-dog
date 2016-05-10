@@ -1,6 +1,7 @@
 'use strict';
 
 const Form = require('../models/form');
+const config = require('../../config');
 const FormNotFoundError = require('../errors').FormNotFoundError;
 
 exports.index = function(req, res, next) {
@@ -29,6 +30,10 @@ exports.show = function(req, res, next) {
   })
   .then(function(resourceObject) {
     let meta = {};
+
+    if (config.DEBUG) {
+      meta.debug = true;
+    }
 
     if (req.remoteUser) {
       meta.authorized = true;

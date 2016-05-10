@@ -1,7 +1,7 @@
 'use strict';
 
 let required = ['HOST', 'PORT', 'SWORD_BASE_URL', 'SWORD_USERNAME', 'SWORD_PASSWORD', 'FORMS_DIRECTORY', 'VOCABULARIES_DIRECTORY', 'UPLOADS_DIRECTORY'];
-let optional = [];
+let optional = ['DEBUG'];
 
 if (process.env.NODE_ENV === 'production') {
   required.push('LOG_FILENAME');
