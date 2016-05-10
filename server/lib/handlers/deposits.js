@@ -7,11 +7,10 @@ const submitZip = require('../deposit/submit-zip');
 const logging = require('../logging');
 const SwordError = require('../errors').SwordError;
 
-exports.debug = function(req, res, next) {
-  let deposit = req.body;
+function processDeposit(deposit) {
   let form, values, bundle;
 
-  Form.findById(deposit.form)
+  return Form.findById(deposit.form)
   .then(function(f) {
     form = f;
     return form.transformValues(deposit.values);
@@ -41,50 +40,32 @@ exports.debug = function(req, res, next) {
       }, {})
     });
 
-    res.send(submission['mets.xml']).end();
-  })
-  .catch(next);
+    return {
+      form: form,
+      values: values,
+      bundle: bundle,
+      submission: submission
+    };
+  });
 }
 
+exports.debug = function(req, res, next) {
+  processDeposit(req.body)
+  .then(function(results) {
+    res.send(results.submission['mets.xml']).end();
+  })
+  .catch(function(err) {
+    next(err);
+  });
+};
+
 exports.create = function(req, res, next) {
-  let deposit = req.body;
-  let form, values, bundle;
-
-  Form.findById(deposit.form)
-  .then(function(f) {
-    form = f;
-
-    return form.transformValues(deposit.values);
+  processDeposit(req.body)
+  .then(function(results) {
+    return submitZip(results.form, results.submission);
   })
-  .then(function(v) {
-    values = v;
-    logging.debug('Transformed values for form "%s"', deposit.form, {
-      values: values
-    });
-
-    bundle = generateBundle(form, values);
-    logging.debug('Generated bundle for form "%s"', deposit.form, {
-      bundle: bundle
-    });
-
-    return generateSubmission(form, bundle);
-  })
-  .then(function(submission) {
-    logging.debug('Generated submission for form "%s"', deposit.form, {
-      submission: Object.keys(submission).reduce(function(object, name) {
-        if (submission[name] instanceof Buffer) {
-          object[name] = submission[name].toString();
-        } else {
-          object[name] = submission[name];
-        }
-        return object;
-      }, {})
-    });
-
-    return submitZip(form, submission);
-  })
-  .then(function(result) {
-    res.send(result).end();
+  .then(function(response) {
+    res.send(response).end();
   })
   .catch(function(err) {
     if (err instanceof SwordError) {
