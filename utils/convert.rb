@@ -6,8 +6,6 @@ require "nokogiri"
 require "json"
 require "open-uri"
 
-require "./template_stringifier"
-
 PREFIXES = { "xmi" => "http://www.omg.org/XMI", "xsi" => "http://www.w3.org/2001/XMLSchema-instance" }
 
 class Identifiers
@@ -45,7 +43,7 @@ def href_name(node, type)
   end
 end
 
-def convert_attributes(element, identifiers, type)
+def convert_attributes(element, identifiers, type, path)
   element.xpath("attributes").map do |attribute|
     default_value = attribute["defaultValue"]
     mapped_feature = attribute.at_xpath("mappedFeature")
@@ -64,7 +62,7 @@ def convert_attributes(element, identifiers, type)
     end
     
     if output != nil
-      value = { type: "path", parts: ["section", output] }
+      value = { type: "lookup", path: path + [output] }
     else
       value = { type: "string", value: default_value }
     end
@@ -77,93 +75,52 @@ def convert_attributes(element, identifiers, type)
       end
     
       {
-        type: "call",
-        name: "attribute",
-        params: [
-          { type: "string", value: name }
-        ],
-        hash: { type: "hash", pairs: [] },
-        locals: [],
-        body: {
-          type: "program",
-          body: [value]
-        }
+        type: "structure",
+        name: "@" + name,
+        properties: { value: value }
       }
     end
   end
 end
 
-def convert_child_elements(mapped_element, identifiers, type)
+def convert_child_elements(mapped_element, identifiers, type, path)
   mapped_element.xpath("childElements").map do |child_element|
     mapped_feature = child_element.at_xpath("mappedFeature")
     name = href_name(mapped_feature, type)
-    pairs = []
     
     if type == :acl
       name = "acl:" + name
     end
     
     {
-      type: "call",
-      name: "element",
-      params: [
-        { type: "string", value: name }
-      ],
-      hash: { type: "hash", pairs: pairs },
-      locals: [],
-      body: {
-        type: "program",
-        body: convert_child_elements(child_element, identifiers, type) + convert_attributes(child_element, identifiers, type)
-      }
+      type: "structure",
+      name: name,
+      children: convert_child_elements(child_element, identifiers, type, path) + convert_attributes(child_element, identifiers, type, path)
     }
   end
 end
 
-def convert_mapped_elements(metadata_block, identifiers, type)
+def convert_mapped_elements(metadata_block, identifiers, type, path)
   metadata_block.xpath("elements").map do |mapped_element|
     mapped_feature = mapped_element.at_xpath("mappedFeature")
     name = href_name(mapped_feature, type)
-    pairs = []
-    
-    if name.nil?
+    properties = {}
+  
+    if name.nil? || name == "value"
       next
     end
-    
+  
     if type == :acl && name == "accessControl"
-      name = "acl:" + name
-      pairs << {
-        type: "pair",
-        key: "xmlns:acl",
-        value: { type: "string", value: "http://cdr.unc.edu/definitions/acl" }
-      }
-      pairs << {
-        type: "pair",
-        key: "@compact",
-        value: { type: "boolean", value: true }
-      }
-    end
+      name = "acl:accessControl"
     
-    # Keep accessCondition boilerplate
-    if type == :mods && name == "accessCondition"
-      pairs << {
-        type: "pair",
-        key: "@keep",
-        value: { type: "boolean", value: true }
-      }
+      properties["xmlns:acl"] = { type: "string", value: "http://cdr.unc.edu/definitions/acl" }
     end
-    
+  
     {
-      type: "call",
-      name: "element",
-      params: [
-        { type: "string", value: name }
-      ],
-      hash: { type: "hash", pairs: pairs },
-      locals: [],
-      body: {
-        type: "program",
-        body: convert_child_elements(mapped_element, identifiers, type) + convert_attributes(mapped_element, identifiers, type)
-      }
+      type: "structure",
+      name: name,
+      properties: properties,
+      children: convert_child_elements(mapped_element, identifiers, type, path) + convert_attributes(mapped_element, identifiers, type, path)
     }
   end.compact
 end
@@ -177,23 +134,24 @@ def convert_mapping(doc, identifiers, type)
     rescue
       max_repeat = 1
     end
-
-    elements = convert_mapped_elements(metadata_block, identifiers, type)
     
-    if elements.any?
-      list << {
-        type: "call",
-        name: max_repeat > 1 ? "each" : "with",
-        params: [
-          { type: "call", name: id }
-        ],
-        hash: { type: "hash", pairs: [] },
-        locals: ["section"],
-        body: {
-          type: "program",
+    if max_repeat > 1
+
+      elements = convert_mapped_elements(metadata_block, identifiers, type, ["section"])
+    
+      if elements.any?
+        list << {
+          type: "each",
+          items: { type: "lookup", path: [id] },
+          locals: { item: "section" },
           body: elements
         }
-      }
+      end
+      
+    else
+      
+      list += convert_mapped_elements(metadata_block, identifiers, type, [id])
+      
     end
     
     list
@@ -201,42 +159,11 @@ def convert_mapping(doc, identifiers, type)
   
   if type == :mods
     {
-      type: "program",
-      body: [
-        {
-          type: "call",
-          name: "element",
-          params: [
-            { type: "string", value: "mods" }
-          ],
-          hash: {
-            type: "hash",
-            pairs: [
-              {
-                type: "pair",
-                key: "xmlns",
-                value: {
-                  type: "string",
-                  value: "http://www.loc.gov/mods/v3"
-                }
-              },
-              {
-                type: "pair",
-                key: "@compact",
-                value: {
-                  type: "boolean",
-                  value: true
-                }
-              }
-            ]
-          },
-          locals: [],
-          body: {
-            type: "program",
-            body: main_body
-          }
-        }
-      ]
+      type: "structure",
+      name: "mods",
+      properties: { xmlns: { type: "string", value: "http://www.loc.gov/mods/v3" } },
+      compact: true,
+      children: main_body
     }
   else
     if main_body.size > 1
@@ -246,10 +173,7 @@ def convert_mapping(doc, identifiers, type)
     if main_body.size == 0
       nil
     else
-      {
-        type: "program",
-        body: main_body
-      }
+      main_body[1]
     end
   end
 end
@@ -270,127 +194,276 @@ def convert_form(xml, form_id)
   output[:title] = form["title"]
   output[:description] = form["description"]
   output[:destination] = form["depositContainerId"]
+  
+  
+  # Form fields
 
   output[:children] = []
 
-  form.xpath("elements[@xmi:type='walk:MetadataBlock' or @xsi:type='walk:MetadataBlock']", PREFIXES).each do |block|
-    begin
-      max_repeat = Integer(block["maxRepeat"])
-    rescue
-      max_repeat = 1
-    end
-
-    section = {
-      type: "section",
-      key: identifiers.touch(block["xmi:id"], block),
-      label: block["name"],
-      repeat: max_repeat > 1,
-      children: []
-    }
-
-    output[:children] << section
-
-    block.xpath("ports").each do |port|
+  form.xpath("elements[@xmi:type='walk:MetadataBlock' or @xsi:type='walk:MetadataBlock' or @xsi:type='walk:MajorBlock']", PREFIXES).each do |block|
+    if block["xsi:type"] == "walk:MajorBlock"
+      
       field = {
-        key: identifiers.touch(port["xmi:id"], port),
-        label: port["label"]
+        type: "select",
+        key: identifiers.touch(block["xmi:id"], block),
+        label: block["label"],
+        options: "honors-majors"
       }
 
-      validations = {}
-
-      field[:validations] = validations
-
-      if port["required"] == "true"
-        validations[:presence] = true
+      output[:children] << field
+      
+    else
+      
+      begin
+        max_repeat = Integer(block["maxRepeat"])
+      rescue
+        max_repeat = 1
       end
 
-      if port["usage"] != nil && port["usage"] != ""
-        field[:placeholder] = port["usage"]
-      end
+      section = {
+        type: "section",
+        key: identifiers.touch(block["xmi:id"], block),
+        label: block["name"],
+        repeat: max_repeat > 1,
+        children: []
+      }
 
-      if port.xpath("validValues").any?
-        field[:options] = port.xpath("validValues").map { |v| v.text }
-      elsif port["vocabularyURL"] != nil && port["vocabularyURL"] != ""
-        url = port["vocabularyURL"]
+      output[:children] << section
 
-        if url =~ /^https:\/\/cdr.lib.unc.edu\/shared\/vocab\/.*\.txt$/
-          field[:options] = File.basename(url, ".txt")
-        else
-          raise "Vocabulary URL outside of shared/vocab: #{url}"
+      block.xpath("ports").each do |port|
+        field = {
+          key: identifiers.touch(port["xmi:id"], port),
+          label: port["label"]
+        }
+
+        validations = {}
+
+        if port["required"] == "true"
+          field[:required] = true
         end
-      end
 
-      if port["allowFreeText"] == "false"
-        field[:type] = "select"
-      elsif port.xpath("validValues").any?
-        field[:type] = "select"
-        field[:options] = port.xpath("validValues").map { |v| v.text }
-      elsif port["xmi:type"] == "walk:EmailInputField" || port["xsi:type"] == "walk:EmailInputField"
-        field[:type] = "text"
-      elsif port["xmi:type"] == "walk:TextInputField" || port["xsi:type"] == "walk:TextInputField"
-        field[:type] = "text"
-      elsif port["xmi:type"] == "walk:DateInputField" || port["xsi:type"] == "walk:DateInputField"
-        field[:type] = "date"
-
-        if port["datePrecision"] != nil && port["datePrecision"] != ""
-          field[:precision] = port["datePrecision"]
+        if port["usage"] != nil && port["usage"] != ""
+          field[:placeholder] = port["usage"]
         end
-      end
 
-      section[:children] << field
+        if port.xpath("validValues").any?
+          field[:options] = port.xpath("validValues").map { |v| v.text }
+        elsif port["vocabularyURL"] != nil && port["vocabularyURL"] != ""
+          url = port["vocabularyURL"]
+
+          if url =~ /^https:\/\/cdr.lib.unc.edu\/shared\/vocab\/.*\.txt$/
+            field[:options] = File.basename(url, ".txt")
+          else
+            raise "Vocabulary URL outside of shared/vocab: #{url}"
+          end
+        end
+
+        if port["allowFreeText"] == "false"
+          field[:type] = "select"
+        elsif port.xpath("validValues").any?
+          field[:type] = "select"
+          field[:options] = port.xpath("validValues").map { |v| v.text }
+        elsif port["xmi:type"] == "walk:EmailInputField" || port["xsi:type"] == "walk:EmailInputField"
+          field[:type] = "text"
+        elsif port["xmi:type"] == "walk:TextInputField" || port["xsi:type"] == "walk:TextInputField"
+          field[:type] = "text"
+          
+          if port["type"] == "MultipleLines"
+            field[:size] = "paragraph"
+          end
+        elsif port["xmi:type"] == "walk:DateInputField" || port["xsi:type"] == "walk:DateInputField"
+          field[:type] = "date"
+
+          if port["datePrecision"] != nil && port["datePrecision"] != ""
+            field[:precision] = port["datePrecision"]
+          end
+        end
+
+        section[:children] << field
+        
+      end
     end
   end
+  
+  
+  # Templates
   
   mods_template = convert_mapping(doc, identifiers, :mods)
   acl_template = convert_mapping(doc, identifiers, :acl)
   
-  output[:templates] = []
+  if form_id == "honors-thesis"
+    majors_identifier = identifiers.get(form.at_xpath("elements[@xsi:type='walk:MajorBlock']", PREFIXES))
+    
+    # children of <name> for Author Information
+    mods_template[:children][0][:children] << {
+      type: "structure",
+      name: "affiliation",
+      properties: {},
+      children: [
+        { type: "lookup", path: [majors_identifier, "name"] }
+      ]
+    }
+    
+    acl_template = {
+      type: "structure",
+      name: "acl:accessControl",
+      properties: {
+        "xmlns:acl" => { type: "string", value: "http://cdr.unc.edu/definitions/acl" }
+      },
+      children: [
+        {
+          type: "each",
+          items: { type: "lookup", path: [majors_identifier, "observerGroups"] },
+          locals: { item: "group" },
+          body: [
+            {
+              type: "structure",
+              name: "grant",
+              properties: {
+                group: { type: "lookup", path: ["group"] },
+                role: { type: "string", value: "observer" }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  end
   
-  template_stringifier = TemplateStringifier.new
+  output[:metadata] = []
   
   if mods_template
-    output[:templates] << {
-      id: "mods",
-      type: "xml",
-      template: template_stringifier.stringify(mods_template)
+    output[:metadata] << {
+      id: "main-mods",
+      type: "descriptive",
+      model: "xml",
+      template: mods_template
     }
   end
   
   if acl_template
-    output[:templates] << {
-      id: "acl",
-      type: "xml",
-      template: template_stringifier.stringify(acl_template)
+    output[:metadata] << {
+      id: "main-acl",
+      type: "access-control",
+      model: "xml",
+      template: acl_template
     }
   end
   
   if form_id == "art-mfa"
-    output[:templates] << {
-      id: "work-sample",
-      type: "xml",
-      template: 'element "mods" xmlns="http://www.loc.gov/mods/v3" @compact=true { sample.title -> (element "titleInfo") (element "title"); element "physicalDescription" { sample.medium -> element "form" type="material"; sample.dimensions -> element "extent" }; sample.date -> (element "originInfo") (element "dateCreated" encoding="iso8601"); sample.narrative -> element "abstract" }'
-    }
-  end
-  
-  
-  form.xpath("elements[@xsi:type='walk:MajorBlock']", PREFIXES).each do |block|
-    field = {
-      type: "select",
-      key: identifiers.touch(block["xmi:id"], block),
-      label: block["label"],
-      optionLabelKeyPath: "name"
-    }
-
-    field[:options] = block.xpath("majorEntries").map do |entries|
-      {
-        name: entries["name"],
-        observerGroups: entries.xpath("observerGroups").map { |g| g.text },
-        emailDepositNoticeTo: entries.xpath("emailDepositNoticeTo").map { |g| g.text }
+    output[:metadata] << {
+      id: "art-mfa-work-sample-mods",
+      type: "descriptive",
+      model: "xml",
+      template: {
+        type: "structure",
+        name: "mods",
+        compact: true,
+        properties: {
+          xmlns: { type: "string", value: "http://www.loc.gov/mods/v3" }
+        },
+        children: [
+          {
+            type: "arrow",
+            items: { type: "lookup", path: ["title"] },
+            target: [
+              { type: "structure", name: "titleInfo" },
+              { type: "structure", name: "title" }
+            ]
+          },
+          {
+            type: "structure",
+            name: "physicalDescription",
+            children: [
+              {
+                type: "arrow",
+                items: { type: "lookup", path: ["medium"] },
+                target: [
+                  { type: "structure", name: "form", properties: { type: { type: "string", value: "material" } } },
+                ]
+              },
+              {
+                type: "arrow",
+                items: { type: "lookup", path: ["dimensions"] },
+                target: [
+                  { type: "structure", name: "extent" },
+                ]
+              }
+            ]
+          },
+          {
+            type: "arrow",
+            items: { type: "lookup", path: ["date"] },
+            target: [
+              { type: "structure", name: "originInfo" },
+              { type: "structure", name: "dateCreated", properties: { encoding: { type: "string", value: "iso8601" } } }
+            ]
+          },
+          {
+            type: "arrow",
+            items: { type: "lookup", path: ["narrative"] },
+            target: [
+              { type: "structure", name: "abstract" }
+            ]
+          }
+        ]
       }
-    end
-
-    output[:children] << field
+    }
   end
+  
+  if form_id == "honors-thesis"
+    majors_identifier = identifiers.get(form.at_xpath("elements[@xsi:type='walk:MajorBlock']", PREFIXES))
+    
+    output[:metadata] << {
+      id: "honors-thesis-cover-acl",
+      type: "access-control",
+      model: "xml",
+      template: {
+        type: "structure",
+        name: "acl:accessControl",
+        properties: {
+          "xmlns:acl" => { type: "string", value: "http://cdr.unc.edu/definitions/acl" },
+          "acl:inherit" => { type: "string", value: "false" }
+        },
+        children: [
+          {
+            type: "each",
+            items: { type: "lookup", path: [majors_identifier, "observerGroups"] },
+            locals: { item: "group" },
+            body: [
+              {
+                type: "structure",
+                name: "acl:grant",
+                properties: {
+                  "acl:group" => { type: "lookup", path: ["group"] },
+                  "acl:role" => { type: "string", value: "observer" }
+                }
+              }
+            ]
+          },
+          {
+            type: "structure",
+            name: "acl:grant",
+            properties: {
+              "acl:group" => { type: "string", value: "unc:app:lib:cdr:honorsthesiscurator" },
+              "acl:role" => { type: "string", value: "curator" }
+            }
+          },
+          {
+            type: "structure",
+            name: "acl:grant",
+            properties: {
+              "acl:group" => { type: "string", value: "unc:app:lib:cdr:honorsthesisreviewer" },
+              "acl:role" => { type: "string", value: "observer" }
+            }
+          }
+        ]
+      }
+    }
+  end
+  
+  
+  # Files
   
   main_file = nil
   other_files = []
@@ -401,9 +474,7 @@ def convert_form(xml, form_id)
       type: "file",
       key: "main",
       label: "File for Deposit",
-      validations: {
-        presence: true
-      }
+      required: true
     }
     
     main_file = "main"
@@ -427,9 +498,7 @@ def convert_form(xml, form_id)
     end
 
     if block["required"] == "true"
-      field[:validations] = {
-        presence: true
-      }
+      field[:required] = true
     end
 
     output[:children] << field
@@ -459,93 +528,108 @@ def convert_form(xml, form_id)
           type: "file",
           key: "file",
           label: "Work Sample",
-          validations: {
-            presence: true
-          }
+          required: true
         },
         {
           type: "text",
           key: "title",
           label: "Title",
-          validations: {
-            presence: true
-          }
+          required: true
         },
         {
           type: "text",
           key: "medium",
           label: "Medium/Materials",
-          validations: {
-            presence: true
-          }
+          required: true
         },
         {
           type: "text",
           key: "dimensions",
           label: "Dimensions",
-          validations: {
-            presence: true
-          }
+          required: true
         },
         {
           type: "date",
           key: "date",
           label: "Year",
           precision: "year",
-          validations: {
-            presence: true
-          }
+          required: true
         },
         {
           type: "text",
           key: "narrative",
           label: "Brief narrative",
-          validations: {
-            presence: true
-          }
+          size: "paragraph",
+          required: true
         }
       ]
     }
   end
   
   
-  bundle = ""
+  # Bundles
   
-  bundle << "item type='Aggregate Work' {"
-  bundle << "link rel='http://cdr.unc.edu/definitions/1.0/base-model.xml#defaultWebObject' href='#main'; "
-  
-  if mods_template
-    bundle << "metadata type='descriptive' { partial 'mods' }; "
-  end
-  
-  if acl_template
-    bundle << "metadata type='access-control' { partial 'acl' }; "
-  end
-  
-  bundle << "item type='File' fragment='main' label=#{main_file}.name { file { #{main_file} } }; "
-  
-  other_files.each do |key|
-    bundle << "item type='File' label=#{key}.name { file { #{key} } }; "
-  end
+  output[:bundle] = {
+    type: "aggregate",
+    aggregate: {
+      metadata: ["main-mods", "main-acl"]
+    },
+    main: {
+      upload: main_file
+    },
+    supplemental: []
+  }
   
   if supplemental_files
-    bundle << "each #{supplemental_files} as |s| { "
-    bundle << "item type='File' label=s.name { file { s } }; "
-    bundle << "}"
+    output[:bundle][:supplemental] << {
+      upload: supplemental_files
+    }
   end
   
   if form_id == "art-mfa"
-    bundle << "each work-samples as |s| { "
-    bundle << "item type='File' label=s.file.name { metadata type='descriptive' { partial 'work-sample' sample=s }; file { s.file } }; "
-    bundle << "}"
+    output[:bundle][:supplemental] << {
+      context: "work-samples",
+      upload: "file",
+      metadata: ["art-mfa-work-sample-mods"]
+    }
   end
   
-  bundle << "}"
-  
-  output[:bundle] = bundle
-  
+  if form_id == "honors-thesis"
+    cover_identifier = identifiers.get(form.at_xpath("elements[@name='Cover page']", PREFIXES))
+    
+    output[:bundle][:supplemental] << {
+      upload: cover_identifier,
+      metadata: ["honors-thesis-cover-acl"]
+    }
+  end
   
   output
+end
+
+def extract_majors_vocabulary(xml, vocabs_output_path)
+  doc = Nokogiri::XML(xml)
+
+  block = doc.at_xpath("//elements[@xsi:type='walk:MajorBlock']", PREFIXES)
+  
+  if block
+    terms = block.xpath("majorEntries").map do |entries|
+      {
+        name: entries["name"],
+        observerGroups: entries.xpath("observerGroups").map { |g| g.text },
+        emailDepositNoticeTo: entries.xpath("emailDepositNoticeTo").map { |g| g.text }
+      }
+    end
+  
+    vocab = {
+      terms: terms,
+      valueKey: "name",
+      labelKey: "name"
+    }
+  
+    File.open(File.join(vocabs_output_path, "honors-majors.json"), "w+") do |f|
+      f << JSON.pretty_generate(vocab)
+    end
+  end
 end
 
 def download_vocabularies(xml, vocabs_output_path)
@@ -555,11 +639,13 @@ def download_vocabularies(xml, vocabs_output_path)
     if port["vocabularyURL"] != nil && port["vocabularyURL"] =~ /^https:\/\/cdr.lib.unc.edu\/shared\/vocab\/.*\.txt$/
       id = File.basename(port["vocabularyURL"], ".txt")
 
-      vocab = []
+      vocab = {
+        terms: []
+      }
 
       open(port["vocabularyURL"]) do |f|
         f.each_line do |line|
-          vocab << line.strip
+          vocab[:terms] << line.strip
         end
       end
 
@@ -594,6 +680,7 @@ vocabs_output_path = options["--vocab-output"]
 form_paths = options["<form-xml>"]
 
 FileUtils.mkdir_p(forms_output_path)
+FileUtils.mkdir_p(vocabs_output_path)
 
 form_paths.each do |path|
   begin
@@ -601,6 +688,7 @@ form_paths.each do |path|
     id = File.basename(path, ".form")
 
     download_vocabularies(xml, vocabs_output_path)
+    extract_majors_vocabulary(xml, vocabs_output_path)
 
     output = convert_form(xml, id)
     json = JSON.pretty_generate(output)
