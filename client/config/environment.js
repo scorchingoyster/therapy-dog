@@ -28,6 +28,7 @@ module.exports = function(environment) {
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
     
     ENV.APP.spoofRemoteUser = 'someone';
+    ENV.APP.spoofMail = 'someone@example.com';
   }
 
   if (environment === 'test') {

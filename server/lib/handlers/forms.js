@@ -28,11 +28,21 @@ exports.show = function(req, res, next) {
     }
   })
   .then(function(resourceObject) {
+    let meta = {};
+
+    if (req.remoteUser) {
+      meta.authorized = true;
+    } else {
+      meta.authorized = false;
+    }
+
+    if (req.headers['mail']) {
+      meta.mail = req.headers['mail'];
+    }
+
     res.send({
       data: resourceObject,
-      meta: {
-        authorized: !!req.remoteUser
-      }
+      meta: meta
     });
   })
   .catch(function(err) {
