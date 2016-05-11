@@ -4,7 +4,6 @@ const express = require('express');
 const config = require('./config');
 const logging = require('./lib/logging');
 const router = require('./lib/router');
-const auth = require('./lib/auth');
 
 // Start the server
 let app = express();
@@ -13,8 +12,6 @@ router.use(function(req, res, next) {
   res.header('Cache-Control', 'no-cache');
   next();
 });
-
-app.use(auth.requireRemoteUser);
 
 if (logging.requestLogger) {
   app.use(logging.requestLogger);
