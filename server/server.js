@@ -9,6 +9,11 @@ const auth = require('./lib/auth');
 // Start the server
 let app = express();
 
+router.use(function(req, res, next) {
+  res.header('Cache-Control', 'no-cache');
+  next();
+});
+
 app.use(auth.requireRemoteUser);
 
 if (logging.requestLogger) {
@@ -22,7 +27,6 @@ app.use(logging.errorLogger);
 app.use(function(err, req, res, next) {
   /*jshint unused: vars */
   res.status(500);
-  res.header('Cache-Control', 'max-age=0');
   res.send({ errors: [{ status: '500', title: 'Internal server error' }] });
 });
 
