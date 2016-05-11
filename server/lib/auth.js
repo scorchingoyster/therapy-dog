@@ -1,10 +1,17 @@
 'use strict';
 
-exports.requireRemoteUser = function(req, res, next) {
-  let user = req.headers['remote_user'];
+exports.getRemoteUser = function(req, res, next) {
+  let remoteUser = req.headers['remote_user'];
 
-  if (user) {
-    req.user = user;
+  if (remoteUser) {
+    req.remoteUser = remoteUser;
+  }
+  
+  next();
+};
+
+exports.requireRemoteUser = function(req, res, next) {
+  if (req.remoteUser) {
     next();
   } else {
     res.status(401);

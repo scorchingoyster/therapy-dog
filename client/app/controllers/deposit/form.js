@@ -10,10 +10,10 @@ export default Ember.Controller.extend({
       return false;
     }
     
-    let model = this.get('model');
+    let root = this.get('model.entry');
     let firstBadEntry;
     
-    model.forEach(function(entry) {
+    root.forEach(function(entry) {
       if (entry.get("invalid") && !firstBadEntry) {
         firstBadEntry = entry;
       }
@@ -21,21 +21,21 @@ export default Ember.Controller.extend({
     
     if (firstBadEntry) {
       this.get('entryEvents').trigger('focus', firstBadEntry);
-      this.set('model.hasInvalidEntries', true);
+      this.set('model.entry.hasInvalidEntries', true);
       return false;
     } else {
-      this.set('model.hasInvalidEntries', false);
+      this.set('model.entry.hasInvalidEntries', false);
       return true;
     }
   },
   
   actions: {
     reset() {
-      this.set('model', ObjectEntry.create({ block: this.get('model.block') }));
+      this.set('model.entry', ObjectEntry.create({ block: this.get('model.form') }));
     },
     
     dump() {
-      console.log(JSON.stringify(this.get('model').flatten()));
+      console.log(JSON.stringify(this.get('model.entry').flatten()));
     },
     
     deposit() {

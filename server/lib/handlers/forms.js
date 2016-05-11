@@ -21,10 +21,19 @@ exports.index = function(req, res, next) {
 exports.show = function(req, res, next) {
   Form.findById(req.params.id)
   .then(function(form) {
-    return form.getResourceObject({ children: true });
+    if (req.remoteUser) {
+      return form.getResourceObject({ children: true });
+    } else {
+      return form.getResourceObject();
+    }
   })
   .then(function(resourceObject) {
-    res.send({ data: resourceObject });
+    res.send({
+      data: resourceObject,
+      meta: {
+        authorized: !!req.remoteUser
+      }
+    });
   })
   .catch(function(err) {
     if (err instanceof FormNotFoundError) {
