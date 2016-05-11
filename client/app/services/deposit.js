@@ -55,7 +55,7 @@ export default Ember.Service.extend({
       values: deposit.get('entry').flatten()
     };
   
-    return new Ember.RSVP.Promise(function(resolve, reject) {
+    return new Ember.RSVP.Promise(function(resolve) {
       let headers = {};
       if (ENV.APP.spoofRemoteUser) {
         headers['remote_user'] = ENV.APP.spoofRemoteUser;
