@@ -6,7 +6,7 @@ exports.getRemoteUser = function(req, res, next) {
   if (remoteUser) {
     req.remoteUser = remoteUser;
   }
-  
+
   next();
 };
 

@@ -1,6 +1,4 @@
 import Ember from 'ember';
-import ENV from 'therapy-dog/config/environment';
-/* globals $ */
 
 export default Ember.Route.extend({
   deposit: Ember.inject.service(),
