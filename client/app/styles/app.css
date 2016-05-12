@@ -20,7 +20,7 @@ html, body {
 
 #header {
   height: 95px;
-  width: 100%;
+  float: none;
 }
 
 #body {
