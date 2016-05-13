@@ -34,13 +34,18 @@ export default Ember.Service.extend({
           description: response.data.attributes.description,
           children: deserializeChildren(response.data.attributes.children)
         });
-      
+        
         let deposit = Ember.Object.create({
           authorized: response.meta.authorized,
+          mail: response.meta.mail,
           form: form,
           entry: ObjectEntry.create({ block: form })
         });
-      
+        
+        if (ENV.APP.spoofMail) {
+          deposit.set('mail', ENV.APP.spoofMail);
+        }
+        
         resolve(deposit);
       })
       .fail(function(jqXHR, textStatus, errorThrown) {
