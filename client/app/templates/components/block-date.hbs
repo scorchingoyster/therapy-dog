@@ -1,5 +1,15 @@
 <label for={{object-guid entry}}>{{entry.block.label}}</label>
 
-{{input type="text" value=entry.value class="datepicker" placeholder="YYYY-MM-DD" id=(object-guid entry)}}
+{{#if (eq precision "day")}}
+  {{#if supportsDateInput}}
+    {{input type="date" value=entry.value id=(object-guid entry)}}
+  {{else}}
+    {{input type="text" value=entry.value class="datepicker" placeholder="YYYY-MM-DD" id=(object-guid entry)}}
+  {{/if}}
+{{else if (eq precision "month")}}
+  {{month-input value=entry.value id=(object-guid entry)}}
+{{else if (eq precision "year")}}
+  {{input type="number" value=entry.value placeholder="YYYY" id=(object-guid entry)}}
+{{/if}}
 
 {{entry-error-messages entry=entry}}

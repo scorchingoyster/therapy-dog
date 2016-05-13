@@ -462,3 +462,11 @@ html, body {
   margin: 4px;
   flex: 0 0 auto;
 }
+
+
+/* date blocks */
+
+.block.date .month-input select,
+.block.date .month-input input {
+  display: inline;
+}

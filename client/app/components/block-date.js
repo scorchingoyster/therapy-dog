@@ -7,6 +7,21 @@ export default Ember.Component.extend(FocusEntryAction, {
   classNameBindings: ['required', 'invalid'],
   required: Ember.computed.alias('entry.required'),
   invalid: Ember.computed.alias('entry.invalid'),
+
+  supportsDateInput: Ember.computed(function() {
+    var test = document.createElement('input');
+    test.type = 'date';
+    return test.type === 'date';
+  }),
+
+  precision: Ember.computed('entry.block.precision', function() {
+    let precision = this.get('entry.block.precision');
+    if (Ember.isEmpty(precision)) {
+      return 'day';
+    } else {
+      return precision;
+    }
+  }),
   
   didInsertElement: function() {
     this._super(...arguments);
