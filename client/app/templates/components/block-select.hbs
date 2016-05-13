@@ -6,9 +6,9 @@
   {{/if}}
   {{#each entry.block.options as |option|}}
     {{#if option.value}}
-      <option selected={{if (eq entry.value option.value) "selected" ""}} value={{option.value}}>{{option.label}}</option>
+      <option selected={{if (eq entry.value option.value) "selected" ""}} value={{option.value}}>{{gsub-nbsp option.label}}</option>
     {{else}}
-      <option selected={{if (eq entry.value option) "selected" ""}}>{{option}}</option>
+      <option selected={{if (eq entry.value option) "selected" ""}}>{{gsub-nbsp option}}</option>
     {{/if}}
   {{/each}}
 </select>
