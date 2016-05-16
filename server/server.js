@@ -8,7 +8,7 @@ const router = require('./lib/router');
 // Start the server
 let app = express();
 
-router.use(function(req, res, next) {
+app.use(function(req, res, next) {
   res.header('Cache-Control', 'no-cache');
   next();
 });
