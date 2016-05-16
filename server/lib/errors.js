@@ -2,21 +2,13 @@
 
 const inherits = require('util').inherits;
 
-exports.FormNotFoundError = function(message, extra) {
+exports.ModelNotFoundError = function(message, extra) {
   Error.captureStackTrace(this, this.constructor);
   this.name = this.constructor.name;
   this.message = message;
   this.extra = extra;
 };
-inherits(exports.FormNotFoundError, Error);
-
-exports.VocabularyNotFoundError = function(message, extra) {
-  Error.captureStackTrace(this, this.constructor);
-  this.name = this.constructor.name;
-  this.message = message;
-  this.extra = extra;
-};
-inherits(exports.VocabularyNotFoundError, Error);
+inherits(exports.ModelNotFoundError, Error);
 
 exports.UploadNotFoundError = function(message, extra) {
   Error.captureStackTrace(this, this.constructor);

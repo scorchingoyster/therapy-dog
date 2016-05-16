@@ -1,34 +1,12 @@
 'use strict';
 
-const path = require('path');
-const fs = require('fs');
-const glob = require('glob');
 const typify = require('typify').create();
-const VocabularyNotFoundError = require('../errors').VocabularyNotFoundError;
-const logging = require('../logging');
+const findById = require('./utils').findById;
 const config = require('../../config');
 
 /**
   @module models
 */
-
-const VOCABULARIES = {};
-
-if (config.VOCABULARIES_DIRECTORY) {
-  glob(path.join(config.VOCABULARIES_DIRECTORY, '*.json'), function(err, filenames) {
-    filenames.forEach(function(filename) {
-      try {
-        let id = path.basename(filename, '.json');
-        let attributes = JSON.parse(fs.readFileSync(filename, 'utf8'));
-
-        VOCABULARIES[id] = new Vocabulary(id, attributes);
-      } catch (e) {
-        logging.error('Error loading vocabulary: ' + filename);
-        logging.error(e.stack);
-      }
-    });
-  });
-}
 
 // Define type aliases for checking attributes in the Vocabulary constructor.
 typify.alias('vocabulary_objects', '{ terms: array map, valueKey: string, labelKey: string }');
@@ -112,14 +90,7 @@ class Vocabulary {
     @return {Promise}
   */
   static findById(id) {
-    return new Promise(function(resolve, reject) {
-      let vocab = VOCABULARIES[id];
-      if (vocab) {
-        resolve(vocab);
-      } else {
-        reject(new VocabularyNotFoundError('Couldn\'t find vocabulary "' + id + '"', { id: id }));
-      }
-    });
+    return findById(config.VOCABULARIES_DIRECTORY, this, id);
   }
 }
 

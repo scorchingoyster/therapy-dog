@@ -1,37 +1,15 @@
 'use strict';
 
-const path = require('path');
-const fs = require('fs');
-const glob = require('glob');
 const typify = require('typify').create();
 const Upload = require('./upload');
 const Vocabulary = require('./vocabulary');
 const Arrow = require('../arrow');
-const FormNotFoundError = require('../errors').FormNotFoundError;
-const logging = require('../logging');
+const findById = require('./utils').findById;
 const config = require('../../config');
 
 /**
   @module models
 */
-
-const FORMS = {};
-
-if (config.FORMS_DIRECTORY) {
-  glob(path.join(config.FORMS_DIRECTORY, '*.json'), function(err, filenames) {
-    filenames.forEach(function(filename) {
-      try {
-        let id = path.basename(filename, '.json');
-        let attributes = JSON.parse(fs.readFileSync(filename, 'utf8'));
-
-        FORMS[id] = new Form(id, attributes);
-      } catch (e) {
-        logging.error('Error loading form: ' + filename);
-        logging.error(e.stack);
-      }
-    });
-  });
-}
 
 // Define type aliases for checking attributes in the Form constructor.
 typify.mutual({
@@ -321,21 +299,6 @@ class Form {
   }
 
   /**
-    Find all forms.
-
-    @method findAll
-    @static
-    @return {Promise}
-  */
-  static findAll() {
-    return new Promise(function(resolve) {
-      resolve(Object.keys(FORMS).map(function(id) {
-        return FORMS[id];
-      }));
-    });
-  }
-
-  /**
     Find the form with the given id.
 
     @method findById
@@ -344,14 +307,7 @@ class Form {
     @return {Promise}
   */
   static findById(id) {
-    return new Promise(function(resolve, reject) {
-      let form = FORMS[id];
-      if (form) {
-        resolve(form);
-      } else {
-        reject(new FormNotFoundError('Couldn\'t find form "' + id + '"', { id: id }));
-      }
-    });
+    return findById(config.FORMS_DIRECTORY, this, id);
   }
 }
 

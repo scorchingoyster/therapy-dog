@@ -2,22 +2,7 @@
 
 const Form = require('../models/form');
 const config = require('../../config');
-const FormNotFoundError = require('../errors').FormNotFoundError;
-
-exports.index = function(req, res, next) {
-  Form.findAll()
-  .then(function(forms) {
-    return Promise.all(forms.map(function(form) {
-      return form.getResourceObject();
-    }));
-  })
-  .then(function(data) {
-    res.send({ data: data });
-  })
-  .catch(function(err) {
-    next(err);
-  });
-};
+const ModelNotFoundError = require('../errors').ModelNotFoundError;
 
 exports.show = function(req, res, next) {
   Form.findById(req.params.id)
@@ -51,7 +36,7 @@ exports.show = function(req, res, next) {
     });
   })
   .catch(function(err) {
-    if (err instanceof FormNotFoundError) {
+    if (err instanceof ModelNotFoundError || err instanceof SyntaxError || err instanceof TypeError) {
       res.status(404).send({ errors: [{ status: '404', title: 'Not found' }] });
     } else {
       next(err);
