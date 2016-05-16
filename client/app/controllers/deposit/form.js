@@ -51,7 +51,7 @@ export default Ember.Controller.extend({
       if (this.validate()) {
         this.get('deposit').debug(this.get('model'))
         .then(function(mets) {
-          console.log(mets)
+          console.log(mets);
         });
       }
     }
