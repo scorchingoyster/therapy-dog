@@ -70,14 +70,24 @@ function generateAgreementFileItem(agreements, values) {
 
   let file = new File(contents, { mimetype: 'text/plain' });
 
-  return new Item([file], { type: 'File', label: 'agreements.txt' });
+  let xml = new XML({
+    type: 'acl:accessControl',
+    properties: {
+      'xmlns:acl': 'http://cdr.unc.edu/definitions/acl',
+      'acl:published': 'false'
+    },
+    children: []
+  });
+  let metadata = new Metadata(xml, { type: 'access-control' });
+
+  return new Item([file, metadata], { type: 'File', label: 'agreements.txt' });
 }
 
 /**
   Generate a bundle containing an 'Aggregate Work' item, which contains a main
-  file and optional supplemental files, each optionally with metadata. The
-  aggregate item is linked to the main item via the CDR defaultWebObject
-  relationship.
+  file and optional supplemental files, each optionally with metadata, and an
+  optional agreement record. The aggregate item is linked to the main item via
+  the CDR defaultWebObject relationship.
 
   @method generateAggregate
   @param {Form} form

@@ -308,7 +308,7 @@ describe('Bundle generation', function() {
     it('should generate the correct number of items, files, metadata', function() {
       assert.equal(bundle.items.length, 3);
       assert.equal(bundle.files.length, 2);
-      assert.equal(bundle.metadata.length, 0);
+      assert.equal(bundle.metadata.length, 1);
     });
 
     it('should generate a file containing a record of the agreements', function() {
@@ -317,6 +317,13 @@ describe('Bundle generation', function() {
       let file = item.children.find(i => i instanceof File);
 
       assert.equal(file.contents.toString(), 'Deposit Agreement\nhttp://example.com/agreement\nI agree to the terms.\n');
+    });
+
+    it('should generate access control metadata for the agreement record', function() {
+      let item = bundle.items.find(i => i.label === 'agreements.txt');
+      let metadata = item.children.find(i => i instanceof Metadata);
+
+      assert.equal(metadata.type, 'access-control');
     });
   });
 });
