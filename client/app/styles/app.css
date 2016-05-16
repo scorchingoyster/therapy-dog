@@ -90,15 +90,10 @@ html, body {
 #debug {
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   background: yellow;
   padding: 8px;
   z-index: 1;
-  opacity: 0.3;
-}
-
-#debug:hover {
-  opacity: 1.0;
 }
 
 #debug button {

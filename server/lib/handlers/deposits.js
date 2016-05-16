@@ -7,14 +7,12 @@ const submitZip = require('../deposit/submit-zip');
 const logging = require('../logging');
 const SwordError = require('../errors').SwordError;
 
-exports.create = function(req, res, next) {
-  let deposit = req.body;
+function processDeposit(deposit) {
   let form, values, bundle;
 
-  Form.findById(deposit.form)
+  return Form.findById(deposit.form)
   .then(function(f) {
     form = f;
-
     return form.transformValues(deposit.values);
   })
   .then(function(v) {
@@ -42,10 +40,32 @@ exports.create = function(req, res, next) {
       }, {})
     });
 
-    return submitZip(form, submission);
+    return {
+      form: form,
+      values: values,
+      bundle: bundle,
+      submission: submission
+    };
+  });
+}
+
+exports.debug = function(req, res, next) {
+  processDeposit(req.body)
+  .then(function(results) {
+    res.send(results.submission['mets.xml']).end();
   })
-  .then(function(result) {
-    res.send(result).end();
+  .catch(function(err) {
+    next(err);
+  });
+};
+
+exports.create = function(req, res, next) {
+  processDeposit(req.body)
+  .then(function(results) {
+    return submitZip(results.form, results.submission);
+  })
+  .then(function(response) {
+    res.send(response).end();
   })
   .catch(function(err) {
     if (err instanceof SwordError) {

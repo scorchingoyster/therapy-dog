@@ -4,6 +4,7 @@ import ObjectEntry from 'therapy-dog/utils/object-entry';
 export default Ember.Controller.extend({
   entryEvents: Ember.inject.service(),
   uploader: Ember.inject.service(),
+  deposit: Ember.inject.service(),
   
   validate() {
     if (this.get('uploader.anyLoading')) {
@@ -44,6 +45,15 @@ export default Ember.Controller.extend({
     
     validate() {
       this.validate();
+    },
+    
+    debugDeposit() {
+      if (this.validate()) {
+        this.get('deposit').debug(this.get('model'))
+        .then(function(mets) {
+          console.log(mets)
+        });
+      }
     }
   }
 });

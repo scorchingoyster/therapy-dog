@@ -38,6 +38,7 @@ export default Ember.Service.extend({
         let deposit = Ember.Object.create({
           authorized: response.meta.authorized,
           mail: response.meta.mail,
+          debug: response.meta.debug,
           form: form,
           entry: ObjectEntry.create({ block: form })
         });
@@ -77,6 +78,33 @@ export default Ember.Service.extend({
       })
       .fail(function() {
         resolve({ status: 'ERROR' });
+      });
+    });
+  },
+  
+  debug(deposit) {
+    let payload = {
+      form: deposit.get('form.id'),
+      values: deposit.get('entry').flatten()
+    };
+    
+    return new Ember.RSVP.Promise(function(resolve, reject) {
+      let headers = {};
+      if (ENV.APP.spoofRemoteUser) {
+        headers['remote_user'] = ENV.APP.spoofRemoteUser;
+      }
+    
+      $.ajax('/' + ENV.APP.apiNamespace + '/deposits/debug', {
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(payload),
+        headers
+      })
+      .done(function(response) {
+        resolve(response);
+      })
+      .fail(function() {
+        reject();
       });
     });
   }
