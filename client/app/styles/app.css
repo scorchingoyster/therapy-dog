@@ -25,6 +25,8 @@ html, body {
 
 #body {
   padding-bottom: 57px;
+  width: 960px;
+  margin: 0 auto;
 }
 
 #footer {
