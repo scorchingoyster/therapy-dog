@@ -50,7 +50,7 @@ export default Ember.Service.extend({
         resolve(deposit);
       })
       .fail(function(jqXHR, textStatus, errorThrown) {
-        reject(errorThrown);
+        reject(new Error(errorThrown));
       });
     });
   },
