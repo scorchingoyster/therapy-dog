@@ -181,6 +181,11 @@ html, body {
   padding: 0;
 }
 
+.choose-file-wrapper.file-input-focus {
+  outline: #000 dotted 1px;
+  outline: -webkit-focus-ring-color auto 5px;
+}
+
 
 /* blocks */
 

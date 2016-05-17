@@ -84,6 +84,14 @@ export default Ember.Component.extend(FocusEntryAction, {
 
     focusEntry() {
       this.$('input').focus();
+    },
+    
+    focusInput() {
+      this.$('.choose-file-wrapper').addClass('file-input-focus');
+    },
+    
+    blurInput() {
+      this.$('.choose-file-wrapper').removeClass('file-input-focus');
     }
   }
 });
