@@ -44,9 +44,57 @@ export default Ember.Component.extend(FocusEntryAction, {
       } else {
         this.set('entry.value', response);
       }
+
+      if (!this.get('isMultiple')) {
+        Ember.run.scheduleOnce('afterRender', this, function() {
+          this.$('button').focus();
+        });
+      }
+    });
+
+    upload.on('error', () => {
+      if (!this.get('isMultiple')) {
+        Ember.run.scheduleOnce('afterRender', this, function() {
+          this.$('button').focus();
+        });
+      }
     });
 
     this.get('uploads').pushObject(upload);
+
+    if (!this.get('isMultiple')) {
+      Ember.run.scheduleOnce('afterRender', this, function() {
+        this.$('button').focus();
+      });
+    }
+  },
+  
+  removeUpload(upload) {
+    let uploads = this.get('uploads');
+    let removedIndex = uploads.indexOf(upload);
+    uploads.removeObject(upload);
+
+    if (!this.get('isMultiple')) {
+      Ember.run.scheduleOnce('afterRender', this, function() {
+        this.$('input[type="file"]').focus();
+      });
+    } else {
+      let focusIndex = -1;
+
+      if (removedIndex - 1 >= 0) {
+        focusIndex = removedIndex - 1;
+      } else if (removedIndex < uploads.length) {
+        focusIndex = removedIndex;
+      }
+      
+      Ember.run.next(this, function() {
+        if (focusIndex === -1) {
+          this.$('input').focus();
+        } else {
+          this.$('.upload').eq(focusIndex).find('button, input').eq(0).focus();
+        }
+      });
+    }
   },
 
   actions: {
@@ -65,7 +113,7 @@ export default Ember.Component.extend(FocusEntryAction, {
 
     cancel(upload) {
       upload.cancel();
-      this.get("uploads").removeObject(upload);
+      this.removeUpload(upload);
     },
 
     retry(upload) {
@@ -79,7 +127,7 @@ export default Ember.Component.extend(FocusEntryAction, {
         this.set('entry.value', null);
       }
 
-      this.get('uploads').removeObject(upload);
+      this.removeUpload(upload);
     },
 
     focusEntry() {
