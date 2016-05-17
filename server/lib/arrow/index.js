@@ -50,7 +50,7 @@ class Arrow {
     Evaluate this template using the context.
 
     @method evaluate
-    @param {Object} result
+    @param {Object} context
     @return {any}
   */
   evaluate(context) {

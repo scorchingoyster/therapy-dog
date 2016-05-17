@@ -56,10 +56,6 @@ function evaluateStructure(expression, context) {
 }
 
 function evaluateEach(expression, context) {
-  if (expression.items.type !== 'lookup') {
-    throw new Error('"items" property for an "each" expression should be a "lookup" expression, but was: ' + expression.items.type);
-  }
-
   let items = evaluateExpression(expression.items, context);
 
   // unwrap
@@ -92,9 +88,6 @@ function evaluateEach(expression, context) {
 }
 
 function testPresent(predicate, context) {
-  if (predicate.value.type !== 'lookup') {
-    throw new Error('value for the "present" predicate should be a "lookup" expression, but was: ' + predicate.value.type);
-  }
   return !isEmpty(evaluateExpression(predicate.value, context).value);
 }
 
@@ -121,10 +114,6 @@ function evaluateChoose(expression, context) {
 }
 
 function evaluateArrow(expression, context) {
-  if (expression.items.type !== 'lookup') {
-    throw new Error('"items" property for an "arrow" expression should be a "lookup" expression, but was: ' + expression.items.type);
-  }
-
   let items = evaluateExpression(expression.items, context);
 
   // unwrap
@@ -146,10 +135,6 @@ function evaluateArrow(expression, context) {
   return items.reduce(function(body, item) {
     let result = item;
     for (let i = expression.target.length - 1; i >= 0; i--) {
-      if (expression.target[i].type !== 'structure') {
-        throw new Error('"target" item for an "arrow" expression should be a "structure" expression, but was: ' + expression.target[i].type);
-      }
-
       let structure = evaluateStructure(expression.target[i], item);
       structure.children = [result];
 
