@@ -2,6 +2,7 @@
 
 const assert = require('assert');
 const Form = require('../../lib/models/form');
+const ModelNotFoundError = require('../../lib/errors').ModelNotFoundError;
 
 describe('Form', function() {
   it('can find a form by id', function() {
@@ -11,10 +12,15 @@ describe('Form', function() {
     });
   });
 
-  it('can find all forms', function() {
-    return Form.findAll().then(function(forms) {
-      assert.ok(forms.some(f => f.id === 'article'), 'should find the "article" form');
-      assert.ok(forms.some(f => f.id === 'poster'), 'should find the "poster" form');
+  it('rejects with ModelNotFoundError when it can\'t find a form', function() {
+    return Form.findById('qwerty')
+    .then(function() {
+      assert(false);
+    })
+    .catch(function(error) {
+      assert.ok(error instanceof ModelNotFoundError, 'error should be an instance of ModelNotFoundError');
+      assert.equal(error.extra.model, Form);
+      assert.equal(error.extra.id, 'qwerty');
     });
   });
 
