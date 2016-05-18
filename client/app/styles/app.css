@@ -246,6 +246,11 @@ html, body {
   content: " *";
 }
 
+.block p.note {
+  font-size: 14px;
+  margin: 8px 0;
+}
+
 
 /* text blocks */
 

@@ -1,5 +1,9 @@
 <label for={{object-guid entry}}>{{entry.block.label}}</label>
 
+{{#if entry.block.note}}
+  <p class="note">{{sanitize-html entry.block.note}}</p>
+{{/if}}
+
 {{#if (eq precision "day")}}
   {{#if supportsDateInput}}
     {{input type="date" value=entry.value id=(object-guid entry)}}
