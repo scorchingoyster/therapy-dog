@@ -3,7 +3,7 @@
   "scripts": {
     "lint": "jshint --exclude ./node_modules,lib/arrow/parser.js .",
     "style": "jscs .",
-    "test": "NODE_ENV=test mocha --reporter dot \"test/**/*-test.js\"",
+    "test": "NODE_ENV=test mocha \"test/**/*-test.js\"",
     "start": "node server.js"
   },
   "dependencies": {
