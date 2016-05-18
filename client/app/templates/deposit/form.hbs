@@ -8,7 +8,7 @@
 {{/if}}
 
 <div id="form" class={{if model.entry.hasInvalidEntries "invalid" ""}}>
-  <p>{{sanitize-html model.form.description}}</p>
+  <p class="description">{{sanitize-html model.form.description}}</p>
   <p>Fields marked with <span class="required-example">*</span> are required.</p>
   
   {{object-entry entry=model.entry}}
