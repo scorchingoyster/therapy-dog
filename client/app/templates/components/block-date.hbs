@@ -9,7 +9,7 @@
 {{else if (eq precision "month")}}
   {{month-input value=entry.value id=(object-guid entry)}}
 {{else if (eq precision "year")}}
-  {{input type="number" value=entry.value placeholder="YYYY" id=(object-guid entry)}}
+  {{input value=entry.value placeholder="YYYY" id=(object-guid entry)}}
 {{/if}}
 
 {{entry-error-messages entry=entry}}
