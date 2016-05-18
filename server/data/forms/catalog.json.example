@@ -1,0 +1,356 @@
+{
+  "destination": "uuid:1234",
+  
+  "title": "Catalog",
+  
+  "description": "This is a demo of the various parts of forms. <a href=\"http://example.com\">This is an example link.</a>",
+  
+  "children": [
+    {
+      "type": "text",
+      "key": "text",
+      "label": "Text"
+    },
+    
+    {
+      "type": "text",
+      "key": "text-placeholder",
+      "label": "Text with Placeholder",
+      "placeholder": "This is the placeholder"
+    },
+    
+    {
+      "type": "text",
+      "key": "text-required",
+      "label": "Required Text",
+      "required": true
+    },
+    
+    {
+      "type": "text",
+      "key": "text-options",
+      "label": "Text with Options",
+      "options": "lorem"
+    },
+
+    {
+      "type": "text",
+      "key": "text-long-label",
+      "label": "Text with long label. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    
+    {
+      "type": "text",
+      "key": "text-with-note",
+      "label": "Text with Note",
+      "note": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    
+    {
+      "type": "text",
+      "key": "text-paragraph",
+      "label": "Paragraph Text",
+      "size": "paragraph"
+    },
+    
+    {
+      "type": "text",
+      "key": "text-paragraph-with-note",
+      "label": "Paragraph Text with Note",
+      "size": "paragraph",
+      "note": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    
+    {
+      "type": "text",
+      "key": "text-paragraph-placeholder",
+      "label": "Paragraph Text with Placeholder",
+      "size": "paragraph",
+      "placeholder": "This is the placeholder"
+    },
+    
+    {
+      "type": "text",
+      "key": "text-paragraph-required",
+      "label": "Required Paragraph Text",
+      "size": "paragraph",
+      "required": true
+    },
+    
+    {
+      "type": "select",
+      "key": "select",
+      "label": "Select",
+      "options": "lorem"
+    },
+    
+    {
+      "type": "select",
+      "key": "select-note",
+      "label": "Select with Note",
+      "options": "lorem",
+      "note": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    
+    {
+      "type": "select",
+      "key": "select-language",
+      "label": "Select Language",
+      "options": "language"
+    },
+    
+    {
+      "type": "select",
+      "key": "select-required",
+      "label": "Required Select",
+      "options": "lorem",
+      "required": true
+    },
+    
+    {
+      "type": "select",
+      "key": "select-allow-blank",
+      "label": "Select Allowing Blank",
+      "options": "lorem",
+      "allowBlank": true
+    },
+    
+    {
+      "type": "radio",
+      "key": "radio",
+      "label": "Radio",
+      "options": "lorem"
+    },
+    
+    {
+      "type": "radio",
+      "key": "radio-with-note",
+      "label": "Radio with Note",
+      "options": "lorem",
+      "note": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    
+    {
+      "type": "checkboxes",
+      "key": "checkboxes",
+      "label": "Checkboxes",
+      "options": "lorem"
+    },
+    
+    {
+      "type": "checkboxes",
+      "key": "checkboxes-with-note",
+      "label": "Checkboxes with Note",
+      "options": "lorem",
+      "note": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    
+    {
+      "type": "checkboxes",
+      "key": "checkboxes-required",
+      "label": "Required Checkboxes",
+      "options": "lorem",
+      "required": true
+    },
+    
+    {
+      "type": "file",
+      "key": "file",
+      "label": "File"
+    },
+    
+    {
+      "type": "file",
+      "key": "file-with-note",
+      "label": "File with Note",
+      "note": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    
+    {
+      "type": "file",
+      "key": "file-required",
+      "label": "Required File",
+      "required": true
+    },
+    
+    {
+      "type": "file",
+      "key": "file-multiple",
+      "label": "Multiple Files",
+      "multiple": true
+    },
+    
+    {
+      "type": "date",
+      "key": "date",
+      "label": "Date"
+    },
+    
+    {
+      "type": "date",
+      "key": "date-with-note",
+      "label": "Date with Note",
+      "note": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    
+    {
+      "type": "date",
+      "key": "date-required",
+      "label": "Required Date",
+      "required": true
+    },
+    
+    {
+      "type": "date",
+      "key": "date-month",
+      "label": "Date with Month Precision",
+      "precision": "month"
+    },
+    
+    {
+      "type": "date",
+      "key": "date-year",
+      "label": "Date with Year Precision",
+      "precision": "year"
+    },
+    
+    {
+      "type": "agreement",
+      "key": "agreement",
+      "name": "Agreement",
+      "uri": "http://example.com/agreement",
+      "prompt": "I agree to the <a href=\"http://example.com/agreement\">Agreement</a>. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    
+    {
+      "type": "section",
+      "key": "section",
+      "label": "Section",
+      "children": [
+        {
+          "type": "text",
+          "key": "text",
+          "label": "Text"
+        },
+        
+        {
+          "type": "text",
+          "key": "text-required",
+          "label": "Required Text",
+          "required": true
+        },
+        
+        {
+          "type": "text",
+          "key": "text-long-label",
+          "label": "Text with long label. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        },
+    
+        {
+          "type": "text",
+          "key": "text-with-note",
+          "label": "Text with Note",
+          "note": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        },
+        
+        {
+          "type": "select",
+          "key": "select",
+          "label": "Select",
+          "options": "lorem"
+        },
+    
+        {
+          "type": "select",
+          "key": "select-language",
+          "label": "Select Language",
+          "options": "language"
+        },
+        
+        {
+          "type": "radio",
+          "key": "radio",
+          "label": "Radio",
+          "options": "lorem"
+        },
+        
+        {
+          "type": "checkboxes",
+          "key": "checkboxes",
+          "label": "Checkboxes",
+          "options": "lorem"
+        },
+        
+        {
+          "type": "date",
+          "key": "date",
+          "label": "Date"
+        },
+        
+        {
+          "type": "file",
+          "key": "file",
+          "label": "File"
+        },
+        
+        {
+          "type": "agreement",
+          "key": "agreement",
+          "name": "Agreement",
+          "uri": "http://example.com/agreement",
+          "prompt": "I agree to the <a href=\"http://example.com/agreement\">Agreement</a>. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        }
+      ]
+    },
+    
+    {
+      "type": "section",
+      "key": "section-repeat",
+      "label": "Repeating Section",
+      "repeat": true,
+      "children": [
+        {
+          "type": "text",
+          "key": "text",
+          "label": "Text"
+        },
+        
+        {
+          "type": "select",
+          "key": "select",
+          "label": "Select",
+          "options": "lorem"
+        },
+        
+        {
+          "type": "radio",
+          "key": "radio",
+          "label": "Radio",
+          "options": "lorem"
+        }
+      ]
+    },
+    
+    {
+      "type": "section",
+      "key": "section-long-label",
+      "label": "Section with long label. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "children": [
+        {
+          "type": "text",
+          "key": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  
+  "bundle": {
+    "type": "single",
+    "file": {
+      "upload": "file"
+    }
+  },
+  
+  "metadata": []
+}
