@@ -199,28 +199,34 @@
             },
             "body": [
               {
-                "type": "arrow",
-                "items": { "type": "lookup", "path": ["author", "first"] },
-                "target": [
+                "type": "structure",
+                "name": "name",
+                "children": [
                   {
-                    "type": "structure",
-                    "name": "namePart",
-                    "properties": {
-                      "type": { "type": "string", "value": "given" }
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "arrow",
-                "items": { "type": "lookup", "path": ["author", "last"] },
-                "target": [
+                    "type": "arrow",
+                    "items": { "type": "lookup", "path": ["author", "first"] },
+                    "target": [
+                      {
+                        "type": "structure",
+                        "name": "namePart",
+                        "properties": {
+                          "type": { "type": "string", "value": "given" }
+                        }
+                      }
+                    ]
+                  },
                   {
-                    "type": "structure",
-                    "name": "namePart",
-                    "properties": {
-                      "type": { "type": "string", "value": "family" }
-                    }
+                    "type": "arrow",
+                    "items": { "type": "lookup", "path": ["author", "last"] },
+                    "target": [
+                      {
+                        "type": "structure",
+                        "name": "namePart",
+                        "properties": {
+                          "type": { "type": "string", "value": "family" }
+                        }
+                      }
+                    ]
                   }
                 ]
               }
