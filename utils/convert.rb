@@ -120,7 +120,6 @@ def convert_mapped_elements(metadata_block, identifiers, type, path)
       type: "structure",
       name: name,
       properties: properties,
-      compact: true,
       children: convert_child_elements(mapped_element, identifiers, type, path) + convert_attributes(mapped_element, identifiers, type, path)
     }
   end.compact
@@ -163,7 +162,6 @@ def convert_mapping(doc, identifiers, type)
       type: "structure",
       name: "mods",
       properties: { xmlns: { type: "string", value: "http://www.loc.gov/mods/v3" } },
-      compact: true,
       children: main_body
     }
   else
@@ -359,7 +357,6 @@ def convert_form(xml, form_id)
       template: {
         type: "structure",
         name: "mods",
-        compact: true,
         properties: {
           xmlns: { type: "string", value: "http://www.loc.gov/mods/v3" }
         },

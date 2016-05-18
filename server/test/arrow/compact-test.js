@@ -8,7 +8,6 @@ describe('Compact', function() {
     let template = new Arrow({
       type: 'structure',
       name: 'mods',
-      compact: true,
       children: [
         {
           type: 'structure',
@@ -45,7 +44,7 @@ describe('Compact', function() {
       deepEqual(template.evaluate(context), expected);
     });
 
-    it('should consider empty strings absent data', function() {
+    it('should consider empty context strings absent data', function() {
       let context = { pubdate: '', version: '' };
 
       let expected = {
@@ -72,11 +71,6 @@ describe('Compact', function() {
                 type: 'dateIssued',
                 properties: {},
                 children: ['2016']
-              },
-              {
-                type: 'edition',
-                properties: {},
-                children: []
               }
             ]
           }
@@ -91,12 +85,10 @@ describe('Compact', function() {
     let template = new Arrow({
       type: 'structure',
       name: 'mods',
-      compact: true,
       children: [
         {
           type: 'structure',
           name: 'originInfo',
-          compact: true,
           children: [
             {
               type: 'structure',
@@ -124,7 +116,7 @@ describe('Compact', function() {
       ]
     });
 
-    it('should compact only deeper structures if one of their descendant lookups is present', function() {
+    it('should not remove a structure containing other structures where some descendant lookups are present and some are absent', function() {
       let context = { pubdate: '2016' };
 
       let expected = {
@@ -153,7 +145,7 @@ describe('Compact', function() {
       deepEqual(template.evaluate(context), expected);
     });
 
-    it('should compact the shallow structure if none of its descendant lookups are present', function() {
+    it('should remove a structure containing other structures if none of their descendant lookups are present', function() {
       let context = {};
 
       let expected = {
@@ -170,7 +162,6 @@ describe('Compact', function() {
     let template = new Arrow({
       type: 'structure',
       name: 'mods',
-      compact: true,
       children: [
         {
           type: 'structure',
@@ -219,7 +210,6 @@ describe('Compact', function() {
     let template = new Arrow({
       type: 'structure',
       name: 'mods',
-      compact: true,
       children: [
         {
           type: 'structure',
@@ -241,6 +231,51 @@ describe('Compact', function() {
           type: 'accessCondition',
           properties: {},
           children: ['Some license...']
+        }
+      ]
+    };
+
+    deepEqual(template.evaluate(context), expected);
+  });
+
+  it('should not remove structures marked keep, even if they contain absent data', function() {
+    let template = new Arrow({
+      type: 'structure',
+      name: 'mods',
+      children: [
+        {
+          type: 'structure',
+          name: 'originInfo',
+          children: [
+            {
+              type: 'structure',
+              name: 'dateIssued',
+              keep: true,
+              children: [
+                { type: 'lookup', path: ['pubdate'] }
+              ]
+            }
+          ]
+        }
+      ]
+    });
+
+    let context = {};
+
+    let expected = {
+      type: 'mods',
+      properties: {},
+      children: [
+        {
+          type: 'originInfo',
+          properties: {},
+          children: [
+            {
+              type: 'dateIssued',
+              properties: {},
+              children: []
+            }
+          ]
         }
       ]
     };
