@@ -48,10 +48,6 @@ function evaluateStructure(expression, context) {
     structure.keep = expression.keep;
   }
 
-  if ('compact' in expression) {
-    structure.compact = expression.compact;
-  }
-
   return structure;
 }
 

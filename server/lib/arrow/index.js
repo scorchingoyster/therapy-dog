@@ -12,7 +12,7 @@ const flatten = require('./flatten');
 typify.mutual({
   'expression_string': '{ type: "string", value: string }',
   'expression_lookup': '{ type: "lookup", path: array string }',
-  'expression_structure': '{ type: "structure", compact: boolean?, name: string, properties: (map (expression_string | expression_lookup))?, children: (array expression)? }',
+  'expression_structure': '{ type: "structure", keep: boolean?, name: string, properties: (map (expression_string | expression_lookup))?, children: (array expression)? }',
   'expression_each': '{ type: "each", items: expression_lookup, locals: map string, body: array expression }',
   'expression_present': '{ name: "present", value: expression_lookup }',
   'expression_predicate': 'expression_present',

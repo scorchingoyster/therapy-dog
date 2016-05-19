@@ -177,7 +177,6 @@
       "template": {
         "type": "structure",
         "name": "mods",
-        "compact": true,
         "properties": {
           "xmlns": { "type": "string", "value": "http://www.loc.gov/mods/v3" }
         },

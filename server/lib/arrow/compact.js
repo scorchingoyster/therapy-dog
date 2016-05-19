@@ -28,11 +28,16 @@ function markNode(node) {
       return Object.assign({}, result, { [key]: markNode(node.properties[key]) });
     }, {});
 
-    // If a structure has no children or properties, it is marked literal, so use 'literal' as an initial value with reduce.
-    let presence = combinePresence(
-      children.map(c => c.presence).reduce(combinePresence, 'literal'),
-      Object.keys(properties).map(k => properties[k].presence).reduce(combinePresence, 'literal')
-    );
+    let presence;
+    if (node.keep) {
+      presence = 'present';
+    } else {
+      // If a structure has no children or properties, it is marked literal, so use 'literal' as an initial value with reduce.
+      presence = combinePresence(
+        children.map(c => c.presence).reduce(combinePresence, 'literal'),
+        Object.keys(properties).map(k => properties[k].presence).reduce(combinePresence, 'literal')
+      );
+    }
 
     return Object.assign({}, node, { children, properties, presence });
   } else {
@@ -54,15 +59,11 @@ function compactBody(body) {
   }, []);
 }
 
-// Compact the result of the template. If a structure node has the 'compact' property set to a truthy value, remove any nodes with a 'presence' property of 'absent'.
+// Compact the result of the template. Remove any nodes with a 'presence' property of 'absent'.
 
 function compactNode(node) {
   if (node.type === 'structure') {
-    if (node.compact) {
-      return Object.assign({}, node, { children: compactBody(node.children) });
-    } else {
-      return Object.assign({}, node, { children: node.children.map(compactNode) });
-    }
+    return Object.assign({}, node, { children: compactBody(node.children) });
   } else {
     return node;
   }
