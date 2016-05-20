@@ -276,7 +276,7 @@ def convert_form(xml, form_id)
           field[:type] = "select"
           field[:options] = port.xpath("validValues").map { |v| v.text }
         elsif port["xmi:type"] == "walk:EmailInputField" || port["xsi:type"] == "walk:EmailInputField"
-          field[:type] = "text"
+          field[:type] = "email"
         elsif port["xmi:type"] == "walk:TextInputField" || port["xsi:type"] == "walk:TextInputField"
           field[:type] = "text"
           
