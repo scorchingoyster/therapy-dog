@@ -195,6 +195,19 @@ def convert_form(xml, form_id)
   output[:destination] = form["depositContainerId"]
   
   
+  # Contact
+  
+  contact_name = form["contactName"] || ""
+  contact_email = form["contactEmail"] || ""
+  
+  if contact_name !~ /^\s*$/ && contact_email !~ /^\s*$/
+    output[:contact] = {
+      name: contact_name,
+      email: contact_email
+    }
+  end
+  
+  
   # Form fields
 
   output[:children] = []
