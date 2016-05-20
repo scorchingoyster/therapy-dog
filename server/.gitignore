@@ -13,3 +13,4 @@ node_modules/nodemon
 node_modules/xmldom
 node_modules/xpath
 node_modules/nock
+node_modules/node-mocks-http
