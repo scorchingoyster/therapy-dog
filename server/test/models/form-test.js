@@ -3,6 +3,7 @@
 const assert = require('assert');
 const Form = require('../../lib/models/form');
 const ModelNotFoundError = require('../../lib/errors').ModelNotFoundError;
+const UploadNotFoundError = require('../../lib/errors').UploadNotFoundError;
 
 describe('Form', function() {
   it('can find a form by id', function() {
@@ -160,6 +161,22 @@ describe('Form', function() {
           uri: 'http://example.com/agreement',
           prompt: 'I agree to the terms in the agreement.'
         });
+      });
+    });
+
+    it('rejects when an upload is not found by the id given', function() {
+      return Form.findById('article')
+      .then(function(form) {
+        return form.transformValues({
+          title: 'Test',
+          article: { id: '71c5a4d1-eb04-4a25-9786-331c27c959d7' }
+        });
+      })
+      .then(function() {
+        assert(false, 'should reject');
+      })
+      .catch(function(error) {
+        assert.ok(error instanceof UploadNotFoundError, 'should reject with UploadNotFoundError');
       });
     });
   });
