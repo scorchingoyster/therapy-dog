@@ -12,5 +12,7 @@ module.exports = {
   VOCABULARIES_DIRECTORY: path.join(__dirname, '../test/fixtures/vocabularies'),
   UPLOADS_DIRECTORY: path.join(__dirname, '../test/fixtures/uploads'),
   ADMIN_CONTACT_NAME: 'Some Admin',
-  ADMIN_CONTACT_EMAIL: 'admin@example.com'
+  ADMIN_CONTACT_EMAIL: 'admin@example.com',
+  FROM_EMAIL: 'admin@example.com',
+  MAILER_CONNECTION_URL: 'stub'
 };

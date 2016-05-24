@@ -1,0 +1,20 @@
+<dl>
+  {{#each items as |item|}}
+    <dt>{{item.label}}</dt>
+    {{#if item.section}}
+      <dd>
+        {{#if item.repeat}}
+          <ul>
+            {{#each item.value as |value|}}
+              <li>{{> items-list-html items=value}}</li>
+            {{/each}}
+          </ul>
+        {{else}}
+          {{> items-list-html items=item.value}}
+        {{/if}}
+      </dd>
+    {{else}}
+      <dd>{{item.value}}</dd>
+    {{/if}}
+  {{/each}}
+</dl>

@@ -3,16 +3,29 @@
 const Form = require('../models/form');
 const generateBundle = require('../deposit/generate-bundle');
 const generateSubmission = require('../deposit/generate-submission');
+const collectNotificationRecipientEmails = require('../deposit/collect-notification-recipient-emails');
 const submitZip = require('../deposit/submit-zip');
+const mailer = require('../mailer');
 const logging = require('../logging');
 const SwordError = require('../errors').SwordError;
 
 function processDeposit(deposit) {
-  let form, values, bundle;
+  let form, values, summary, bundle, depositorEmail, notificationRecipientEmails;
+
+  depositorEmail = deposit.depositorEmail;
+  logging.debug('Saved depositor email for form "%s"', deposit.form, {
+    depositorEmail: depositorEmail
+  });
 
   return Form.findById(deposit.form)
   .then(function(f) {
     form = f;
+
+    return form.summarizeInput(deposit.values);
+  })
+  .then(function(s) {
+    summary = s;
+
     return form.transformValues(deposit.values);
   })
   .then(function(v) {
@@ -24,6 +37,11 @@ function processDeposit(deposit) {
     bundle = generateBundle(form, values);
     logging.debug('Generated bundle for form "%s"', deposit.form, {
       bundle: bundle
+    });
+
+    notificationRecipientEmails = collectNotificationRecipientEmails(form, values);
+    logging.debug('Collected notification recipient emails for form "%s"', deposit.form, {
+      notificationRecipientEmails: notificationRecipientEmails
     });
 
     return generateSubmission(form, bundle);
@@ -41,10 +59,13 @@ function processDeposit(deposit) {
     });
 
     return {
-      form: form,
-      values: values,
-      bundle: bundle,
-      submission: submission
+      form,
+      values,
+      summary,
+      bundle,
+      submission,
+      depositorEmail,
+      notificationRecipientEmails
     };
   });
 }
@@ -60,12 +81,27 @@ exports.debug = function(req, res, next) {
 };
 
 exports.create = function(req, res, next) {
+  let form, values, summary, submission, depositorEmail, notificationRecipientEmails;
+
   processDeposit(req.body)
   .then(function(results) {
-    return submitZip(results.form, results.submission);
+    form = results.form;
+    values = results.values;
+    summary = results.summary;
+    submission = results.submission;
+    depositorEmail = results.depositorEmail;
+    notificationRecipientEmails = results.notificationRecipientEmails;
+
+    return submitZip(form, submission, depositorEmail);
   })
   .then(function(response) {
-    res.send(response).end();
+    res.send(response);
+
+    mailer.sendDepositReceipt(form, summary, depositorEmail);
+
+    if (notificationRecipientEmails.length > 0) {
+      mailer.sendDepositNotification(form, summary, notificationRecipientEmails);
+    }
   })
   .catch(function(err) {
     if (err instanceof SwordError) {

@@ -1,0 +1,20 @@
+{
+  "authors": [
+    {
+      "first": "Some",
+      "last": "Author"
+    },
+    {
+      "first": "Another",
+      "last": "Author (No Relation)"
+    }
+  ],
+  "info": {
+    "title": "Test"
+  },
+  "language": "eng",
+  "roles": ["Student", "Staff"],
+  "review": "yes",
+  "license": "CC-BY",
+  "agreement": true
+}

@@ -3,6 +3,8 @@ import ENV from 'therapy-dog/config/environment';
 import ObjectEntry from 'therapy-dog/utils/object-entry';
 /* globals $ */
 
+const DEPOSITOR_EMAIL_KEY = 'virtual:depositor-email';
+
 function deserializeChildren(value) {
   if (Ember.isArray(value)) {
     return value.map(function(block) {
@@ -13,6 +15,19 @@ function deserializeChildren(value) {
       return object;
     });
   }
+}
+
+function buildPayload(deposit) {
+  let values = deposit.get('entry').flatten();
+  
+  let depositorEmail = values[DEPOSITOR_EMAIL_KEY];
+  delete values[DEPOSITOR_EMAIL_KEY];
+  
+  return {
+    form: deposit.get('form.id'),
+    values,
+    depositorEmail
+  };
 }
 
 export default Ember.Service.extend({
@@ -36,17 +51,31 @@ export default Ember.Service.extend({
           children: deserializeChildren(response.data.attributes.children)
         });
         
+        let depositorEmailBlock = Ember.Object.create({
+          type: 'email',
+          key: DEPOSITOR_EMAIL_KEY,
+          label: 'Depositor\'s Email Address',
+          required: true
+        });
+        
+        if (response.meta.mail) {
+          depositorEmailBlock.set('defaultValue', response.meta.mail);
+        }
+        
+        if (ENV.APP.spoofMail) {
+          depositorEmailBlock.set('defaultValue', ENV.APP.spoofMail);
+        }
+        
+        if (Ember.isArray(form.get('children'))) {
+          form.get('children').push(depositorEmailBlock);
+        }
+        
         let deposit = Ember.Object.create({
           authorized: response.meta.authorized,
-          mail: response.meta.mail,
           debug: response.meta.debug,
           form: form,
           entry: ObjectEntry.create({ block: form })
         });
-        
-        if (ENV.APP.spoofMail) {
-          deposit.set('mail', ENV.APP.spoofMail);
-        }
         
         resolve(deposit);
       })
@@ -57,11 +86,8 @@ export default Ember.Service.extend({
   },
   
   submit(deposit) {
-    let payload = {
-      form: deposit.get('form.id'),
-      values: deposit.get('entry').flatten()
-    };
-  
+    let payload = buildPayload(deposit);
+    
     return new Ember.RSVP.Promise(function(resolve) {
       let headers = {};
       if (ENV.APP.spoofRemoteUser) {
@@ -84,10 +110,7 @@ export default Ember.Service.extend({
   },
   
   debug(deposit) {
-    let payload = {
-      form: deposit.get('form.id'),
-      values: deposit.get('entry').flatten()
-    };
+    let payload = buildPayload(deposit);
     
     return new Ember.RSVP.Promise(function(resolve, reject) {
       let headers = {};

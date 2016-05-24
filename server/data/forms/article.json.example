@@ -6,14 +6,36 @@
     "name": "Someone",
     "email": "someone@example.com"
   },
-  "notificationRecipientEmails": [
-    { "type": "string", "value": "someone@example.com" }
-  ],
   "children": [
     {
-      "type": "text",
-      "key": "title",
-      "label": "Title"
+      "type": "section",
+      "key": "authors",
+      "label": "Authors",
+      "repeat": true,
+      "children": [
+        {
+          "type": "text",
+          "key": "first",
+          "label": "First Name"
+        },
+        {
+          "type": "text",
+          "key": "last",
+          "label": "Last Name"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "key": "info",
+      "label": "Info",
+      "children": [
+        {
+          "type": "text",
+          "key": "title",
+          "label": "Title"
+        }
+      ]
     },
     {
       "type": "select",

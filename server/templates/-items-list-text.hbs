@@ -1,0 +1,5 @@
+{{#each items as |item|}}{{#if item.section}}{{item.label}}
+{{#if item.repeat}}{{#each item.value as |value|}}* {{> items-list-text items=value}}
+{{/each}}{{else}}{{> items-list-text items=value}}
+{{/if}}{{else}}{{item.label}}: {{item.value}}
+{{/if}}{{/each}}
