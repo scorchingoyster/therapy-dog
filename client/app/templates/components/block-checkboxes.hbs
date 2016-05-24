@@ -1,5 +1,9 @@
 <h2>{{entry.block.label}}</h2>
 
+{{#if entry.block.note}}
+  <p class="note">{{sanitize-html entry.block.note}}</p>
+{{/if}}
+
 {{#each entry.block.options as |option index|}}
   {{#if option.value}}
     <label>

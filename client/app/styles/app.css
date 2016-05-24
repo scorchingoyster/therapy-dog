@@ -120,11 +120,9 @@ html, body {
   color: red;
 }
 
-
-/* description */
-
-#form p {
+.description {
   margin: 16px 0;
+  line-height: 16px;
 }
 
 
@@ -189,7 +187,7 @@ html, body {
 }
 
 .block {
-  margin: 36px 0;
+  margin: 24px 0;
 }
 
 .block .errors {
@@ -217,21 +215,9 @@ html, body {
 .block.agreement h2 {
   display: block;
   margin: 8px 0;
-  font-size: 18px;
+  font-size: 16px;
+  line-height: 20px;
   font-weight: bold;
-}
-
-.section .block.text label,
-.section .block.date label,
-.section .block.select label,
-.section .block.file label,
-.section .block.email label,
-.section .block.checkboxes h2,
-.section .block.radio h2,
-.section .block.agreement h2 {
-  margin: 8px 0;
-  font-size: 14px;
-  color: #666;
 }
 
 .block.text.required label:after,
@@ -244,6 +230,12 @@ html, body {
 .block.agreement.required h2:after {
   color: red;
   content: " *";
+}
+
+.block p.note {
+  font-size: 14px;
+  margin: 8px 0;
+  line-height: 18px;
 }
 
 
@@ -342,7 +334,11 @@ html, body {
 
 /* section blocks */
 
-.section h2 {
+.block.section {
+  margin: 32px 0;
+}
+
+.block.section h2 {
   font-size: 18px;
   margin: 16px 0;
 }
@@ -352,6 +348,19 @@ html, body {
 
 .section .block {
   margin: 24px 0;
+}
+
+.section .block.text label,
+.section .block.date label,
+.section .block.select label,
+.section .block.file label,
+.section .block.email label,
+.section .block.checkboxes h2,
+.section .block.radio h2,
+.section .block.agreement h2 {
+  margin: 8px 0;
+  font-size: 14px;
+  line-height: 18px;
 }
 
 
