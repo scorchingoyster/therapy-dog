@@ -2,8 +2,11 @@ import Ember from 'ember';
 import ArrayEntry from 'therapy-dog/utils/array-entry';
 import ObjectEntry from 'therapy-dog/utils/object-entry';
 import ValueEntry from 'therapy-dog/utils/value-entry';
+import FocusEntryAction from 'therapy-dog/mixins/focus-entry-action';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(FocusEntryAction, {
+  entryEvents: Ember.inject.service(),
+  
   didReceiveAttrs() {
     this._super(...arguments);
     
@@ -35,5 +38,15 @@ export default Ember.Component.extend({
     });
     
     this.set('entries', entries);
+  },
+  
+  actions: {
+    focusEntry() {
+      let first = this.get('entries').get(0);
+      
+      if (first && first instanceof ValueEntry) {
+        this.get('entryEvents').trigger('focus', first);
+      }
+    }
   }
 });

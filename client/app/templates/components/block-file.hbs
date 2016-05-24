@@ -49,7 +49,7 @@
 {{#if acceptsNewUpload}}
   <div class="new-upload">
     <div class="choose-file-wrapper">
-      <input type="file" onchange={{action "choose" value="target.files"}} multiple={{if isMultiple "multiple" ""}} id={{object-guid entry}}>
+      <input type="file" onchange={{action "choose" value="target.files"}} onfocus={{action "focusInput"}} onblur={{action "blurInput"}} multiple={{if isMultiple "multiple" ""}} id={{object-guid entry}}>
       {{#if isMultiple}}
         Choose Files…
       {{else}}
