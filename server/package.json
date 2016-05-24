@@ -30,6 +30,7 @@
     "nock": "^8.0.0",
     "node-mocks-http": "^1.5.2",
     "nodemon": "^1.9.1",
+    "smtp-server": "^1.9.1",
     "xmldom": "^0.1.22",
     "xpath": "0.0.22"
   }
