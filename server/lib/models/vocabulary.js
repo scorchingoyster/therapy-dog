@@ -9,7 +9,7 @@ const config = require('../../config');
 */
 
 // Define type aliases for checking attributes in the Vocabulary constructor.
-typify.alias('vocabulary_objects', '{ terms: array map, valueKey: string, labelKey: string }');
+typify.alias('vocabulary_objects', '{ terms: array map, valueKey: string, labelKey: string, noteKey: string? }');
 typify.alias('vocabulary_strings', '{ terms: array string }');
 typify.alias('vocabulary', 'vocabulary_strings | vocabulary_objects');
 
@@ -53,13 +53,30 @@ class Vocabulary {
   }
 
   /**
+    @property noteKey
+    @type {String}
+  */
+  get noteKey() {
+    return this.attributes.noteKey;
+  }
+
+  /**
     @method getOptions
     @type {Array}
   */
   get options() {
     return this.terms.map((term) => {
       if (typeof term === 'object') {
-        return { label: term[this.labelKey], value: term[this.valueKey] };
+        let option = {
+          label: term[this.labelKey],
+          value: term[this.valueKey]
+        };
+
+        if (this.noteKey) {
+          option.note = term[this.noteKey];
+        }
+
+        return option;
       } else {
         return term;
       }
