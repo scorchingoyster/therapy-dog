@@ -4,12 +4,12 @@
   {{#if option.value}}
     <label>
       {{radio-button value=option.value groupValue=entry.value name=(object-guid entry)}}
-      {{option.label}}
+      {{sanitize-html option.label}}
     </label>
   {{else}}
     <label>
       {{radio-button value=option groupValue=entry.value name=(object-guid entry)}}
-      {{option}}
+      {{sanitize-html option}}
     </label>
   {{/if}}
 {{/each}}

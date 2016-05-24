@@ -4,12 +4,12 @@
   {{#if option.value}}
     <label>
       {{check-box value=option.value groupValue=entry.value}}
-      {{option.label}}
+      {{sanitize-html option.label}}
     </label>
   {{else}}
     <label>
       {{check-box value=option groupValue=entry.value}}
-      {{option}}
+      {{sanitize-html option}}
     </label>
   {{/if}}
 {{/each}}
