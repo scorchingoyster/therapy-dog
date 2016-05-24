@@ -7,7 +7,7 @@ export default Ember.Route.extend({
     if (model.get('authorized')) {
       this.render('deposit/form', { model });
     } else {
-      this.render('deposit/login');
+      this.render('deposit/login', { model });
     }
   },
   
