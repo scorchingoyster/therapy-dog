@@ -14,7 +14,7 @@ const config = require('../../config');
 // Define type aliases for checking attributes in the Form constructor.
 typify.mutual({
   'form_agreement': '{ type: "agreement", key: string, name: string, uri: string, prompt: string }',
-  'form_options': 'string | array string | array { label: string, value: string }',
+  'form_options': 'string | array string | array { label: string, value: string, note: string? }',
   'form_checkboxes': '{ type: "checkboxes", key: string, label: string?, options: form_options, required: boolean?, defaultValue: (array string)?, note: string? }',
   'form_date': '{ type: "date", key: string, label: string, precision: ("year" | "month" | "day")?, required: boolean?, note: string? }',
   'form_email': '{ type: "email", key: string, label: string, required: boolean?, defaultValue: string?, placeholder: string?, note: string? }',
