@@ -31,6 +31,7 @@ export default Ember.Service.extend({
         let form = Ember.Object.create({
           id: response.data.id,
           title: response.data.attributes.title,
+          contact: response.data.attributes.contact,
           description: response.data.attributes.description,
           children: deserializeChildren(response.data.attributes.children)
         });
