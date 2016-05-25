@@ -195,6 +195,19 @@ def convert_form(xml, form_id)
   output[:destination] = form["depositContainerId"]
   
   
+  # Contact
+  
+  contact_name = form["contactName"] || ""
+  contact_email = form["contactEmail"] || ""
+  
+  if contact_name !~ /^\s*$/ && contact_email !~ /^\s*$/
+    output[:contact] = {
+      name: contact_name,
+      email: contact_email
+    }
+  end
+  
+  
   # Form fields
 
   output[:children] = []
@@ -263,7 +276,7 @@ def convert_form(xml, form_id)
           field[:type] = "select"
           field[:options] = port.xpath("validValues").map { |v| v.text }
         elsif port["xmi:type"] == "walk:EmailInputField" || port["xsi:type"] == "walk:EmailInputField"
-          field[:type] = "text"
+          field[:type] = "email"
         elsif port["xmi:type"] == "walk:TextInputField" || port["xsi:type"] == "walk:TextInputField"
           field[:type] = "text"
           
@@ -457,6 +470,34 @@ def convert_form(xml, form_id)
           }
         ]
       }
+    }
+  end
+  
+  
+  # Deposit Notices
+  
+  output[:notificationRecipientEmails] = []
+  
+  form.xpath("emailDepositNoticeTo", PREFIXES).each do |email|
+    output[:notificationRecipientEmails] << {
+      type: "string",
+      value: email.text.strip
+    }
+  end
+  
+  if form_id == "honors-thesis"
+    majors_identifier = identifiers.get(form.at_xpath("elements[@xsi:type='walk:MajorBlock']", PREFIXES))
+    output[:notificationRecipientEmails] << {
+      type: "lookup",
+      path: [majors_identifier, "emailDepositNoticeTo"]
+    }
+    
+    # Special case for EmailInputField -- there's only one and it's on this form.
+    advisor_block_identifier = identifiers.get(form.at_xpath("//ports[@xsi:type='walk:EmailInputField']/..", PREFIXES))
+    advisor_email_identifier = identifiers.get(form.at_xpath("//ports[@xsi:type='walk:EmailInputField']", PREFIXES))
+    output[:notificationRecipientEmails] << {
+      type: "lookup",
+      path: [advisor_block_identifier, advisor_email_identifier]
     }
   end
   
