@@ -1,6 +1,11 @@
 {
   "destination": "uuid:1234",
   "title": "Article Form",
+  "description": "This is a form for articles.",
+  "contact": {
+    "name": "Someone",
+    "email": "someone@example.com"
+  },
   "children": [
     {
       "type": "text",

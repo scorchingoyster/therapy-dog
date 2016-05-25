@@ -38,7 +38,7 @@ typify.type('arrow_expression', function(t) {
 
 typify.alias('metadata', '{ id: string, type: ("descriptive" | "access-control"), model: "xml", template: arrow_expression }');
 
-typify.alias('form', '{ destination: string, title: string, description: string?, children: array form_block, bundle: bundle, metadata: array metadata }');
+typify.alias('form', '{ destination: string, contact: { name: string, email: string }?, title: string, description: string?, children: array form_block, bundle: bundle, metadata: array metadata }');
 
 /**
   Traverse the given blocks and values, yielding non-section blocks and their
@@ -169,6 +169,21 @@ class Form {
   }
 
   /**
+    @property contact
+    @type {String}
+  */
+  get contact() {
+    if (this.attributes.contact) {
+      return this.attributes.contact;
+    } else {
+      return {
+        name: config.ADMIN_CONTACT_NAME,
+        email: config.ADMIN_CONTACT_EMAIL
+      };
+    }
+  }
+
+  /**
     @property title
     @type {String}
   */
@@ -234,6 +249,7 @@ class Form {
           attributes: {
             title: this.title,
             description: this.description,
+            contact: this.contact,
             children: children
           }
         };
@@ -244,7 +260,8 @@ class Form {
         id: this.id,
         attributes: {
           title: this.title,
-          description: this.description
+          description: this.description,
+          contact: this.contact
         }
       };
     }

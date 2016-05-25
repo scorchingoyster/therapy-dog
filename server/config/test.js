@@ -10,5 +10,7 @@ module.exports = {
   SWORD_PASSWORD: 'depositforms',
   FORMS_DIRECTORY: path.join(__dirname, '../test/fixtures/forms'),
   VOCABULARIES_DIRECTORY: path.join(__dirname, '../test/fixtures/vocabularies'),
-  UPLOADS_DIRECTORY: path.join(__dirname, '../test/fixtures/uploads')
+  UPLOADS_DIRECTORY: path.join(__dirname, '../test/fixtures/uploads'),
+  ADMIN_CONTACT_NAME: 'Some Admin',
+  ADMIN_CONTACT_EMAIL: 'admin@example.com'
 };
