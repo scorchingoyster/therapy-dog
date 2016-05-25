@@ -4,6 +4,6 @@
   <p class="note">{{sanitize-html entry.block.note}}</p>
 {{/if}}
 
-{{input value=entry.value type="email" placeholder=entry.block.placeholder id=(object-guid entry)}}
+{{input value=entry.value type="email" class="autocomplete" placeholder=entry.block.placeholder id=(object-guid entry)}}
 
 {{entry-error-messages entry=entry}}

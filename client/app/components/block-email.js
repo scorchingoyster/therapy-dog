@@ -14,6 +14,26 @@ export default Ember.Component.extend(FocusEntryAction, {
       this.set('entry.value', this.get('entry.block.defaultValue') || '');
     }
   },
+
+  didInsertElement: function() {
+    this._super(...arguments);
+
+    let options = this.get('entry.block.options');
+    if (Ember.isArray(options)) {
+      this.$('.autocomplete').autocomplete({
+        source: options
+      });
+    }
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    let options = this.get('entry.block.options');
+    if (Ember.isArray(options)) {
+      this.$('.autocomplete').autocomplete('destroy');
+    }
+  },
   
   actions: {
     focusEntry: function() {
