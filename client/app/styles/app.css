@@ -66,6 +66,7 @@ html, body {
 
 #notice p {
   margin: 12px;
+  line-height: 20px;
 }
 
 #notice p.button {
