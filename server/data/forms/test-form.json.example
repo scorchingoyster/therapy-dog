@@ -140,8 +140,7 @@
     {
       "key": "email",
       "type": "email",
-      "label": "Email Address",
-      "required": true
+      "label": "Email Address"
     },
     {
       "type": "agreement",
