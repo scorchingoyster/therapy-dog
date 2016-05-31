@@ -35,7 +35,7 @@ export default Ember.Object.extend({
       return [`Please check at least one option.`];
     } else if (required && Ember.isEmpty(value)) {
       return [`This field is required.`];
-    } else if (type === 'email' && !EMAIL_REGEX.test(value)) {
+    } else if (type === 'email' && !Ember.isEmpty(value) && !EMAIL_REGEX.test(value)) {
       return [`The entered value is not a valid email address.`];
     } else if (type === 'date') {
       let precision = this.get('block.precision');

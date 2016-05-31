@@ -14,6 +14,12 @@ let block = Ember.Object.create({
   required: true
 });
 
+let optionalBlock = Ember.Object.create({
+  type: 'email',
+  key: 'email',
+  label: 'Email Address'
+});
+
 test('it renders', function(assert) {
   let entry = ValueEntry.create({ block });
   this.set('entry', entry);
@@ -73,6 +79,20 @@ test('it is valid if an valid email is entered', function(assert) {
   assert.ok(this.$('.block').hasClass('invalid'));
 
   this.$('input').val('info@email.edu');
+  this.$('input').change();
+
+  assert.notOk(this.$('.block').hasClass('invalid'));
+});
+
+test('it is valid with no text entered if not required', function(assert) {
+  let entry = ValueEntry.create({ optionalBlock });
+  this.set('entry', entry);
+
+  this.render(hbs`{{block-email entry=entry}}`);
+
+  assert.notOk(this.$('.block').hasClass('invalid'));
+
+  this.$('input').val('');
   this.$('input').change();
 
   assert.notOk(this.$('.block').hasClass('invalid'));
