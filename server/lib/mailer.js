@@ -93,8 +93,10 @@ function flattenSummary(blocks, summary) {
         } else {
           return { label: block.label, value: value.map(u => u.name).join(', ') };
         }
-      } else {
+      } else if (typeof value !== 'undefined') {
         return { label: block.label, value: value.name };
+      } else {
+        return { label: block.label, value: '(none)' };
       }
     } else if (block.type === 'agreement') {
       return { label: block.name, value: 'Accepted' };
