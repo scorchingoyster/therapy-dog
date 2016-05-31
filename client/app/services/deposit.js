@@ -100,11 +100,11 @@ export default Ember.Service.extend({
         data: JSON.stringify(payload),
         headers
       })
-      .done(function(data) {
-        resolve(data);
+      .done(function() {
+        resolve({ success: true });
       })
       .fail(function() {
-        resolve({ status: 'ERROR' });
+        resolve({ success: false });
       });
     });
   },

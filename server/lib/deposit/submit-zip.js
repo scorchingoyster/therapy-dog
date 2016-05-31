@@ -70,7 +70,7 @@ function postZip(form, zipFile, depositorEmail) {
           body: body
         }));
       } else {
-        resolve({ status: 'OK', message: body });
+        resolve();
       }
     });
   });
