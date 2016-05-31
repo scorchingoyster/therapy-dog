@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const Promise = require('bluebird');
 const mailer = require('../lib/mailer');
 const Form = require('../lib/models/form');
 const createTestUpload = require('../test/test-helpers').createTestUpload;

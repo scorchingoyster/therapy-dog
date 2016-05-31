@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const Promise = require('bluebird');
 const request = require('request');
 const archiver = require('archiver');
 const tmp = require('tmp');

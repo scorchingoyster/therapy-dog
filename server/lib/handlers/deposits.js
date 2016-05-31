@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise = require('bluebird');
 const Form = require('../models/form');
 const generateBundle = require('../deposit/generate-bundle');
 const generateSubmission = require('../deposit/generate-submission');

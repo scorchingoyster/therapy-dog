@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise = require('bluebird');
 const Xmlbuilder = require('xmlbuilder');
 const Link = require('./bundle/link');
 const Item = require('./bundle/item');

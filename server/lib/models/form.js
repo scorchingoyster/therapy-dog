@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise = require('bluebird');
 const typify = require('typify').create();
 const Upload = require('./upload');
 const Vocabulary = require('./vocabulary');
