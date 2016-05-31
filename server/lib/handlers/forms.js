@@ -30,14 +30,17 @@ exports.show = function(req, res, next) {
       meta.mail = req.headers['mail'];
     }
 
-    res.send({
+    res.header('Content-Type', 'application/vnd.api+json');
+    res.send(new Buffer(JSON.stringify({
       data: resourceObject,
       meta: meta
-    });
+    })));
   })
   .catch(function(err) {
     if (err instanceof ModelNotFoundError || err instanceof SyntaxError || err instanceof TypeError) {
-      res.status(404).send({ errors: [{ status: '404', title: 'Not found' }] });
+      res.status(404);
+      res.header('Content-Type', 'application/vnd.api+json');
+      res.send(new Buffer(JSON.stringify({ errors: [{ status: '404', title: 'Not found' }] })));
     } else {
       next(err);
     }

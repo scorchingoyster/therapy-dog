@@ -24,7 +24,8 @@ app.use(logging.errorLogger);
 app.use(function(err, req, res, next) {
   /*jshint unused: vars */
   res.status(500);
-  res.send({ errors: [{ status: '500', title: 'Internal server error' }] });
+  res.header('Content-Type', 'application/vnd.api+json');
+  res.send(new Buffer(JSON.stringify({ errors: [{ status: '500', title: 'Internal server error' }] })));
 });
 
 let server = app.listen(config.PORT, config.HOST, function() {

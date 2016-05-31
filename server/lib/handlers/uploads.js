@@ -8,7 +8,8 @@ exports.create = function(req, res, next) {
     return upload.getResourceObject();
   })
   .then(function(data) {
-    res.send({ data: data });
+    res.header('Content-Type', 'application/vnd.api+json');
+    res.send(new Buffer(JSON.stringify({ data: data })));
   })
   .catch(function(err) {
     next(err);
