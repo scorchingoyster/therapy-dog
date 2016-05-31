@@ -10,105 +10,56 @@ const mailer = require('../mailer');
 const logging = require('../logging');
 const SwordError = require('../errors').SwordError;
 
-function processDeposit(deposit) {
-  let form, values, summary, bundle, depositorEmail, notificationRecipientEmails;
-
-  depositorEmail = deposit.depositorEmail;
-  logging.debug('Saved depositor email for form "%s"', deposit.form, {
-    depositorEmail: depositorEmail
-  });
-
-  return Form.findById(deposit.form)
-  .then(function(f) {
-    form = f;
-
-    return form.summarizeInput(deposit.values);
-  })
-  .then(function(s) {
-    summary = s;
-
-    return form.transformValues(deposit.values);
-  })
-  .then(function(v) {
-    values = v;
-    logging.debug('Transformed values for form "%s"', deposit.form, {
-      values: values
-    });
-
-    bundle = generateBundle(form, values);
-    logging.debug('Generated bundle for form "%s"', deposit.form, {
-      bundle: bundle
-    });
-
-    notificationRecipientEmails = collectNotificationRecipientEmails(form, values);
-    logging.debug('Collected notification recipient emails for form "%s"', deposit.form, {
-      notificationRecipientEmails: notificationRecipientEmails
-    });
-
-    return generateSubmission(form, bundle);
-  })
-  .then(function(submission) {
-    logging.debug('Generated submission for form "%s"', deposit.form, {
-      submission: Object.keys(submission).reduce(function(object, name) {
-        if (submission[name] instanceof Buffer) {
-          object[name] = submission[name].toString();
-        } else {
-          object[name] = submission[name];
-        }
-        return object;
-      }, {})
-    });
-
-    return {
-      form,
-      values,
-      summary,
-      bundle,
-      submission,
-      depositorEmail,
-      notificationRecipientEmails
-    };
-  });
-}
-
-exports.debug = function(req, res, next) {
-  processDeposit(req.body)
-  .then(function(results) {
-    res.send(results.submission['mets.xml']).end();
-  })
-  .catch(function(err) {
-    next(err);
-  });
-};
-
 exports.create = function(req, res, next) {
-  let form, values, summary, submission, depositorEmail, notificationRecipientEmails;
+  let deposit = req.body;
 
-  processDeposit(req.body)
-  .then(function(results) {
-    form = results.form;
-    values = results.values;
-    summary = results.summary;
-    submission = results.submission;
-    depositorEmail = results.depositorEmail;
-    notificationRecipientEmails = results.notificationRecipientEmails;
+  // Find the form...
+  let form = Form.findById(deposit.form);
 
-    return submitZip(form, submission, depositorEmail);
-  })
-  .then(function(response) {
-    res.send(response);
+  // Transform input...
+  let transformedValues = form.then(f => f.transformValues(deposit.values));
+  let inputSummary = form.then(f => f.summarizeInput(deposit.values));
 
-    mailer.sendDepositReceipt(form, summary, depositorEmail);
+  // Generate a bundle and submission...
+  let bundle = Promise.join(form, transformedValues, generateBundle);
+  let submission = Promise.join(form, bundle, generateSubmission);
 
-    if (notificationRecipientEmails.length > 0) {
-      mailer.sendDepositNotification(form, summary, notificationRecipientEmails);
-    }
-  })
+  // Collect notification recipients...
+  let notificationRecipientEmails = Promise.join(form, transformedValues, collectNotificationRecipientEmails);
+
+  // Submit the deposit, send email notifications, send response.
+  Promise.join(form, submission, deposit.depositorEmail, submitZip)
+  .then((response) => Promise.all([
+    Promise.try(() => { res.send(response); }),
+    Promise.join(form, inputSummary, deposit.depositorEmail, mailer.sendDepositReceipt),
+    Promise.join(form, inputSummary, notificationRecipientEmails, mailer.sendDepositNotification)
+  ]))
   .catch(function(err) {
     if (err instanceof SwordError) {
       logging.error('Received error response from SWORD endpoint: %s', err.extra.body);
     }
 
+    next(err);
+  });
+};
+
+exports.debug = function(req, res, next) {
+  let deposit = req.body;
+
+  // Find the form...
+  let form = Form.findById(deposit.form);
+
+  // Transform input...
+  let transformedValues = form.then(f => f.transformValues(deposit.values));
+
+  // Generate a bundle and submission...
+  let bundle = Promise.join(form, transformedValues, generateBundle);
+  let submission = Promise.join(form, bundle, generateSubmission);
+
+  // Respond with the METS.
+  submission
+  .then((s) => { res.send(s['mets.xml']).end(); })
+  .catch(function(err) {
     next(err);
   });
 };

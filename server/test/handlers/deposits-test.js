@@ -52,7 +52,7 @@ describe('Deposits handler', function() {
       let expect = 3;
 
       response.on('end', function() {
-        assert.deepEqual({ status: 'OK', message: 'SWORD response' }, response._getData());
+        assert.equal(204, response.statusCode);
 
         if (--expect === 0) {
           done();
