@@ -106,6 +106,8 @@ function flattenSummary(blocks, summary) {
   });
 }
 
+exports.flattenSummary = flattenSummary;
+
 exports.sendDepositReceipt = function(form, summary, address) {
   return Promise.try(function() {
     let items = flattenSummary(form.children, summary);
