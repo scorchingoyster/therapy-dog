@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const Promise = require('bluebird');
 const Handlebars = require('handlebars');
 const nodemailer = require('nodemailer');
 const stubTransport = require('nodemailer-stub-transport');
@@ -104,11 +105,19 @@ function flattenSummary(blocks, summary) {
 }
 
 exports.sendDepositReceipt = function(form, summary, address) {
-  let items = flattenSummary(form.children, summary);
-  return depositReceiptSender({ to: address }, { form, items });
+  return Promise.try(function() {
+    let items = flattenSummary(form.children, summary);
+
+    return depositReceiptSender({ to: address }, { form, items });
+  });
 };
 
-exports.sendDepositNotification = function(form, summary, address) {
-  let items = flattenSummary(form.children, summary);
-  return depositNotificationSender({ to: address }, { form, items });
+exports.sendDepositNotification = function(form, summary, addresses) {
+  return Promise.try(function() {
+    let items = flattenSummary(form.children, summary);
+
+    if (addresses.length > 0) {
+      return depositNotificationSender({ to: addresses }, { form, items });
+    }
+  });
 };
