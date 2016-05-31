@@ -208,4 +208,28 @@ describe('Form', function() {
       });
     });
   });
+
+  describe('#summarizeInput()', function() {
+    it('transforms option values to the correct label', function() {
+      return Form.findById('article')
+      .then(function(form) {
+        return form.summarizeInput({ language: 'eng', roles: ['Staff', 'Faculty'], review: 'no' });
+      })
+      .then(function(values) {
+        assert.deepEqual(values.language, 'English');
+        assert.deepEqual(values.roles, ['Staff', 'Faculty']);
+        assert.deepEqual(values.review, 'No');
+      });
+    });
+
+    it('does not assign terms not found in a literal options array', function() {
+      return Form.findById('article')
+      .then(function(form) {
+        return form.summarizeInput({ review: 'maybe' });
+      })
+      .then(function(values) {
+        assert.deepEqual(values.review, undefined);
+      });
+    });
+  });
 });
