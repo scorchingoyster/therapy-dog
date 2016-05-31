@@ -143,10 +143,12 @@ function transformOptionValue(options, value) {
     // Return the option's value.
     if (option) {
       if (typeof option === 'string') {
-        return option;
+        return Promise.resolve(option);
       } else {
-        return option.value;
+        return Promise.resolve(option.value);
       }
+    } else {
+      return Promise.resolve(undefined);
     }
   }
 }
@@ -179,6 +181,8 @@ function getOptionLabel(options, value) {
       } else {
         return Promise.resolve(option.label);
       }
+    } else {
+      return Promise.resolve(undefined);
     }
   }
 }
