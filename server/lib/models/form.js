@@ -215,14 +215,7 @@ class Form {
     @type {String}
   */
   get contact() {
-    if (this.attributes.contact) {
-      return this.attributes.contact;
-    } else {
-      return {
-        name: config.ADMIN_CONTACT_NAME,
-        email: config.ADMIN_CONTACT_EMAIL
-      };
-    }
+    return this.attributes.contact;
   }
 
   /**
