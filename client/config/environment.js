@@ -44,7 +44,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-    ENV.baseURL = '/forms2';
+    ENV.baseURL = undefined;
     ENV.APP.apiNamespace = 'forms2/api';
   }
 
