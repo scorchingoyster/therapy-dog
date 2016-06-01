@@ -11,5 +11,7 @@
   "sub": true,
   "undef": true,
   "unused": true,
-  "varstmt": true
+  "varstmt": true,
+  
+  "predef": ["-Promise"]
 }
