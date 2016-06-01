@@ -29,8 +29,8 @@ exports.create = function(req, res, next) {
 
   // Submit the deposit, send email notifications, send response.
   Promise.join(form, submission, deposit.depositorEmail, submitZip)
-  .then((response) => Promise.all([
-    Promise.try(() => { res.status(204).end(); }),
+  .then(() => { res.status(204).end(); })
+  .then(() => Promise.all([
     Promise.join(form, inputSummary, deposit.depositorEmail, mailer.sendDepositReceipt),
     Promise.join(form, inputSummary, notificationRecipientEmails, mailer.sendDepositNotification)
   ]))

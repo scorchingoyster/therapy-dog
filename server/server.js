@@ -23,6 +23,9 @@ app.use(logging.errorLogger);
 
 app.use(function(err, req, res, next) {
   /*jshint unused: vars */
+  if (res.headersSent) {
+    return next(err);
+  }
   res.status(500);
   res.header('Content-Type', 'application/vnd.api+json');
   res.send(new Buffer(JSON.stringify({ errors: [{ status: '500', title: 'Internal server error' }] })));
