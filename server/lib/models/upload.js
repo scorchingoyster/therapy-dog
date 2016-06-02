@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise = require('bluebird');
 const UploadNotFoundError = require('../errors').UploadNotFoundError;
 
 /**

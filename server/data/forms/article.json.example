@@ -1,0 +1,90 @@
+{
+  "destination": "uuid:1234",
+  "title": "Article Form",
+  "description": "This is a form for articles.",
+  "contact": {
+    "name": "Someone",
+    "email": "someone@example.com"
+  },
+  "children": [
+    {
+      "type": "section",
+      "key": "authors",
+      "label": "Authors",
+      "repeat": true,
+      "children": [
+        {
+          "type": "text",
+          "key": "first",
+          "label": "First Name"
+        },
+        {
+          "type": "text",
+          "key": "last",
+          "label": "Last Name"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "key": "info",
+      "label": "Info",
+      "children": [
+        {
+          "type": "text",
+          "key": "title",
+          "label": "Title"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "key": "language",
+      "label": "Language",
+      "options": "language"
+    },
+    {
+      "type": "checkboxes",
+      "key": "roles",
+      "label": "Roles",
+      "options": "role"
+    },
+    {
+      "type": "select",
+      "key": "review",
+      "label": "Needs Review?",
+      "options": [
+        { "label": "Yes", "value": "yes" },
+        { "label": "No", "value": "no" }
+      ]
+    },
+    {
+      "type": "select",
+      "key": "license",
+      "label": "License",
+      "options": [
+        "CC-BY",
+        "CC-BY-NC"
+      ]
+    },
+    {
+      "type": "agreement",
+      "key": "agreement",
+      "name": "Deposit Agreement",
+      "uri": "http://example.com/agreement",
+      "prompt": "I agree to the terms in the agreement."
+    },
+    {
+      "type": "file",
+      "key": "article",
+      "label": "Article"
+    }
+  ],
+  "bundle": {
+    "type": "single",
+    "file": {
+      "upload": "article"
+    }
+  },
+  "metadata": []
+}

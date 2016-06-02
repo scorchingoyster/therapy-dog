@@ -6,6 +6,9 @@
     "name": "Someone",
     "email": "someone@example.com"
   },
+  "notificationRecipientEmails": [
+    { "type": "string", "value": "someone@example.com" }
+  ],
   "children": [
     {
       "type": "text",

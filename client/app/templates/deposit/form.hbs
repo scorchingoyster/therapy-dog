@@ -9,8 +9,10 @@
 
 <div id="form" class={{if model.entry.hasInvalidEntries "invalid" ""}}>
   <p class="description">{{sanitize-html model.form.description}}</p>
+  
   <p>Fields marked with <span class="required-example">*</span> are required.</p>
-  <p>If you have any questions, please contact <a href="mailto:{{model.form.contact.email}}">{{model.form.contact.name}}</a>.</p>
+  
+  {{partial "deposit/contact"}}
   
   {{object-entry entry=model.entry}}
   

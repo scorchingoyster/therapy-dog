@@ -6,7 +6,7 @@ const generateBundle = require('../../lib/deposit/generate-bundle');
 const Link = require('../../lib/deposit/bundle/link');
 const Metadata = require('../../lib/deposit/bundle/metadata');
 const File = require('../../lib/deposit/bundle/file');
-const buildTestUpload = require('./test-helpers').buildTestUpload;
+const buildTestUpload = require('../test-helpers').buildTestUpload;
 
 describe('Bundle generation', function() {
   describe('using the "single" type', function() {

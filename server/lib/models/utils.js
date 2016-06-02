@@ -3,6 +3,7 @@
 const path = require('path');
 const fs = require('fs');
 const assert = require('assert');
+const Promise = require('bluebird');
 const ModelNotFoundError = require('../errors').ModelNotFoundError;
 
 function buildNotFoundError(dir, model, id) {

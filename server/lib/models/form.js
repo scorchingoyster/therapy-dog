@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise = require('bluebird');
 const typify = require('typify').create();
 const Upload = require('./upload');
 const Vocabulary = require('./vocabulary');
@@ -36,9 +37,14 @@ typify.type('arrow_expression', function(t) {
   return Arrow.check(t);
 });
 
+// Duplicate part of the Arrow typify specification so we can define notification recipient email expressions.
+typify.alias('recipient_expression_string', '{ type: "string", value: string }');
+typify.alias('recipient_expression_lookup', '{ type: "lookup", path: array string }');
+typify.alias('recipient_expression', 'recipient_expression_string | recipient_expression_lookup');
+
 typify.alias('metadata', '{ id: string, type: ("descriptive" | "access-control"), model: "xml", template: arrow_expression }');
 
-typify.alias('form', '{ destination: string, contact: { name: string, email: string }?, title: string, description: string?, children: array form_block, bundle: bundle, metadata: array metadata }');
+typify.alias('form', '{ destination: string, contact: { name: string, email: string }?, title: string, description: string?, notificationRecipientEmails: (array recipient_expression)?, children: array form_block, bundle: bundle, metadata: array metadata }');
 
 /**
   Traverse the given blocks and values, yielding non-section blocks and their
@@ -137,10 +143,46 @@ function transformOptionValue(options, value) {
     // Return the option's value.
     if (option) {
       if (typeof option === 'string') {
-        return option;
+        return Promise.resolve(option);
       } else {
-        return option.value;
+        return Promise.resolve(option.value);
       }
+    } else {
+      return Promise.resolve(undefined);
+    }
+  }
+}
+
+function getOptionLabel(options, value) {
+  if (typeof options === 'string') {
+    return Vocabulary.findById(options).then(function(vocabulary) {
+      let term = vocabulary.getTerm(value);
+
+      if (typeof term === 'object') {
+        return term[vocabulary.labelKey];
+      } else {
+        return term;
+      }
+    });
+  } else if (Array.isArray(options)) {
+    // Find the option that matches the value. It may either be a string or a { label, value } object.
+    let option = options.find(function(option) {
+      if (typeof option === 'string') {
+        return value === option;
+      } else {
+        return value === option.value;
+      }
+    });
+
+    // Return the option's label, or the option itself if it is just a string.
+    if (option) {
+      if (typeof option === 'string') {
+        return Promise.resolve(option);
+      } else {
+        return Promise.resolve(option.label);
+      }
+    } else {
+      return Promise.resolve(undefined);
     }
   }
 }
@@ -173,14 +215,15 @@ class Form {
     @type {String}
   */
   get contact() {
-    if (this.attributes.contact) {
-      return this.attributes.contact;
-    } else {
-      return {
-        name: config.ADMIN_CONTACT_NAME,
-        email: config.ADMIN_CONTACT_EMAIL
-      };
-    }
+    return this.attributes.contact;
+  }
+
+  /**
+    @property notificationRecipientEmails
+    @type {String}
+  */
+  get notificationRecipientEmails() {
+    return this.attributes.notificationRecipientEmails;
   }
 
   /**
@@ -299,6 +342,47 @@ class Form {
         }
       } else if (block.type === 'radio') {
         return transformOptionValue(block.options, value);
+      } else if (block.type === 'file') {
+        if (block.multiple) {
+          return Promise.all(value.map(function(v) {
+            return Upload.findById(v.id);
+          }));
+        } else {
+          return Upload.findById(value.id);
+        }
+      } else if (block.type === 'agreement') {
+        if (value) {
+          return { name: block.name, uri: block.uri, prompt: block.prompt };
+        }
+      }
+    });
+  }
+
+  summarizeInput(input) {
+    return mapValues(this.children, input, function(block, value) {
+      if (block.type === 'text') {
+        return String(value);
+      } else if (block.type === 'email') {
+        return String(value);
+      } else if (block.type === 'date') {
+        return String(value);
+      } else if (block.type === 'select') {
+        return getOptionLabel(block.options, value)
+        .then(function(label) {
+          if (label !== undefined) {
+            return label;
+          }
+        });
+      } else if (block.type === 'checkboxes') {
+        if (Array.isArray(value)) {
+          return Promise.all(value.map(function(v) {
+            return getOptionLabel(block.options, v);
+          })).then(function(labels) {
+            return labels.filter(l => l !== undefined);
+          });
+        }
+      } else if (block.type === 'radio') {
+        return getOptionLabel(block.options, value);
       } else if (block.type === 'file') {
         if (block.multiple) {
           return Promise.all(value.map(function(v) {

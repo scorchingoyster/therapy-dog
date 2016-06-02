@@ -1,6 +1,7 @@
 data/uploads
 data/forms/*.json
 data/vocabularies/*.json
+data/input/*.json
 
 # npm binaries
 node_modules/.bin
@@ -12,3 +13,6 @@ node_modules/mocha
 node_modules/nodemon
 node_modules/xmldom
 node_modules/xpath
+node_modules/nock
+node_modules/node-mocks-http
+node_modules/smtp-server

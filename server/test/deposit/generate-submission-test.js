@@ -6,7 +6,7 @@ const DOMParser = require('xmldom').DOMParser;
 const Form = require('../../lib/models/form');
 const generateSubmission = require('../../lib/deposit/generate-submission');
 const generateBundle = require('../../lib/deposit/generate-bundle');
-const buildTestUpload = require('./test-helpers').buildTestUpload;
+const buildTestUpload = require('../test-helpers').buildTestUpload;
 
 const select = xpath.useNamespaces({
   mets: 'http://www.loc.gov/METS/',

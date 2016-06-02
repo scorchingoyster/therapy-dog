@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const Promise = require('bluebird');
 const request = require('request');
 const archiver = require('archiver');
 const tmp = require('tmp');
@@ -41,7 +42,7 @@ function makeZip(submission) {
   });
 }
 
-function postZip(form, zipFile) {
+function postZip(form, zipFile, depositorEmail) {
   return new Promise(function(resolve, reject) {
     let body = fs.readFileSync(zipFile);
 
@@ -52,7 +53,8 @@ function postZip(form, zipFile) {
       headers: {
         'Packaging': 'http://cdr.unc.edu/METS/profiles/Simple',
         'Content-Disposition': 'attachment; filename=package.zip',
-        'Content-Type': 'application/zip'
+        'Content-Type': 'application/zip',
+        'mail': depositorEmail
       },
       auth: {
         username: config.SWORD_USERNAME,
@@ -68,16 +70,16 @@ function postZip(form, zipFile) {
           body: body
         }));
       } else {
-        resolve({ status: 'OK', message: body });
+        resolve();
       }
     });
   });
 }
 
-function submitZip(form, submission) {
+function submitZip(form, submission, depositorEmail) {
   return makeZip(submission)
   .then(function(zipFile) {
-    return postZip(form, zipFile);
+    return postZip(form, zipFile, depositorEmail);
   });
 }
 

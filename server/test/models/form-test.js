@@ -2,7 +2,6 @@
 
 const assert = require('assert');
 const Form = require('../../lib/models/form');
-const config = require('../../config');
 const ModelNotFoundError = require('../../lib/errors').ModelNotFoundError;
 const UploadNotFoundError = require('../../lib/errors').UploadNotFoundError;
 
@@ -78,15 +77,6 @@ describe('Form', function() {
   it('may have a contact', function() {
     return Form.findById('article').then(function(form) {
       assert.deepEqual(form.contact, { name: 'Someone', email: 'someone@example.com' });
-    });
-  });
-
-  it('uses the admin contact name and email as a default contact', function() {
-    return Form.findById('poster').then(function(form) {
-      assert.deepEqual(form.contact, {
-        name: config.ADMIN_CONTACT_NAME,
-        email: config.ADMIN_CONTACT_EMAIL
-      });
     });
   });
 
@@ -205,6 +195,30 @@ describe('Form', function() {
       })
       .catch(function(error) {
         assert.ok(error instanceof UploadNotFoundError, 'should reject with UploadNotFoundError');
+      });
+    });
+  });
+
+  describe('#summarizeInput()', function() {
+    it('transforms option values to the correct label', function() {
+      return Form.findById('article')
+      .then(function(form) {
+        return form.summarizeInput({ language: 'eng', roles: ['Staff', 'Faculty'], review: 'no' });
+      })
+      .then(function(values) {
+        assert.deepEqual(values.language, 'English');
+        assert.deepEqual(values.roles, ['Staff', 'Faculty']);
+        assert.deepEqual(values.review, 'No');
+      });
+    });
+
+    it('does not assign terms not found in a literal options array', function() {
+      return Form.findById('article')
+      .then(function(form) {
+        return form.summarizeInput({ review: 'maybe' });
+      })
+      .then(function(values) {
+        assert.deepEqual(values.review, undefined);
       });
     });
   });

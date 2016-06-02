@@ -9,7 +9,7 @@ run-server: ## Run the API server in development mode
 run-client: ## Run the client in development mode
 	cd client && node_modules/.bin/ember server
 
-EXAMPLE_TEMPLATES = $(wildcard server/data/forms/*.json.example server/data/vocabularies/*.json.example)
+EXAMPLE_TEMPLATES = $(wildcard server/data/forms/*.json.example server/data/vocabularies/*.json.example server/data/input/*.json.example)
 
 examples: $(EXAMPLE_TEMPLATES:.json.example=.json) ## Copy example forms and vocabularies
 

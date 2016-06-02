@@ -11,7 +11,7 @@ module.exports = {
   FORMS_DIRECTORY: path.join(__dirname, '../data/forms'),
   VOCABULARIES_DIRECTORY: path.join(__dirname, '../data/vocabularies'),
   UPLOADS_DIRECTORY: path.join(__dirname, '../data/uploads'),
-  ADMIN_CONTACT_NAME: 'Some Admin',
-  ADMIN_CONTACT_EMAIL: 'admin@example.com',
+  FROM_EMAIL: 'admin@example.com',
+  MAILER_CONNECTION_URL: 'smtp://localhost:1025',
   DEBUG: true
 };

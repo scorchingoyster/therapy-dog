@@ -1,5 +1,5 @@
 <div id="notice">
-  {{#if (eq model.result.status "OK")}}
+  {{#if model.result.success}}
     <h2>Deposit Successful</h2>
 
     <p>Your deposit was successful and is being processed. In the next hour, you should receive a deposit receipt email confirming your submission.</p>
@@ -9,7 +9,7 @@
     <p>There was an error submitting your deposit.</p>
   {{/if}}
   
-  <p>If you have any questions, please contact <a href="mailto:{{model.form.contact.email}}">{{model.form.contact.name}}</a>.</p>
+  {{partial "deposit/contact"}}
 
   <p class="button"><a href="/Shibboleth.sso/Logout?return=https%3a%2f%2fcdr.lib.unc.edu%2f">Sign Out</a></p>
 </div>
