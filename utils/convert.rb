@@ -73,6 +73,10 @@ def convert_attributes(element, identifiers, type, path)
       if type == :acl
         name = "acl:" + name
       end
+      
+      if name == "acl:embargoUntil"
+        name = "acl:embargo-until"
+      end
     
       {
         type: "structure",
