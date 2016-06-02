@@ -3,6 +3,8 @@ data/forms/*.json
 data/vocabularies/*.json
 data/input/*.json
 
+coverage
+
 # npm binaries
 node_modules/.bin
 
