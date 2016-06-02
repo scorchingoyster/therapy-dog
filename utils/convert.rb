@@ -172,7 +172,7 @@ def convert_mapping(doc, identifiers, type)
     if main_body.size == 0
       nil
     else
-      main_body[1]
+      main_body[0]
     end
   end
 end
