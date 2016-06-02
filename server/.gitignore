@@ -7,6 +7,7 @@ data/input/*.json
 node_modules/.bin
 
 # npm devDependencies
+node_modules/istanbul
 node_modules/jscs
 node_modules/jshint
 node_modules/mocha
