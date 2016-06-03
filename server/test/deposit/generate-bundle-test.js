@@ -85,18 +85,110 @@ describe('Bundle generation', function() {
     });
   });
 
+  describe('using the "single" type with a context', function() {
+    let form = new Form('test', {
+      destination: 'uuid:1234',
+      title: 'Test',
+      children: [
+        {
+          type: 'section',
+          key: 'stuff',
+          children: [
+            { type: 'text', key: 'title' },
+            { type: 'file', key: 'thesis' }
+          ]
+        }
+      ],
+      bundle: {
+        type: 'single',
+        file: {
+          context: 'stuff',
+          upload: 'thesis',
+          metadata: ['description']
+        }
+      },
+      metadata: [
+        {
+          id: 'description',
+          type: 'descriptive',
+          model: 'xml',
+          template: {
+            type: 'structure',
+            name: 'mods',
+            children: [
+              {
+                type: 'arrow',
+                items: { type: 'lookup', path: ['title'] },
+                target: [
+                  { type: 'structure', name: 'titleInfo' },
+                  { type: 'structure', name: 'title' }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    });
+
+    let buffer = new Buffer('lorem ipsum');
+    let thesis = buildTestUpload('thesis.pdf', 'application/pdf', buffer);
+
+    let values = {
+      stuff: {
+        title: 'My Thesis',
+        thesis: thesis
+      }
+    };
+
+    let bundle = generateBundle(form, values);
+
+    it('should generate the correct number of items, files, metadata', function() {
+      assert.equal(bundle.items.length, 1);
+      assert.equal(bundle.files.length, 1);
+      assert.equal(bundle.metadata.length, 1);
+    });
+
+    it('should have a "File" item at the root', function() {
+      let item = bundle.children[0];
+      assert.equal(item.label, 'thesis.pdf');
+      assert.equal(item.type, 'File');
+    });
+
+    it('should make the properties from the upload available on the file', function() {
+      let file = bundle.files[0];
+      assert.equal(file.name, 'thesis.pdf');
+      assert.equal(file.mimetype, 'application/pdf');
+      assert.equal(file.contents, thesis);
+      assert.equal(file.size, buffer.length);
+    });
+
+    it('should generate metadata for the item', function() {
+      let item = bundle.children[0];
+      let metadata = item.children.find(i => i instanceof Metadata);
+      assert.equal(metadata.type, 'descriptive');
+      assert.equal(metadata.contents.render().toString(), '<mods><titleInfo><title>My Thesis</title></titleInfo></mods>');
+    });
+  });
+
   describe('using the "aggregate" type', function() {
     let form = new Form('test', {
       destination: 'uuid:1234',
       title: 'Test',
       children: [
-        { type: 'text', key: 'title' },
+        {
+          type: 'section',
+          key: 'info',
+          children: [
+            { type: 'text', key: 'title' }
+          ]
+        },
         { type: 'file', key: 'thesis' },
         { type: 'file', key: 'supplemental', multiple: true }
       ],
       bundle: {
         type: 'aggregate',
         aggregate: {
+          context: 'info',
           metadata: ['description']
         },
         main: {
@@ -137,7 +229,9 @@ describe('Bundle generation', function() {
     let appendix = buildTestUpload('appendix.pdf', 'application/pdf', buffer);
 
     let values = {
-      title: 'My Thesis',
+      info: {
+        title: 'My Thesis'
+      },
       thesis: thesis,
       supplemental: [dataset, appendix]
     };
@@ -184,6 +278,7 @@ describe('Bundle generation', function() {
       destination: 'uuid:1234',
       title: 'Test',
       children: [
+        { type: 'text', key: 'title' },
         { type: 'file', key: 'thesis' },
         {
           type: 'section',
@@ -196,6 +291,9 @@ describe('Bundle generation', function() {
       ],
       bundle: {
         type: 'aggregate',
+        aggregate: {
+          metadata: ['aggregate']
+        },
         main: {
           upload: 'thesis'
         },
@@ -203,13 +301,32 @@ describe('Bundle generation', function() {
           {
             context: 'supplemental',
             upload: 'file',
-            metadata: ['description']
+            metadata: ['supplemental']
           }
         ]
       },
       metadata: [
         {
-          id: 'description',
+          id: 'aggregate',
+          type: 'descriptive',
+          model: 'xml',
+          template: {
+            type: 'structure',
+            name: 'mods',
+            children: [
+              {
+                type: 'arrow',
+                items: { type: 'lookup', path: ['title'] },
+                target: [
+                  { type: 'structure', name: 'titleInfo' },
+                  { type: 'structure', name: 'title' }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          id: 'supplemental',
           type: 'descriptive',
           model: 'xml',
           template: {
@@ -235,6 +352,7 @@ describe('Bundle generation', function() {
     let appendix = buildTestUpload('appendix.pdf', 'application/pdf', buffer);
 
     let values = {
+      title: 'My Thesis',
       thesis: thesis,
       supplemental: [
         { abstract: 'Dataset', file: dataset },
@@ -247,7 +365,7 @@ describe('Bundle generation', function() {
     it('should generate the correct number of items, files, metadata', function() {
       assert.equal(bundle.items.length, 4);
       assert.equal(bundle.files.length, 3);
-      assert.equal(bundle.metadata.length, 2);
+      assert.equal(bundle.metadata.length, 3);
     });
 
     it('should generate metadata for the supplemental items', function() {

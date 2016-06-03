@@ -69,6 +69,7 @@ function evaluateEach(expression, context) {
   return items.reduce(function(body, item, index) {
     let locals = {};
 
+    /* istanbul ignore else */
     if (expression.locals) {
       if (expression.locals.item) {
         locals[expression.locals.item] = item;
@@ -89,6 +90,7 @@ function testPresent(predicate, context) {
 
 function testPredicates(predicates, context) {
   return predicates.some(function(predicate) {
+    /* istanbul ignore else */
     if (predicate.name === 'present') {
       return testPresent(predicate, context);
     } else {
@@ -106,6 +108,8 @@ function evaluateChoose(expression, context) {
 
   if (expression.otherwise) {
     return evaluateBody(expression.otherwise, context);
+  } else {
+    return [];
   }
 }
 
@@ -142,16 +146,12 @@ function evaluateArrow(expression, context) {
 
 function evaluateBody(expressions, context) {
   return expressions.reduce(function(body, expression) {
-    let result = evaluateExpression(expression, context);
-    if (result !== undefined) {
-      return body.concat(result);
-    } else {
-      return body;
-    }
+    return body.concat(evaluateExpression(expression, context));
   }, []);
 }
 
 function evaluateExpression(expression, context) {
+  /* istanbul ignore else */
   if (expression.type === 'string') {
     return evaluateString(expression, context);
   } else if (expression.type === 'lookup') {

@@ -11,6 +11,7 @@ const SwordError = require('../errors').SwordError;
 function makeZip(submission) {
   return new Promise(function(resolve, reject) {
     tmp.tmpName(function(err, zipFile) {
+      /* istanbul ignore next */
       if (err) {
         reject(err);
         return;
@@ -25,6 +26,7 @@ function makeZip(submission) {
       let archive = archiver.create('zip', {});
       archive.pipe(output);
 
+      /* istanbul ignore next */
       archive.on('error', function(err) {
         reject(err);
       });
@@ -62,6 +64,7 @@ function postZip(form, zipFile, depositorEmail) {
         sendImmediately: true
       }
     }, function(err, response, body) {
+      /* istanbul ignore if */
       if (err) {
         reject(err);
       } else if (response.statusCode !== 201) {

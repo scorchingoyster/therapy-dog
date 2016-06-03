@@ -7,6 +7,7 @@
 //   { type: 'structure', name: n, properties: p, children: c, ... } => { type: n, properties: flatten(p), children: flatten(c) }
 
 function flattenNode(node) {
+  /* istanbul ignore else */
   if (node.type === 'string') {
     return node.value;
   } else if (node.type === 'data') {
@@ -27,11 +28,7 @@ function flattenProperties(properties) {
     let node = properties[key];
     let flat = flattenNode(node);
 
-    if (flat !== undefined) {
-      return Object.assign({}, result, { [key]: flat });
-    } else {
-      return result;
-    }
+    return Object.assign({}, result, { [key]: flat });
   }, {});
 }
 
@@ -39,11 +36,7 @@ function flattenBody(body) {
   return body.reduce(function(result, node) {
     let flat = flattenNode(node);
 
-    if (flat !== undefined) {
-      return result.concat(flat);
-    } else {
-      return result;
-    }
+    return result.concat(flat);
   }, []);
 }
 

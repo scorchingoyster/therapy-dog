@@ -17,6 +17,7 @@ function combinePresence(p1, p2) {
 }
 
 function markNode(node) {
+  /* istanbul ignore else */
   if (node.type === 'string') {
     return Object.assign({}, node, { presence: 'literal' });
   } else if (node.type === 'data') {

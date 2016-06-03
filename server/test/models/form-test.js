@@ -1,9 +1,11 @@
 'use strict';
 
 const assert = require('assert');
+const Promise = require('bluebird');
 const Form = require('../../lib/models/form');
 const ModelNotFoundError = require('../../lib/errors').ModelNotFoundError;
 const UploadNotFoundError = require('../../lib/errors').UploadNotFoundError;
+const createTestUpload = require('../test-helpers').createTestUpload;
 
 describe('Form', function() {
   it('can find a form by id', function() {
@@ -87,7 +89,7 @@ describe('Form', function() {
         return form.getResourceObject({ children: true });
       })
       .then(function(resourceObject) {
-        let language = resourceObject.attributes.children[1];
+        let language = resourceObject.attributes.children[1].children[1];
         assert.deepEqual(language.options, [
           { label: 'English', value: 'eng' },
           { label: 'Spanish; Castilian', value: 'spa' }
@@ -126,22 +128,47 @@ describe('Form', function() {
   });
 
   describe('#transformValues()', function() {
-    it('transforms values to the correct term', function() {
-      return Form.findById('article')
-      .then(function(form) {
-        return form.transformValues({ language: 'eng', roles: ['Staff', 'Faculty'], review: 'no' });
-      })
+    it('transforms values to the correct shape, with correct vocabulary terms and upload instances', function() {
+      let form = Form.findById('article');
+      let uploads = Promise.props({
+        article: createTestUpload('article.pdf', 'application/pdf', new Buffer('lorem ipsum')),
+        supplemental: createTestUpload('data.csv', 'application/csv', new Buffer('lorem ipsum'))
+      });
+
+      return Promise.all([form, uploads]).spread((form, uploads) => form.transformValues({
+        authors: [
+          { first: 'Some', last: 'Author' },
+          { first: 'Another', last: 'Author' }
+        ],
+        info: {
+          title: 'My Article',
+          language: 'eng'
+        },
+        roles: ['Staff', 'Faculty'],
+        review: 'no',
+        article: { id: uploads.article.id },
+        supplemental: [
+          { id: uploads.supplemental.id }
+        ]
+      }))
       .then(function(values) {
-        assert.deepEqual(values.language, { code: 'eng', name: 'English' });
+        assert.deepEqual(values.authors, [
+          { first: 'Some', last: 'Author' },
+          { first: 'Another', last: 'Author' }
+        ]);
+        assert.equal(values.info.title, 'My Article');
+        assert.deepEqual(values.info.language, { code: 'eng', name: 'English' });
         assert.deepEqual(values.roles, ['Staff', 'Faculty']);
-        assert.deepEqual(values.review, 'no');
+        assert.equal(values.review, 'no');
+        assert.equal(values.article.name, 'article.pdf');
+        assert.deepEqual(values.supplemental.map(u => u.name), ['data.csv']);
       });
     });
 
     it('does not assign terms not found in an object array vocabulary', function() {
       return Form.findById('article')
       .then(function(form) {
-        return form.transformValues({ language: 'other' });
+        return form.transformValues({ info: { language: 'other' } });
       })
       .then(function(values) {
         assert.equal(values.language, undefined);
@@ -186,7 +213,6 @@ describe('Form', function() {
       return Form.findById('article')
       .then(function(form) {
         return form.transformValues({
-          title: 'Test',
           article: { id: '71c5a4d1-eb04-4a25-9786-331c27c959d7' }
         });
       })
@@ -200,15 +226,40 @@ describe('Form', function() {
   });
 
   describe('#summarizeInput()', function() {
-    it('transforms option values to the correct label', function() {
-      return Form.findById('article')
-      .then(function(form) {
-        return form.summarizeInput({ language: 'eng', roles: ['Staff', 'Faculty'], review: 'no' });
-      })
+    it('transforms values to the correct shape, with correct vocabulary terms and upload instances', function() {
+      let form = Form.findById('article');
+      let uploads = Promise.props({
+        article: createTestUpload('article.pdf', 'application/pdf', new Buffer('lorem ipsum')),
+        supplemental: createTestUpload('data.csv', 'application/csv', new Buffer('lorem ipsum'))
+      });
+
+      return Promise.all([form, uploads]).spread((form, uploads) => form.summarizeInput({
+        authors: [
+          { first: 'Some', last: 'Author' },
+          { first: 'Another', last: 'Author' }
+        ],
+        info: {
+          title: 'My Article',
+          language: 'eng'
+        },
+        roles: ['Staff', 'Faculty'],
+        review: 'no',
+        article: { id: uploads.article.id },
+        supplemental: [
+          { id: uploads.supplemental.id }
+        ]
+      }))
       .then(function(values) {
-        assert.deepEqual(values.language, 'English');
+        assert.deepEqual(values.authors, [
+          { first: 'Some', last: 'Author' },
+          { first: 'Another', last: 'Author' }
+        ]);
+        assert.equal(values.info.title, 'My Article');
+        assert.deepEqual(values.info.language, 'English');
         assert.deepEqual(values.roles, ['Staff', 'Faculty']);
-        assert.deepEqual(values.review, 'No');
+        assert.equal(values.review, 'No');
+        assert.equal(values.article.name, 'article.pdf');
+        assert.deepEqual(values.supplemental.map(u => u.name), ['data.csv']);
       });
     });
 

@@ -8,7 +8,7 @@
 /**
   @class Link
   @constructor
-  @param {Item|String} target
+  @param {Item} target
   @param {String} rel
 */
 class Link {
@@ -19,7 +19,7 @@ class Link {
 
   /**
     @property target
-    @type Item or String
+    @type Item
   */
 
   /**

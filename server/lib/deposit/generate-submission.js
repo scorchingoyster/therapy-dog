@@ -88,10 +88,12 @@ function generateItem(parent, node) {
   parent
     .element('div', { ID: node.id });
 
+  /* istanbul ignore else */
   if (node.type) {
     div.attribute('TYPE', node.type);
   }
 
+  /* istanbul ignore else */
   if (node.label) {
     div.attribute('LABEL', node.label);
   }
@@ -147,11 +149,7 @@ function collectSmLinks(bundle) {
   bundle.items.forEach(function(item) {
     item.children.forEach(function(child) {
       if (child instanceof Link) {
-        if (child.target instanceof Item) {
-          result.push({ arcrole: child.rel, from: '#' + item.id, to: '#' + child.target.id });
-        } else {
-          result.push({ arcrole: child.rel, from: '#' + item.id, to: child.target });
-        }
+        result.push({ arcrole: child.rel, from: '#' + item.id, to: '#' + child.target.id });
       }
     });
   });

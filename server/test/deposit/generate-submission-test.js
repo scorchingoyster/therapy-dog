@@ -4,6 +4,7 @@ const assert = require('assert');
 const xpath = require('xpath');
 const DOMParser = require('xmldom').DOMParser;
 const Form = require('../../lib/models/form');
+const File = require('../../lib/deposit/bundle/file');
 const generateSubmission = require('../../lib/deposit/generate-submission');
 const generateBundle = require('../../lib/deposit/generate-bundle');
 const buildTestUpload = require('../test-helpers').buildTestUpload;
@@ -214,7 +215,8 @@ describe('Submission generation', function() {
       children: [
         { type: 'text', key: 'title' },
         { type: 'file', key: 'thesis' },
-        { type: 'file', key: 'supplemental', multiple: true }
+        { type: 'file', key: 'supplemental', multiple: true },
+        { type: 'agreement', key: 'agreement', name: 'Agreement', uri: 'http://example.com/agreement', prompt: 'You agree to the agreement.' }
       ],
       bundle: {
         type: 'aggregate',
@@ -225,6 +227,9 @@ describe('Submission generation', function() {
           {
             upload: 'supplemental'
           }
+        ],
+        agreements: [
+          'agreement'
         ]
       },
       metadata: []
@@ -237,7 +242,8 @@ describe('Submission generation', function() {
 
     let values = {
       thesis: thesis,
-      supplemental: [dataset, appendix]
+      supplemental: [dataset, appendix],
+      agreement: true
     };
 
     let bundle = generateBundle(form, values);
@@ -259,17 +265,26 @@ describe('Submission generation', function() {
       });
     });
 
-    it('should generate a div elements for the aggregate item', function() {
+    it('should generate a div element for the aggregate item', function() {
       return doc.then(function(doc) {
         let aggregateDiv = select1('/mets:mets/mets:structMap/mets:div', doc);
         assert.ok(aggregateDiv);
         assert.equal(aggregateDiv.getAttribute('TYPE'), 'Aggregate Work');
 
         let fileDivs = select('mets:div', aggregateDiv);
-        assert.equal(fileDivs.length, 3);
-        assert.ok(fileDivs.find(d => d.getAttribute('LABEL') === 'thesis.pdf' && d.getAttribute('TYPE') === 'File'));
-        assert.ok(fileDivs.find(d => d.getAttribute('LABEL') === 'dataset.csv' && d.getAttribute('TYPE') === 'File'));
-        assert.ok(fileDivs.find(d => d.getAttribute('LABEL') === 'appendix.pdf' && d.getAttribute('TYPE') === 'File'));
+        assert.equal(fileDivs.length, 4);
+        assert.ok(fileDivs.find(d => d.getAttribute('LABEL') === 'thesis.pdf' && d.getAttribute('TYPE') === 'File'), 'should have a div for thesis.pdf');
+        assert.ok(fileDivs.find(d => d.getAttribute('LABEL') === 'dataset.csv' && d.getAttribute('TYPE') === 'File'), 'should have a div for dataset.csv');
+        assert.ok(fileDivs.find(d => d.getAttribute('LABEL') === 'appendix.pdf' && d.getAttribute('TYPE') === 'File'), 'should have a div for appendix.pdf');
+        assert.ok(fileDivs.find(d => d.getAttribute('LABEL') === 'agreements.txt' && d.getAttribute('TYPE') === 'File'), 'should have a div for agreements.txt');
+      });
+    });
+
+    it('should contain the agreement record as a buffer', function() {
+      let agreementsFile = bundle.items.find(i => i.label === 'agreements.txt').children.find(c => c instanceof File);
+
+      return submission.then(function(submission) {
+        assert.ok(submission[agreementsFile.id] instanceof Buffer, 'should have a Buffer for agreements.txt');
       });
     });
   });
