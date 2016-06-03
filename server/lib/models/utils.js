@@ -22,6 +22,6 @@ exports.findById = function(dir, model, id) {
     });
   })
   .catch(function(err) {
-    throw new ModelNotFoundError(`Couldn't find "${id}": ${err.message}`, { cause: err, dir, model, id });
+    throw new ModelNotFoundError(`Couldn't load "${id}": ${err.message}`, { cause: err, dir, model, id });
   });
 };
