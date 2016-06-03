@@ -9,6 +9,16 @@ const ModelNotFoundError = require('../../lib/errors').ModelNotFoundError;
 const UploadNotFoundError = require('../../lib/errors').UploadNotFoundError;
 const createTestUpload = require('../test-helpers').createTestUpload;
 
+function assertFindById(id) {
+  return Form.findById(id)
+  .then(function() {
+    assert(false);
+  })
+  .catch(function(error) {
+    assert.ok(error instanceof ModelNotFoundError, 'error should be an instance of ModelNotFoundError');
+  });
+}
+
 describe('Form', function() {
   describe('findById', function() {
     it('can find a form by id', function() {
@@ -18,36 +28,24 @@ describe('Form', function() {
       });
     });
 
-    it('rejects with ModelNotFoundError when it can\'t find a form', function() {
-      return Form.findById('qwerty')
-      .then(function() {
-        assert(false);
-      })
-      .catch(function(error) {
-        assert.ok(error instanceof ModelNotFoundError, 'error should be an instance of ModelNotFoundError');
-      });
+    it('rejects with ModelNotFoundError for a nonexistent form', function() {
+      return assertFindById('qwerty');
     });
 
-    it('rejects with ModelNotFoundError when given an id that isn\'t a string', function() {
-      return Form.findById(undefined)
-      .then(function() {
-        assert(false);
-      })
-      .catch(function(error) {
-        assert.ok(error instanceof ModelNotFoundError, 'error should be an instance of ModelNotFoundError');
-        assert.ok(/must be a string/.test(error));
-      });
+    it('rejects with ModelNotFoundError for a form with invalid JSON', function() {
+      return assertFindById('invalid-syntax');
+    });
+
+    it('rejects with ModelNotFoundError for an invalid form', function() {
+      return assertFindById('invalid-type');
+    });
+
+    it('rejects with ModelNotFoundError when given an invalid id', function() {
+      return assertFindById(undefined);
     });
 
     it('rejects with ModelNotFoundError when given an id that contains the path separator', function() {
-      return Form.findById(path.join('..', 'vocabularies', 'role'))
-      .then(function() {
-        assert(false);
-      })
-      .catch(function(error) {
-        assert.ok(error instanceof ModelNotFoundError, 'error should be an instance of ModelNotFoundError');
-        assert.ok(/path separator/.test(error));
-      });
+      return assertFindById(path.join('..', 'vocabularies', 'role'));
     });
 
     it('includes a cause, id, model, and dir when rejecting', function() {
