@@ -2,6 +2,7 @@
 
 const Form = require('../models/form');
 const config = require('../../config');
+const logging = require('../../lib/logging');
 const ModelNotFoundError = require('../errors').ModelNotFoundError;
 
 exports.show = function(req, res, next) {
@@ -36,13 +37,13 @@ exports.show = function(req, res, next) {
       meta: meta
     })));
   })
+  .catch(ModelNotFoundError, function(err) {
+    logging.error(err);
+    res.status(404);
+    res.header('Content-Type', 'application/vnd.api+json');
+    res.send(new Buffer(JSON.stringify({ errors: [{ status: '404', title: 'Not found' }] })));
+  })
   .catch(function(err) {
-    if (err instanceof ModelNotFoundError || err instanceof SyntaxError || err instanceof TypeError) {
-      res.status(404);
-      res.header('Content-Type', 'application/vnd.api+json');
-      res.send(new Buffer(JSON.stringify({ errors: [{ status: '404', title: 'Not found' }] })));
-    } else {
-      next(err);
-    }
+    next(err);
   });
 };
