@@ -1,5 +1,9 @@
 <h2>{{entry.block.label}}</h2>
 
+{{#if entry.block.note}}
+  <p class="note">{{sanitize-html entry.block.note}}</p>
+{{/if}}
+
 {{#if entry.block.repeat}}
   {{#each entry.value as |item|}}
     <div class="item">

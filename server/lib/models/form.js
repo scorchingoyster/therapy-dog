@@ -21,7 +21,7 @@ typify.mutual({
   'form_email': '{ type: "email", key: string, label: string?, options: form_options?, required: boolean?, defaultValue: string?, placeholder: string?, note: string? }',
   'form_file': '{ type: "file", key: string, label: string?, required: boolean?, multiple: boolean?, note: string? }',
   'form_radio': '{ type: "radio", key: string, label: string?, options: form_options, required: boolean?, defaultValue: string?, note: string? }',
-  'form_section': '{ type: "section", key: string, label: string?, children: array form_block, repeat: boolean? }',
+  'form_section': '{ type: "section", key: string, label: string?, note: string?, children: array form_block, repeat: boolean? }',
   'form_select': '{ type: "select", key: string, label: string?, options: form_options, required: boolean?, allowBlank: boolean?, defaultValue: string?, note: string? }',
   'form_text': '{ type: "text", key: string, label: string?, options: form_options?, required: boolean?, defaultValue: string?, placeholder: string?, size: ("line" | "paragraph")?, note: string? }',
   'form_block': 'form_agreement | form_checkboxes | form_date | form_email | form_file | form_radio | form_section | form_select | form_text'
