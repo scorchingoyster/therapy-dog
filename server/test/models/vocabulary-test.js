@@ -5,9 +5,16 @@ const Vocabulary = require('../../lib/models/vocabulary');
 
 describe('Vocabulary', function() {
   it('can find a vocabulary by id', function() {
-    return Vocabulary.findById('language').then(function(form) {
-      assert.equal(form.id, 'language');
-      assert.equal(form.labelKey, 'name');
+    return Vocabulary.findById('language').then(function(vocab) {
+      assert.equal(vocab.id, 'language');
+      assert.equal(vocab.labelKey, 'name');
+    });
+  });
+
+  it('can have notes in options', function() {
+    return Vocabulary.findById('cc').then(function(vocab) {
+      assert.equal(vocab.noteKey, 'description');
+      assert.ok(vocab.options[0].note);
     });
   });
 

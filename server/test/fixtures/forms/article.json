@@ -11,15 +11,40 @@
   ],
   "children": [
     {
-      "type": "text",
-      "key": "title",
-      "label": "Title"
+      "type": "section",
+      "key": "authors",
+      "label": "Authors",
+      "repeat": true,
+      "children": [
+        {
+          "type": "text",
+          "key": "first",
+          "label": "First Name"
+        },
+        {
+          "type": "text",
+          "key": "last",
+          "label": "Last Name"
+        }
+      ]
     },
     {
-      "type": "select",
-      "key": "language",
-      "label": "Language",
-      "options": "language"
+      "type": "section",
+      "key": "info",
+      "label": "Info",
+      "children": [
+        {
+          "type": "text",
+          "key": "title",
+          "label": "Title"
+        },
+        {
+          "type": "select",
+          "key": "language",
+          "label": "Language",
+          "options": "language"
+        }
+      ]
     },
     {
       "type": "checkboxes",
@@ -56,6 +81,12 @@
       "type": "file",
       "key": "article",
       "label": "Article"
+    },
+    {
+      "type": "file",
+      "key": "supplemental",
+      "label": "Supplemental",
+      "multiple": true
     }
   ],
   "bundle": {

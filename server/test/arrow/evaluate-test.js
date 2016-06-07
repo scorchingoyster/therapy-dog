@@ -77,6 +77,30 @@ describe('Evaluate', function() {
     deepEqual(template.evaluate(context), expected);
   });
 
+  it('should make the index available as a local in an each expression', function() {
+    let template = new Arrow({
+      type: 'each',
+      items: { type: 'lookup', path: ['authors'] },
+      locals: {
+        index: 'i'
+      },
+      body: [
+        { type: 'lookup', path: ['i'] }
+      ]
+    });
+
+    let context = {
+      authors: [
+        { first: 'Someone' },
+        { first: 'Another' }
+      ]
+    };
+
+    let expected = [0, 1];
+
+    deepEqual(template.evaluate(context), expected);
+  });
+
   it('should evaluate an each expression which looks up something undefined', function() {
     let template = new Arrow({
       type: 'each',
@@ -92,6 +116,25 @@ describe('Evaluate', function() {
     let context = {};
 
     deepEqual(template.evaluate(context), undefined);
+  });
+
+  it('should evaluate an each expression that looks up a non-array value', function() {
+    let template = new Arrow({
+      type: 'each',
+      items: { type: 'lookup', path: ['author'] },
+      locals: {
+        item: 'a'
+      },
+      body: [
+        { type: 'lookup', path: ['author'] }
+      ]
+    });
+
+    let context = {
+      author: 'Someone'
+    };
+
+    deepEqual(template.evaluate(context), ['Someone']);
   });
 
   it('should evaluate a choose expression', function() {
@@ -123,6 +166,45 @@ describe('Evaluate', function() {
     deepEqual(template.evaluate({ stuff: '123', other: '456' }), ['stuff']);
     deepEqual(template.evaluate({ other: '456' }), ['other']);
     deepEqual(template.evaluate({}), ['nothing']);
+  });
+
+  it('should consider an empty array to be not present in a choose expression', function() {
+    let template = new Arrow({
+      type: 'choose',
+      choices: [
+        {
+          predicates: [
+            { name: 'present', value: { type: 'lookup', path: ['stuff'] } }
+          ],
+          body: [
+            { type: 'string', value: 'stuff' }
+          ]
+        }
+      ],
+      otherwise: [
+        { type: 'string', value: 'nothing' }
+      ]
+    });
+
+    deepEqual(template.evaluate({ stuff: [] }), ['nothing']);
+  });
+
+  it('should produce an empty array for the otherwise branch in a choose expression if no otherwise property is specified', function() {
+    let template = new Arrow({
+      type: 'choose',
+      choices: [
+        {
+          predicates: [
+            { name: 'present', value: { type: 'lookup', path: ['stuff'] } }
+          ],
+          body: [
+            { type: 'string', value: 'stuff' }
+          ]
+        }
+      ]
+    });
+
+    deepEqual(template.evaluate({}), []);
   });
 
   it('should evaluate an arrow expression', function() {

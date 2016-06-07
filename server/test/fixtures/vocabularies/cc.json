@@ -1,0 +1,9 @@
+{
+  "terms": [
+    { "id": "by", "name": "Creative Commons Attribution 4.0 International", "description": "<a href=\"http://creativecommons.org/licenses/by/4.0/\">Creative Commons Attribution 4.0 International</a>" },
+    { "id": "by-nc", "name": "Creative Commons Attribution-NonCommercial 4.0 International", "description": "<a href=\"http://creativecommons.org/licenses/by-nc/4.0/\">Creative Commons Attribution-NonCommercial 4.0 International</a>" }
+  ],
+  "valueKey": "id",
+  "labelKey": "name",
+  "noteKey": "description"
+}

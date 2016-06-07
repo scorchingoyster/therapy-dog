@@ -61,4 +61,23 @@ describe('collectNotificationRecipientEmails', function() {
 
     assert.deepEqual(collectNotificationRecipientEmails(form, values), ['b@example.com', 'c@example.com']);
   });
+
+  it('should return an empty array if the property is absent', function() {
+    let form = new Form('test', {
+      destination: 'uuid:1234',
+      title: 'Test',
+      children: [
+        { type: 'file', key: 'thesis' }
+      ],
+      bundle: {
+        type: 'single',
+        file: {
+          upload: 'thesis'
+        }
+      },
+      metadata: []
+    });
+
+    assert.deepEqual(collectNotificationRecipientEmails(form, {}), []);
+  });
 });
