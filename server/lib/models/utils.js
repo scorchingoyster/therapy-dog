@@ -1,59 +1,39 @@
 'use strict';
 
-const path = require('path');
-const fs = require('fs');
-const assert = require('assert');
 const Promise = require('bluebird');
+const path = require('path');
+const fs = Promise.promisifyAll(require('fs'));
+const assert = require('assert');
 const ModelNotFoundError = require('../errors').ModelNotFoundError;
 
-function buildNotFoundError(dir, model, id) {
-  return new ModelNotFoundError('Couldn\'t find model object', { dir, model, id });
-}
+/**
+  Look in the `directory` for a file named by `id` with the extension ".json" and attempt to create a new instance using the `constructor`, passing the `id` and the parsed JSON contents of the file. Return a Promise resolving to the new instance.
 
-function contains(main, sub) {
-  assert(typeof main === 'string');
-  assert(typeof sub === 'string');
+  This function is used by the Form and Vocabulary models.
 
-  main = path.resolve(main);
-  sub = path.resolve(sub);
+  @method findById
+  @param {String} directory The directory to search.
+  @param {Object} constructor The constructor function.
+  @param {String} id The identifier of the model to search for.
+  @return {Promise}
+  @throws {ModelNotFoundError} If the identifier is invalid or would cause the function to access a file outside the `directory`, or the file cannot be found or read, or there is a JSON parsing error, or the constructor throws an error.
+*/
+exports.findById = function(directory, constructor, id) {
+  return Promise.try(function() {
+    assert(typeof id === 'string', 'id must be a string');
+    assert(id.indexOf(path.sep) === -1, 'id must not contain the path separator');
 
-  return sub.indexOf(main) === 0 && sub.slice(main.length)[0] === path.sep;
-}
+    let filename = path.join(directory, id + '.json');
 
-exports.findById = function(dir, model, id) {
-  return new Promise(function(resolve, reject) {
-    assert(typeof id === 'string');
-
-    if (id.indexOf(path.sep) !== -1) {
-      reject(buildNotFoundError(dir, model, id));
-      return;
-    }
-
-    let filename = path.join(dir, id + '.json');
-
-    if (!contains(dir, filename)) {
-      reject(buildNotFoundError(dir, model, id));
-      return;
-    }
-
-    fs.access(filename, fs.R_OK, function(error) {
-      if (error) {
-        reject(buildNotFoundError(dir, model, id));
-        return;
-      }
-
-      fs.readFile(filename, 'utf8', function(err, data) {
-        if (error) {
-          reject(buildNotFoundError(dir, model, id));
-          return;
-        }
-
-        try {
-          resolve(new model(id, JSON.parse(data)));
-        } catch (e) {
-          reject(e);
-        }
-      });
+    return fs.accessAsync(filename, fs.R_OK)
+    .then(function() {
+      return fs.readFileAsync(filename, 'utf8');
+    })
+    .then(function(data) {
+      return new constructor(id, JSON.parse(data));
     });
+  })
+  .catch(function(err) {
+    throw new ModelNotFoundError(`Couldn't load "${id}": ${err.message}`, { cause: err, directory, constructor, id });
   });
 };

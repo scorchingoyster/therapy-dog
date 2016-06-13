@@ -2,28 +2,63 @@
 
 const assert = require('assert');
 const Promise = require('bluebird');
+const path = require('path');
+const config = require('../../config');
 const Form = require('../../lib/models/form');
 const ModelNotFoundError = require('../../lib/errors').ModelNotFoundError;
 const UploadNotFoundError = require('../../lib/errors').UploadNotFoundError;
 const createTestUpload = require('../test-helpers').createTestUpload;
 
-describe('Form', function() {
-  it('can find a form by id', function() {
-    return Form.findById('article').then(function(form) {
-      assert.equal(form.id, 'article');
-      assert.equal(form.title, 'Article Form');
-    });
+function assertFindById(id) {
+  return Form.findById(id)
+  .then(function() {
+    assert(false);
+  })
+  .catch(function(error) {
+    assert.ok(error instanceof ModelNotFoundError, 'error should be an instance of ModelNotFoundError');
   });
+}
 
-  it('rejects with ModelNotFoundError when it can\'t find a form', function() {
-    return Form.findById('qwerty')
-    .then(function() {
-      assert(false);
-    })
-    .catch(function(error) {
-      assert.ok(error instanceof ModelNotFoundError, 'error should be an instance of ModelNotFoundError');
-      assert.equal(error.extra.model, Form);
-      assert.equal(error.extra.id, 'qwerty');
+describe('Form', function() {
+  describe('findById', function() {
+    it('can find a form by id', function() {
+      return Form.findById('article').then(function(form) {
+        assert.equal(form.id, 'article');
+        assert.equal(form.title, 'Article Form');
+      });
+    });
+
+    it('rejects with ModelNotFoundError for a nonexistent form', function() {
+      return assertFindById('qwerty');
+    });
+
+    it('rejects with ModelNotFoundError for a form with invalid JSON', function() {
+      return assertFindById('invalid-syntax');
+    });
+
+    it('rejects with ModelNotFoundError for an invalid form', function() {
+      return assertFindById('invalid-type');
+    });
+
+    it('rejects with ModelNotFoundError when given an invalid id', function() {
+      return assertFindById(undefined);
+    });
+
+    it('rejects with ModelNotFoundError when given an id that contains the path separator', function() {
+      return assertFindById(path.join('..', 'vocabularies', 'role'));
+    });
+
+    it('includes a cause, id, constructor, and directory when rejecting', function() {
+      return Form.findById('qwerty')
+      .then(function() {
+        assert(false);
+      })
+      .catch(function(error) {
+        assert.ok(error.extra.cause);
+        assert.equal(error.extra.id, 'qwerty');
+        assert.equal(error.extra.constructor, Form);
+        assert.equal(error.extra.directory, config.FORMS_DIRECTORY);
+      });
     });
   });
 
