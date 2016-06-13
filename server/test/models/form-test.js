@@ -146,9 +146,9 @@ describe('Form', function() {
         },
         roles: ['Staff', 'Faculty'],
         review: 'no',
-        article: { id: uploads.article.id },
+        article: uploads.article.id,
         supplemental: [
-          { id: uploads.supplemental.id }
+          uploads.supplemental.id
         ]
       }))
       .then(function(values) {
@@ -244,9 +244,9 @@ describe('Form', function() {
         },
         roles: ['Staff', 'Faculty'],
         review: 'no',
-        article: { id: uploads.article.id },
+        article: uploads.article.id,
         supplemental: [
-          { id: uploads.supplemental.id }
+          uploads.supplemental.id
         ]
       }))
       .then(function(values) {

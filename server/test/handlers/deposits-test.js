@@ -25,7 +25,7 @@ function createTestDeposit() {
         review: 'yes',
         license: 'CC-BY',
         agreement: true,
-        article: article,
+        article: article.id,
         supplemental: []
       },
       depositorEmail: 'depositor@example.com'

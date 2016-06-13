@@ -345,10 +345,10 @@ class Form {
       } else if (block.type === 'file') {
         if (block.multiple) {
           return Promise.all(value.map(function(v) {
-            return Upload.findById(v.id);
+            return Upload.findById(v);
           }));
         } else {
-          return Upload.findById(value.id);
+          return Upload.findById(value);
         }
       } else if (block.type === 'agreement') {
         if (value) {
@@ -386,10 +386,10 @@ class Form {
       } else if (block.type === 'file') {
         if (block.multiple) {
           return Promise.all(value.map(function(v) {
-            return Upload.findById(v.id);
+            return Upload.findById(v);
           }));
         } else {
-          return Upload.findById(value.id);
+          return Upload.findById(value);
         }
       } else if (block.type === 'agreement') {
         if (value) {
