@@ -48,7 +48,7 @@ describe('Form', function() {
       return assertFindById(path.join('..', 'vocabularies', 'role'));
     });
 
-    it('includes a cause, id, model, and dir when rejecting', function() {
+    it('includes a cause, id, constructor, and directory when rejecting', function() {
       return Form.findById('qwerty')
       .then(function() {
         assert(false);
@@ -56,8 +56,8 @@ describe('Form', function() {
       .catch(function(error) {
         assert.ok(error.extra.cause);
         assert.equal(error.extra.id, 'qwerty');
-        assert.equal(error.extra.model, Form);
-        assert.equal(error.extra.dir, config.FORMS_DIRECTORY);
+        assert.equal(error.extra.constructor, Form);
+        assert.equal(error.extra.directory, config.FORMS_DIRECTORY);
       });
     });
   });

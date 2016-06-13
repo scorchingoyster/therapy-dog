@@ -6,22 +6,34 @@ const fs = Promise.promisifyAll(require('fs'));
 const assert = require('assert');
 const ModelNotFoundError = require('../errors').ModelNotFoundError;
 
-exports.findById = function(dir, model, id) {
+/**
+  Look in the `directory` for a file named by `id` with the extension ".json" and attempt to create a new instance using the `constructor`, passing the `id` and the parsed JSON contents of the file. Return a Promise resolving to the new instance.
+
+  This function is used by the Form and Vocabulary models.
+
+  @method findById
+  @param {String} directory The directory to search.
+  @param {Object} constructor The constructor function.
+  @param {String} id The identifier of the model to search for.
+  @return {Promise}
+  @throws {ModelNotFoundError} If the identifier is invalid or would cause the function to access a file outside the `directory`, or the file cannot be found or read, or there is a JSON parsing error, or the constructor throws an error.
+*/
+exports.findById = function(directory, constructor, id) {
   return Promise.try(function() {
     assert(typeof id === 'string', 'id must be a string');
     assert(id.indexOf(path.sep) === -1, 'id must not contain the path separator');
 
-    let filename = path.join(dir, id + '.json');
+    let filename = path.join(directory, id + '.json');
 
     return fs.accessAsync(filename, fs.R_OK)
     .then(function() {
       return fs.readFileAsync(filename, 'utf8');
     })
     .then(function(data) {
-      return new model(id, JSON.parse(data));
+      return new constructor(id, JSON.parse(data));
     });
   })
   .catch(function(err) {
-    throw new ModelNotFoundError(`Couldn't load "${id}": ${err.message}`, { cause: err, dir, model, id });
+    throw new ModelNotFoundError(`Couldn't load "${id}": ${err.message}`, { cause: err, directory, constructor, id });
   });
 };
