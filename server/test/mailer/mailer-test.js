@@ -23,7 +23,7 @@ describe('Mailer', function() {
         review: 'no',
         license: 'CC-BY',
         agreement: true,
-        article: a,
+        article: a.id,
         supplemental: []
       }));
 
