@@ -56,6 +56,22 @@ In a separate terminal, start the client:
 
 Visit <http://localhost:4200/test-form> in your browser.
 
+## Documentation
+
+More information can be found in the docs directory:
+
+- docs/arrow.md -- description and examples of Arrow features
+- docs/lifecycle.md -- where every part of deposits happen, from requesting a form to submitting to the CDR
+- docs/mailer-testing.md -- how to test mailers in development
+- docs/new-block.md -- how to add a new block type
+- docs/types.md -- reference for the structures that appear in form definitions
+
+To generate API documentation for the server:
+
+    make docs
+
+This runs JSDoc, saving the output in the server/docs directory.
+
 ### If `make` is unavailable
 
 Copy the example forms and vocabularies:
