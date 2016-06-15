@@ -7,7 +7,7 @@ run-server: ## Run the API server in development mode
 	cd server && node_modules/.bin/nodemon --ignore "data" npm start
 
 run-client: ## Run the client in development mode
-	cd client && node_modules/.bin/ember server
+	cd client && npm start
 
 EXAMPLE_TEMPLATES = $(wildcard server/data/forms/*.json.example server/data/vocabularies/*.json.example server/data/input/*.json.example)
 
