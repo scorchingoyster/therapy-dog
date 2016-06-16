@@ -143,7 +143,7 @@ describe('Evaluate', function() {
       choices: [
         {
           predicates: [
-            { name: 'present', value: { type: 'lookup', path: ['stuff'] } }
+            { type: 'present', value: { type: 'lookup', path: ['stuff'] } }
           ],
           body: [
             { type: 'string', value: 'stuff' }
@@ -151,7 +151,7 @@ describe('Evaluate', function() {
         },
         {
           predicates: [
-            { name: 'present', value: { type: 'lookup', path: ['other'] } }
+            { type: 'present', value: { type: 'lookup', path: ['other'] } }
           ],
           body: [
             { type: 'string', value: 'other' }
@@ -174,7 +174,7 @@ describe('Evaluate', function() {
       choices: [
         {
           predicates: [
-            { name: 'present', value: { type: 'lookup', path: ['stuff'] } }
+            { type: 'present', value: { type: 'lookup', path: ['stuff'] } }
           ],
           body: [
             { type: 'string', value: 'stuff' }
@@ -195,7 +195,7 @@ describe('Evaluate', function() {
       choices: [
         {
           predicates: [
-            { name: 'present', value: { type: 'lookup', path: ['stuff'] } }
+            { type: 'present', value: { type: 'lookup', path: ['stuff'] } }
           ],
           body: [
             { type: 'string', value: 'stuff' }

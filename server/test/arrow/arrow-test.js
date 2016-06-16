@@ -1,6 +1,7 @@
 'use strict';
 
 const Arrow = require('../../lib/arrow');
+const CheckerError = require('../../lib/checker').CheckerError;
 const assert = require('assert');
 
 describe('Arrow', function() {

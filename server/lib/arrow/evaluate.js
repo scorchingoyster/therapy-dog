@@ -91,10 +91,10 @@ function testPresent(predicate, context) {
 function testPredicates(predicates, context) {
   return predicates.some(function(predicate) {
     /* istanbul ignore else */
-    if (predicate.name === 'present') {
+    if (predicate.type === 'present') {
       return testPresent(predicate, context);
     } else {
-      throw new Error('Unknown predicate name: ' + predicate.name);
+      throw new Error('Unknown predicate type: ' + predicate.type);
     }
   });
 }
