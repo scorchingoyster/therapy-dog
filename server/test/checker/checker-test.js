@@ -149,7 +149,7 @@ describe('Checker', function() {
       assertCheckerErrorMessage(c, 'test', 'Expected object');
       assertCheckerErrorPath(c, 'test', []);
 
-      assertCheckerErrorMessage(c, { label: '123' }, 'Expected string');
+      assertCheckerErrorMessage(c, { label: '123' }, 'Expected string at ["key"]');
       assertCheckerErrorPath(c, { label: '123' }, ['key']);
     });
 
@@ -176,10 +176,10 @@ describe('Checker', function() {
       assertCheckerErrorMessage(c, 'test', 'Expected object');
       assertCheckerErrorPath(c, 'test', []);
 
-      assertCheckerErrorMessage(c, { type: 'lookup', path: 'x' }, 'Expected array');
+      assertCheckerErrorMessage(c, { type: 'lookup', path: 'x' }, 'Expected array at ["path"]');
       assertCheckerErrorPath(c, { type: 'lookup', path: 'x' }, ['path']);
 
-      assertCheckerErrorMessage(c, { type: 'string', value: 123 }, 'Expected string');
+      assertCheckerErrorMessage(c, { type: 'string', value: 123 }, 'Expected string at ["value"]');
       assertCheckerErrorPath(c, { type: 'string', value: 123 }, ['value']);
 
       assertCheckerErrorMessage(c, { type: 'qwerty', blah: true }, /Expected "type" of/);
@@ -205,7 +205,7 @@ describe('Checker', function() {
       assertCheckerThrows(c, 'test', 'Expected array');
       assertCheckerErrorPath(c, 'test', []);
 
-      assertCheckerErrorMessage(c, [1, false, 'xyz'], 'Expected string');
+      assertCheckerErrorMessage(c, [1, false, 'xyz'], 'Expected string at [0]');
       assertCheckerErrorPath(c, [1, false, 'xyz'], [0]);
     });
 
@@ -255,7 +255,7 @@ describe('Checker', function() {
       assertCheckerErrorMessage(c, 'test', 'Expected object');
       assertCheckerErrorPath(c, 'test', []);
 
-      assertCheckerErrorMessage(c, { x: 1, y: false }, 'Expected one of string, number');
+      assertCheckerErrorMessage(c, { x: 1, y: false }, 'Expected one of string, number at ["y"]');
       assertCheckerErrorPath(c, { x: 1, y: false }, ['y']);
     });
 
@@ -283,12 +283,12 @@ describe('Checker', function() {
       assertCheckerErrorMessage(checkers.expression, { type: 'twice', body: [{ type: 'blah', value: 123 }] }, /Expected "type" of/);
       assertCheckerErrorMessage(checkers.expression, { type: 'twice', body: [{ type: 'blah', value: 123 }] }, /twice/);
       assertCheckerErrorMessage(checkers.expression, { type: 'twice', body: [{ type: 'blah', value: 123 }] }, /string/);
-      assertCheckerErrorPath(checkers.expression, { type: 'twice', body: [{ type: 'blah', value: 123 }] }, ['body', 0]);
+      assertCheckerErrorMessage(checkers.expression, { type: 'twice', body: [{ type: 'blah', value: 123 }] }, /\["body"\]\[0\]/);
 
-      assertCheckerErrorMessage(checkers.expression, { type: 'twice', body: [123] }, 'Expected object');
+      assertCheckerErrorMessage(checkers.expression, { type: 'twice', body: [123] }, 'Expected object at ["body"][0]');
       assertCheckerErrorPath(checkers.expression, { type: 'twice', body: [123] }, ['body', 0]);
 
-      assertCheckerErrorMessage(checkers.expression, { type: 'twice', body: [{ type: 'string', value: 'abc' }, { type: 'string', value: 123 }] }, 'Expected string');
+      assertCheckerErrorMessage(checkers.expression, { type: 'twice', body: [{ type: 'string', value: 'abc' }, { type: 'string', value: 123 }] }, 'Expected string at ["body"][1]["value"]');
       assertCheckerErrorPath(checkers.expression, { type: 'twice', body: [{ type: 'string', value: 'abc' }, { type: 'string', value: 123 }] }, ['body', 1, 'value']);
     });
   });

@@ -7,7 +7,15 @@ const CheckerError = function(message/*, path=[]*/) {
 
   Error.captureStackTrace(this, this.constructor);
   this.name = this.constructor.name;
-  this.message = message;
+  
+  this.originalMessage = message;
+  
+  if (path.length > 0) {
+    this.message = `${message} at ${path.map(i => `[${JSON.stringify(i)}]`).join('')}`;
+  } else {
+    this.message = message;
+  }
+  
   this.path = path;
 };
 inherits(CheckerError, Error);
@@ -103,7 +111,7 @@ exports.shape = function(spec) {
         }
       } catch (err) {
         if (err instanceof CheckerError) {
-          throw new CheckerError(err.message, [key].concat(err.path));
+          throw new CheckerError(err.originalMessage, [key].concat(err.path));
         } else {
           throw err;
         }
@@ -148,7 +156,7 @@ exports.arrayOf = function(inner) {
         result[i] = inner(value[i]);
       } catch (err) {
         if (err instanceof CheckerError) {
-          throw new CheckerError(err.message, [i].concat(err.path));
+          throw new CheckerError(err.originalMessage, [i].concat(err.path));
         } else {
           throw err;
         }
@@ -178,7 +186,7 @@ exports.mapOf = function(inner) {
         result[key] = inner(value[key]);
       } catch (err) {
         if (err instanceof CheckerError) {
-          throw new CheckerError(err.message, [key].concat(err.path));
+          throw new CheckerError(err.originalMessage, [key].concat(err.path));
         } else {
           throw err;
         }
