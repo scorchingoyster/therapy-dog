@@ -2,6 +2,7 @@
 
 const typify = require('typify').create();
 const findById = require('./utils').findById;
+const checker = require('../checker');
 const config = require('../../config');
 
 /**
@@ -13,6 +14,20 @@ typify.alias('vocabulary_objects', '{ terms: array map, valueKey: string, labelK
 typify.alias('vocabulary_strings', '{ terms: array string }');
 typify.alias('vocabulary', 'vocabulary_strings | vocabulary_objects');
 
+// Define checkers for checking attributes in the Vocabulary constructor.
+
+let vocabularyChecker = checker.oneOf([
+  checker.shape({
+    terms: checker.arrayOf(checker.object()),
+    valueKey: checker.string(),
+    labelKey: checker.optional(checker.string()),
+    noteKey: checker.optional(checker.string())
+  }),
+  checker.shape({
+    terms: checker.arrayOf(checker.string())
+  })
+]);
+
 /**
   @class Vocabulary
   @constructor
@@ -22,6 +37,7 @@ typify.alias('vocabulary', 'vocabulary_strings | vocabulary_objects');
 */
 class Vocabulary {
   constructor(id, attributes) {
+    attributes = vocabularyChecker(attributes);
     typify.assert('vocabulary', attributes);
 
     this.id = id;

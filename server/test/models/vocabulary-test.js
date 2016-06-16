@@ -2,6 +2,7 @@
 
 const assert = require('assert');
 const Vocabulary = require('../../lib/models/vocabulary');
+const CheckerError = require('../../lib/checker').CheckerError;
 
 describe('Vocabulary', function() {
   it('can find a vocabulary by id', function() {
@@ -28,7 +29,7 @@ describe('Vocabulary', function() {
       assert.throws(function() {
         /*jshint nonew: false */
         new Vocabulary(null, invalid);
-      }, TypeError);
+      }, CheckerError);
     });
   });
 });
