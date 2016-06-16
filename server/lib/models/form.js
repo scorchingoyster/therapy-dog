@@ -5,6 +5,7 @@ const typify = require('typify').create();
 const Upload = require('./upload');
 const Vocabulary = require('./vocabulary');
 const Arrow = require('../arrow');
+const checker = require('../checker');
 const findById = require('./utils').findById;
 const config = require('../../config');
 
@@ -45,6 +46,192 @@ typify.alias('recipient_expression', 'recipient_expression_string | recipient_ex
 typify.alias('metadata', '{ id: string, type: ("descriptive" | "access-control"), model: "xml", template: arrow_expression }');
 
 typify.alias('form', '{ destination: string, contact: { name: string, email: string }?, title: string, description: string?, notificationRecipientEmails: (array recipient_expression)?, children: array form_block, bundle: bundle, metadata: array metadata }');
+
+
+// Define checkers for checking attributes in the Form constructor.
+
+// Form options
+let optionsChecker = checker.oneOf([
+  checker.string(),
+  checker.arrayOf(checker.string()),
+  checker.arrayOf(checker.shape({
+    label: checker.string(),
+    value: checker.string(),
+    note: checker.optional(checker.string())
+  }))
+]);
+
+// Blocks
+let blockCheckers = {};
+
+blockCheckers.agreement = checker.shape({
+  key: checker.string(),
+  name: checker.string(),
+  uri: checker.string(),
+  prompt: checker.string()
+});
+
+blockCheckers.checkboxes = checker.shape({
+  key: checker.string(),
+  label: checker.optional(checker.string()),
+  options: optionsChecker,
+  required: checker.optional(checker.boolean()),
+  defaultValue: checker.optional(checker.arrayOf(checker.string())),
+  note: checker.optional(checker.string())
+});
+
+blockCheckers.date = checker.shape({
+  key: checker.string(),
+  label: checker.optional(checker.string()),
+  precision: checker.optional(checker.oneOf([
+    checker.literal('year'),
+    checker.literal('month'),
+    checker.literal('day')
+  ])),
+  required: checker.optional(checker.boolean()),
+  note: checker.optional(checker.string())
+});
+
+blockCheckers.email = checker.shape({
+  key: checker.string(),
+  label: checker.optional(checker.string()),
+  options: checker.optional(optionsChecker),
+  required: checker.optional(checker.boolean()),
+  defaultValue: checker.optional(checker.string()),
+  placeholder: checker.optional(checker.string()),
+  note: checker.optional(checker.string())
+});
+
+blockCheckers.file = checker.shape({
+  key: checker.string(),
+  label: checker.optional(checker.string()),
+  required: checker.optional(checker.boolean()),
+  multiple: checker.optional(checker.boolean()),
+  note: checker.optional(checker.string())
+});
+
+blockCheckers.radio = checker.shape({
+  key: checker.string(),
+  label: checker.optional(checker.string()),
+  options: optionsChecker,
+  required: checker.optional(checker.boolean()),
+  defaultValue: checker.optional(checker.string()),
+  note: checker.optional(checker.string())
+});
+
+blockCheckers.section = checker.shape({
+  key: checker.string(),
+  label: checker.optional(checker.string()),
+  repeat: checker.optional(checker.boolean()),
+  note: checker.optional(checker.string()),
+  children: checker.arrayOf(checker.lookup(blockCheckers, 'block'))
+});
+
+blockCheckers.select = checker.shape({
+  key: checker.string(),
+  label: checker.optional(checker.string()),
+  options: optionsChecker,
+  required: checker.optional(checker.boolean()),
+  allowBlank: checker.optional(checker.boolean()),
+  defaultValue: checker.optional(checker.string()),
+  note: checker.optional(checker.string()),
+});
+
+blockCheckers.text = checker.shape({
+  key: checker.string(),
+  label: checker.optional(checker.string()),
+  options: checker.optional(optionsChecker),
+  required: checker.optional(checker.boolean()),
+  defaultValue: checker.optional(checker.string()),
+  placeholder: checker.optional(checker.string()),
+  size: checker.optional(checker.oneOf([
+    checker.literal('line'),
+    checker.literal('paragraph')
+  ])),
+  note: checker.optional(checker.string()),
+});
+
+blockCheckers.block = checker.recordTypes({
+  agreement: checker.lookup(blockCheckers, 'agreement'),
+  checkboxes: checker.lookup(blockCheckers, 'checkboxes'),
+  date: checker.lookup(blockCheckers, 'date'),
+  email: checker.lookup(blockCheckers, 'email'),
+  file: checker.lookup(blockCheckers, 'file'),
+  radio: checker.lookup(blockCheckers, 'radio'),
+  section: checker.lookup(blockCheckers, 'section'),
+  select: checker.lookup(blockCheckers, 'select'),
+  text: checker.lookup(blockCheckers, 'text')
+});
+
+// Bundles
+let bundleFileChecker = checker.shape({
+  context: checker.optional(checker.string()),
+  metadata: checker.optional(checker.arrayOf(checker.string())),
+  upload: checker.string(),
+});
+
+let bundleItemChecker = checker.shape({
+  context: checker.optional(checker.string()),
+  metadata: checker.optional(checker.arrayOf(checker.string()))
+});
+
+let bundleChecker = checker.recordTypes({
+  single: checker.shape({
+    file: bundleFileChecker
+  }),
+  aggregate: checker.shape({
+    aggregate: checker.optional(bundleItemChecker),
+    main: checker.optional(bundleFileChecker),
+    supplemental: checker.optional(checker.arrayOf(bundleFileChecker)),
+    agreements: checker.optional(checker.arrayOf(checker.string()))
+  })
+});
+
+// Arrow expressions
+let arrowExpressionChecker = function(value) {
+  if (Arrow.check(value)) {
+    return value;
+  } else {
+    throw new checker.CheckerError(`Expected ${arrowExpressionChecker}`);
+  }
+};
+
+arrowExpressionChecker.toString = function() {
+  return 'arrow expression';
+};
+
+// Metadata
+let metadataChecker = checker.shape({
+  id: checker.string(),
+  type: checker.oneOf([
+    checker.literal('descriptive'),
+    checker.literal('access-control')
+  ]),
+  model: checker.literal('xml'),
+  template: arrowExpressionChecker
+});
+
+// Notification recipient email expressions
+// TODO: use checkers exported from Arrow
+let notificationRecipientEmailChecker = checker.recordTypes({
+  string: checker.shape({ value: checker.string() }),
+  lookup: checker.shape({ path: checker.arrayOf(checker.string()) })
+});
+
+// Form
+let formChecker = checker.shape({
+  destination: checker.string(),
+  contact: checker.optional(checker.shape({
+    name: checker.string(),
+    email: checker.string()
+  })),
+  title: checker.string(),
+  description: checker.optional(checker.string()),
+  notificationRecipientEmails: checker.optional(checker.arrayOf(notificationRecipientEmailChecker)),
+  children: checker.arrayOf(blockCheckers.block),
+  bundle: bundleChecker,
+  metadata: checker.arrayOf(metadataChecker)
+});
 
 /**
   Traverse the given blocks and values, yielding non-section blocks and their
@@ -196,6 +383,8 @@ function getOptionLabel(options, value) {
 */
 class Form {
   constructor(id, attributes) {
+    attributes = formChecker(attributes);
+    
     typify.assert('form', attributes);
 
     this.id = id;

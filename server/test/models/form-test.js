@@ -4,6 +4,7 @@ const assert = require('assert');
 const Promise = require('bluebird');
 const path = require('path');
 const config = require('../../config');
+const CheckerError = require('../../lib/checker').CheckerError;
 const Form = require('../../lib/models/form');
 const ModelNotFoundError = require('../../lib/errors').ModelNotFoundError;
 const UploadNotFoundError = require('../../lib/errors').UploadNotFoundError;
@@ -63,7 +64,7 @@ describe('Form', function() {
   });
 
   describe('constructor', function() {
-    it('throws a TypeError when passed invalid attributes', function() {
+    it('throws a CheckerError when passed invalid attributes', function() {
       // Missing the 'upload' property in bundle.
       let invalid = {
         destination: 'uuid:1234',
@@ -80,10 +81,10 @@ describe('Form', function() {
       assert.throws(function() {
         /*jshint nonew: false */
         new Form(null, invalid);
-      }, TypeError);
+      }, CheckerError);
     });
 
-    it('throws a TypeError when passed invalid metadata template in attributes', function() {
+    it('throws a CheckerError when passed invalid metadata template in attributes', function() {
       let invalid = {
         destination: 'uuid:1234',
         title: 'My Form',
@@ -107,7 +108,7 @@ describe('Form', function() {
       assert.throws(function() {
         /*jshint nonew: false */
         new Form(null, invalid);
-      }, TypeError);
+      }, CheckerError);
     });
   });
 
