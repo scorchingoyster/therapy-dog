@@ -1,6 +1,5 @@
 'use strict';
 
-const typify = require('typify').create();
 const findById = require('./utils').findById;
 const checker = require('../checker');
 const config = require('../../config');
@@ -8,11 +7,6 @@ const config = require('../../config');
 /**
   @module models
 */
-
-// Define type aliases for checking attributes in the Vocabulary constructor.
-typify.alias('vocabulary_objects', '{ terms: array map, valueKey: string, labelKey: string, noteKey: string? }');
-typify.alias('vocabulary_strings', '{ terms: array string }');
-typify.alias('vocabulary', 'vocabulary_strings | vocabulary_objects');
 
 // Define checkers for checking attributes in the Vocabulary constructor.
 
@@ -37,11 +31,8 @@ let vocabularyChecker = checker.oneOf([
 */
 class Vocabulary {
   constructor(id, attributes) {
-    attributes = vocabularyChecker(attributes);
-    typify.assert('vocabulary', attributes);
-
     this.id = id;
-    this.attributes = attributes;
+    this.attributes = vocabularyChecker(attributes);
   }
 
   /**

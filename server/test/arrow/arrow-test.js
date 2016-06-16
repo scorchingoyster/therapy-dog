@@ -6,7 +6,7 @@ const assert = require('assert');
 
 describe('Arrow', function() {
   describe('constructor', function() {
-    it('throws a TypeError when passed an invalid expression', function() {
+    it('throws a CheckerError when passed an invalid expression', function() {
       // Lookup path isn't an array.
       let invalid = {
         type: 'lookup',
@@ -15,8 +15,8 @@ describe('Arrow', function() {
 
       assert.throws(function() {
         /*jshint nonew: false */
-        new Arrow(null, invalid);
-      }, TypeError);
+        new Arrow(invalid);
+      }, CheckerError);
     });
   });
 });

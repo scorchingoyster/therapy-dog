@@ -1,7 +1,6 @@
 'use strict';
 
 const Promise = require('bluebird');
-const typify = require('typify').create();
 const Upload = require('./upload');
 const Vocabulary = require('./vocabulary');
 const Arrow = require('../arrow');
@@ -12,41 +11,6 @@ const config = require('../../config');
 /**
   @module models
 */
-
-// Define type aliases for checking attributes in the Form constructor.
-typify.mutual({
-  'form_agreement': '{ type: "agreement", key: string, name: string, uri: string, prompt: string }',
-  'form_options': 'string | array string | array { label: string, value: string, note: string? }',
-  'form_checkboxes': '{ type: "checkboxes", key: string, label: string?, options: form_options, required: boolean?, defaultValue: (array string)?, note: string? }',
-  'form_date': '{ type: "date", key: string, label: string?, precision: ("year" | "month" | "day")?, required: boolean?, note: string? }',
-  'form_email': '{ type: "email", key: string, label: string?, options: form_options?, required: boolean?, defaultValue: string?, placeholder: string?, note: string? }',
-  'form_file': '{ type: "file", key: string, label: string?, required: boolean?, multiple: boolean?, note: string? }',
-  'form_radio': '{ type: "radio", key: string, label: string?, options: form_options, required: boolean?, defaultValue: string?, note: string? }',
-  'form_section': '{ type: "section", key: string, label: string?, note: string?, children: array form_block, repeat: boolean? }',
-  'form_select': '{ type: "select", key: string, label: string?, options: form_options, required: boolean?, allowBlank: boolean?, defaultValue: string?, note: string? }',
-  'form_text': '{ type: "text", key: string, label: string?, options: form_options?, required: boolean?, defaultValue: string?, placeholder: string?, size: ("line" | "paragraph")?, note: string? }',
-  'form_block': 'form_agreement | form_checkboxes | form_date | form_email | form_file | form_radio | form_section | form_select | form_text'
-});
-
-typify.alias('bundle_item', '{ context: string?, metadata: (array string)? }');
-typify.alias('bundle_file', 'bundle_item & { upload: string }');
-typify.alias('bundle_single', '{ type: "single", file: bundle_file }');
-typify.alias('bundle_aggregate', '{ type: "aggregate", aggregate: bundle_item?, main: bundle_file?, supplemental: (array bundle_file)?, agreements: (array string)? }');
-typify.alias('bundle', 'bundle_aggregate | bundle_single');
-
-typify.type('arrow_expression', function(t) {
-  return Arrow.check(t);
-});
-
-// Duplicate part of the Arrow typify specification so we can define notification recipient email expressions.
-typify.alias('recipient_expression_string', '{ type: "string", value: string }');
-typify.alias('recipient_expression_lookup', '{ type: "lookup", path: array string }');
-typify.alias('recipient_expression', 'recipient_expression_string | recipient_expression_lookup');
-
-typify.alias('metadata', '{ id: string, type: ("descriptive" | "access-control"), model: "xml", template: arrow_expression }');
-
-typify.alias('form', '{ destination: string, contact: { name: string, email: string }?, title: string, description: string?, notificationRecipientEmails: (array recipient_expression)?, children: array form_block, bundle: bundle, metadata: array metadata }');
-
 
 // Define checkers for checking attributes in the Form constructor.
 
@@ -369,12 +333,8 @@ function getOptionLabel(options, value) {
 */
 class Form {
   constructor(id, attributes) {
-    attributes = formChecker(attributes);
-    
-    typify.assert('form', attributes);
-
     this.id = id;
-    this.attributes = attributes;
+    this.attributes = formChecker(attributes);
   }
 
   /**

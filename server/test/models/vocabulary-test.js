@@ -20,7 +20,7 @@ describe('Vocabulary', function() {
   });
 
   describe('constructor', function() {
-    it('throws a TypeError when passed invalid attributes', function() {
+    it('throws a CheckerError when passed invalid attributes', function() {
       // Missing the labelKey and valueKey properties.
       let invalid = {
         terms: [{ code: 'eng', name: 'English' }]
