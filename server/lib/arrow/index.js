@@ -138,4 +138,6 @@ class Arrow {
   }
 }
 
+Arrow.expressionCheckers = expressionCheckers;
+
 module.exports = Arrow;

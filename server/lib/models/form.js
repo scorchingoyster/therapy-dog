@@ -187,19 +187,6 @@ let bundleChecker = checker.recordTypes({
   })
 });
 
-// Arrow expressions
-let arrowExpressionChecker = function(value) {
-  if (Arrow.check(value)) {
-    return value;
-  } else {
-    throw new checker.CheckerError(`Expected ${arrowExpressionChecker}`);
-  }
-};
-
-arrowExpressionChecker.toString = function() {
-  return 'arrow expression';
-};
-
 // Metadata
 let metadataChecker = checker.shape({
   id: checker.string(),
@@ -208,14 +195,13 @@ let metadataChecker = checker.shape({
     checker.literal('access-control')
   ]),
   model: checker.literal('xml'),
-  template: arrowExpressionChecker
+  template: Arrow.expressionCheckers.expression
 });
 
 // Notification recipient email expressions
-// TODO: use checkers exported from Arrow
 let notificationRecipientEmailChecker = checker.recordTypes({
-  string: checker.shape({ value: checker.string() }),
-  lookup: checker.shape({ path: checker.arrayOf(checker.string()) })
+  string: Arrow.expressionCheckers.string,
+  lookup: Arrow.expressionCheckers.lookup
 });
 
 // Form
