@@ -6,17 +6,21 @@ This is a Node.js and Ember application that provides:
   - an expression language for mapping form input to MODS and other XML schemas, and
   - routines for packaging and submitting METS deposits to the CDR.
 
-## Setup
+## Setup for development
 
-Install Node.js. If you are using Homebrew:
+Install Node.js.
 
-    brew install node
+If you are using Homebrew on macOS:
 
-Install dependencies:
+    brew install node4-lts
+
+If you are using Git for Windows, install Node.js using the v4.x.x LTS package available at <https://nodejs.org/en/>.
+
+Install Dependencies:
 
     make deps
 
-Copy example the example form and its vocabularies:
+Copy the example forms and vocabularies:
 
     make examples
 
@@ -24,9 +28,53 @@ Start the API server:
 
     make run-server
 
-Start the client:
+In a separate terminal, start the client:
 
     make run-client
+
+Visit <http://localhost:4200/test-form> in your browser.
+
+## Setup for building forms only (not doing development)
+
+Install Node.js as above.
+
+Rather than installing dependencies using `make deps` as above:
+
+    cd client && npm install
+
+Copy the example forms and vocabularies:
+
+    make examples
+
+Start the API server:
+
+    make run-server
+
+In a separate terminal, start the client:
+
+    make run-client
+
+Visit <http://localhost:4200/test-form> in your browser.
+
+### If `make` is unavailable
+
+Copy the example forms and vocabularies:
+
+    cp server/data/forms/article.json.example server/data/forms/article.json
+    cp server/data/forms/catalog.json.example server/data/forms/catalog.json
+    cp server/data/forms/test-form.json.example server/data/forms/test-form.json
+    cp server/data/vocabularies/genre.json.example server/data/vocabularies/genre.json
+    cp server/data/vocabularies/genre.json.example server/data/vocabularies/issuance.json
+    cp server/data/vocabularies/language.json.example server/data/vocabularies/language.json
+    cp server/data/vocabularies/role.json.example server/data/vocabularies/role.json
+
+Start the API server:
+
+    cd server && npm start
+
+In a separate terminal, start the client:
+
+    cd client && npm start
 
 ## Check before you commit
 
