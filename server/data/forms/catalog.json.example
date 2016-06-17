@@ -215,6 +215,16 @@
     },
     
     {
+      "type": "date",
+      "key": "date-options",
+      "label": "Date with Options",
+      "options": [
+        { "label": "No embargo", "value": "" },
+        { "label": "In 1 year", "value": "P1Y" }
+      ]
+    },
+    
+    {
       "type": "agreement",
       "key": "agreement",
       "name": "Agreement",
