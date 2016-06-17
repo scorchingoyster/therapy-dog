@@ -115,6 +115,16 @@ function resolveVocabularies(blocks) {
           options: vocabulary.options
         });
       });
+    } else if (Array.isArray(block.options)) {
+      return Promise.resolve(Object.assign({}, block, {
+        options: block.options.map(option => {
+          if (typeof option === 'string') {
+            return { label: option, value: option };
+          } else {
+            return option;
+          }
+        })
+      }));
     } else {
       return Promise.resolve(block);
     }
