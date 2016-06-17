@@ -81,6 +81,41 @@ describe('Compact', function() {
     });
   });
 
+  describe('with lookup nodes in properties', function() {
+    let template = new Arrow({
+      type: 'structure',
+      name: 'accessControl',
+      properties: {
+        'xmlns': {
+          type: 'string',
+          value: 'http://cdr.unc.edu/definitions/acl'
+        },
+        published: {
+          type: 'lookup',
+          path: ['published']
+        },
+        'embargo-until': {
+          type: 'lookup',
+          path: ['embargo-until']
+        }
+      }
+    });
+
+    it('should remove absent properties, even if they are blank strings', function() {
+      let context = { published: '' };
+
+      let expected = {
+        type: 'accessControl',
+        properties: {
+          xmlns: 'http://cdr.unc.edu/definitions/acl'
+        },
+        children: []
+      };
+
+      deepEqual(template.evaluate(context), expected);
+    });
+  });
+
   describe('with multiple levels', function() {
     let template = new Arrow({
       type: 'structure',
