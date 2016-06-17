@@ -64,7 +64,17 @@ function compactBody(body) {
 
 function compactNode(node) {
   if (node.type === 'structure') {
-    return Object.assign({}, node, { children: compactBody(node.children) });
+    let children = compactBody(node.children);
+
+    let properties = Object.keys(node.properties).reduce(function(result, key) {
+      if (node.properties[key].presence === 'absent') {
+        return result;
+      } else {
+        return Object.assign({}, result, { [key]: compactNode(node.properties[key]) });
+      }
+    }, {});
+
+    return Object.assign({}, node, { children, properties });
   } else {
     return node;
   }
