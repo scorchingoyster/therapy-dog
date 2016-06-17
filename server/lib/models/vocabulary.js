@@ -85,7 +85,10 @@ class Vocabulary {
 
         return option;
       } else {
-        return term;
+        return {
+          label: term,
+          value: term
+        };
       }
     });
   }

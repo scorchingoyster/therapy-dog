@@ -133,20 +133,20 @@ describe('Form', function() {
       });
     });
 
-    it('does not convert string array vocabularies or literal options to options arrays', function() {
+    it('converts array vocabularies or literal options to options arrays', function() {
       return Form.findById('article')
       .then(function(form) {
         return form.getResourceObject({ children: true });
       })
       .then(function(resourceObject) {
         let roles = resourceObject.attributes.children.find(c => c.key === 'roles');
-        assert.deepEqual(roles.options, ['Student', 'Faculty', 'Staff']);
+        assert.deepEqual(roles.options, [{ label: 'Student', value: 'Student' }, { label: 'Faculty', value: 'Faculty' }, { label: 'Staff', value: 'Staff' }]);
 
         let review = resourceObject.attributes.children.find(c => c.key === 'review');
         assert.deepEqual(review.options, [{ label: 'Yes', value: 'yes' }, { label: 'No', value: 'no' }]);
 
         let license = resourceObject.attributes.children.find(c => c.key === 'license');
-        assert.deepEqual(license.options, ['CC-BY', 'CC-BY-NC']);
+        assert.deepEqual(license.options, [{ label: 'CC-BY', value: 'CC-BY' }, { label: 'CC-BY-NC', value: 'CC-BY-NC' }]);
       });
     });
 
