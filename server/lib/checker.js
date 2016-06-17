@@ -7,15 +7,15 @@ const CheckerError = function(message/*, path=[]*/) {
 
   Error.captureStackTrace(this, this.constructor);
   this.name = this.constructor.name;
-  
+
   this.originalMessage = message;
-  
+
   if (path.length > 0) {
     this.message = `${message} at ${path.map(i => `[${JSON.stringify(i)}]`).join('')}`;
   } else {
     this.message = message;
   }
-  
+
   this.path = path;
 };
 inherits(CheckerError, Error);
@@ -37,7 +37,7 @@ function buildTypeofChecker(type) {
 
     return checker;
   };
-};
+}
 
 exports.string = buildTypeofChecker('string');
 
@@ -53,7 +53,7 @@ exports.any = function() {
   };
 
   checker.toString = function() {
-    return type;
+    return 'any';
   };
 
   return checker;
@@ -73,7 +73,7 @@ exports.literal = function(literal) {
   };
 
   return checker;
-}
+};
 
 exports.regexp = function(regexp) {
   let checker = function(value) {
@@ -89,7 +89,7 @@ exports.regexp = function(regexp) {
   };
 
   return checker;
-}
+};
 
 exports.shape = function(spec) {
   let keys = Object.keys(spec);
@@ -128,7 +128,7 @@ exports.shape = function(spec) {
   return checker;
 };
 
-exports.array = function(inner) {
+exports.array = function() {
   let checker = function(value) {
     if (!Array.isArray(value)) {
       throw new CheckerError(`Expected ${checker}`);
@@ -223,7 +223,7 @@ exports.oneOf = function(types) {
   };
 
   return checker;
-}
+};
 
 exports.recordTypes = function(types) {
   let keys = Object.keys(types);
@@ -249,7 +249,7 @@ exports.recordTypes = function(types) {
   };
 
   return checker;
-}
+};
 
 exports.optional = function(inner) {
   let checker = function(value) {

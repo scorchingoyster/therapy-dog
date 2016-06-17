@@ -101,7 +101,7 @@ class Arrow {
   }
 
   constructor(expression) {
-    this.expression = expressionCheckers.expression(expression);;
+    this.expression = expressionCheckers.expression(expression);
   }
 
   /**

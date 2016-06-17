@@ -98,7 +98,7 @@ blockCheckers.select = checker.shape({
   required: checker.optional(checker.boolean()),
   allowBlank: checker.optional(checker.boolean()),
   defaultValue: checker.optional(checker.string()),
-  note: checker.optional(checker.string()),
+  note: checker.optional(checker.string())
 });
 
 blockCheckers.text = checker.shape({
@@ -112,7 +112,7 @@ blockCheckers.text = checker.shape({
     checker.literal('line'),
     checker.literal('paragraph')
   ])),
-  note: checker.optional(checker.string()),
+  note: checker.optional(checker.string())
 });
 
 blockCheckers.block = checker.recordTypes({
@@ -131,7 +131,7 @@ blockCheckers.block = checker.recordTypes({
 let bundleFileChecker = checker.shape({
   context: checker.optional(checker.string()),
   metadata: checker.optional(checker.arrayOf(checker.string())),
-  upload: checker.string(),
+  upload: checker.string()
 });
 
 let bundleItemChecker = checker.shape({
