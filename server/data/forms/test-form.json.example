@@ -31,10 +31,10 @@
           "type": "date",
           "label": "Embargo",
           "options": [
-              { "label": "None", "value": "" },
-              { "label": "1 Year", "value": "P1Y" },
-              { "label": "2 Years", "value": "P2Y" }
-            ]
+            { "label": "None", "value": "" },
+            { "label": "1 Year", "value": "P1Y" },
+            { "label": "2 Years", "value": "P2Y" }
+          ]
         },
         {
           "key": "version",
@@ -276,7 +276,7 @@
         "properties": {
           "xmlns": { "type": "string", "value": "http://cdr.unc.edu/definitions/acl" },
           "published": { "type": "string", "value": "false" },
-          "embargo-until": { "type" : "lookup", "path" : ["info", "embargo"]}
+          "embargo-until": { "type": "lookup", "path": ["info", "embargo"] }
         }
       }
     },
