@@ -47,6 +47,16 @@
       ]
     },
     {
+      "key": "embargo",
+      "type": "date",
+      "label": "Embargo",
+      "options": [
+          { "label": "None", "value": "" },
+          { "label": "1 Year", "value": "P1Y" },
+          { "label": "2 Years", "value": "P2Y" }
+        ]
+    },
+    {
       "type": "checkboxes",
       "key": "roles",
       "label": "Roles",

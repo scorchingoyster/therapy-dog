@@ -3,6 +3,7 @@
 const assert = require('assert');
 const Promise = require('bluebird');
 const path = require('path');
+const moment = require('moment');
 const config = require('../../config');
 const CheckerError = require('../../lib/checker').CheckerError;
 const Form = require('../../lib/models/form');
@@ -180,6 +181,7 @@ describe('Form', function() {
           title: 'My Article',
           language: 'eng'
         },
+        embargo: 'P1Y',
         roles: ['Staff', 'Faculty'],
         review: 'no',
         article: uploads.article.id,
@@ -194,6 +196,10 @@ describe('Form', function() {
         ]);
         assert.equal(values.info.title, 'My Article');
         assert.deepEqual(values.info.language, { code: 'eng', name: 'English' });
+        // Check that the embargo date is roughly a year in the future,
+        // with a little wiggle room to deal with time passing during run
+        assert.ok(moment(values.embargo).isBetween(
+          moment().add(1, 'year').subtract(5, 'minute'), moment().add(1, 'year')));
         assert.deepEqual(values.roles, ['Staff', 'Faculty']);
         assert.equal(values.review, 'no');
         assert.equal(values.article.name, 'article.pdf');

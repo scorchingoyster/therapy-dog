@@ -20,6 +20,7 @@ describe('Mailer', function() {
           language: 'eng'
         },
         roles: ['Staff', 'Faculty'],
+        embargo: '',
         review: 'no',
         license: 'CC-BY',
         agreement: true,
@@ -50,6 +51,7 @@ describe('Mailer', function() {
               { label: 'Language', value: 'English' }
             ]
           },
+          { label: 'Embargo', value: '' },
           { label: 'Roles', value: 'Staff, Faculty' },
           { label: 'Needs Review?', value: 'No' },
           { label: 'License', value: 'CC-BY' },

@@ -7,6 +7,9 @@ const Arrow = require('../arrow');
 const checker = require('../checker');
 const findById = require('./utils').findById;
 const config = require('../../config');
+const moment = require('moment');
+
+const DURATION_REGEX = /^P(\d+[a-zA-Z])+$/;
 
 /**
   @module models
@@ -47,6 +50,7 @@ blockCheckers.checkboxes = checker.shape({
 blockCheckers.date = checker.shape({
   key: checker.string(),
   label: checker.optional(checker.string()),
+  options: checker.optional(optionsChecker),
   precision: checker.optional(checker.oneOf([
     checker.literal('year'),
     checker.literal('month'),
@@ -472,6 +476,9 @@ class Form {
       } else if (block.type === 'email') {
         return String(value);
       } else if (block.type === 'date') {
+        if (DURATION_REGEX.test(value)) {
+          return moment().add(moment.duration(value)).toISOString();
+        }
         return String(value);
       } else if (block.type === 'select') {
         return transformOptionValue(block.options, value);
