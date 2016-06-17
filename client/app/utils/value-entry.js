@@ -4,7 +4,7 @@ const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9
 const DATE_DAY_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 const DATE_MONTH_REGEX = /^\d{4}-\d{2}$/;
 const DATE_YEAR_REGEX = /^\d{4}$/;
-const DURATION_REGEX = /^P(\d+[a-zA-Z])+$/;
+const DURATION_REGEX = /^P.+$/;
 
 export default Ember.Object.extend({
   required: Ember.computed('block.type', 'block.required', function() {

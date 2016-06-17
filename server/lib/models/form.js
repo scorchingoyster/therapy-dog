@@ -9,7 +9,7 @@ const findById = require('./utils').findById;
 const config = require('../../config');
 const moment = require('moment');
 
-const DURATION_REGEX = /^P(\d+[a-zA-Z])+$/;
+const DURATION_REGEX = /^P.+$/;
 
 /**
   @module models
