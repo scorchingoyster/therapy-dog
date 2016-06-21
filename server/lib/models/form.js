@@ -477,7 +477,7 @@ class Form {
         return String(value);
       } else if (block.type === 'date') {
         if (DURATION_REGEX.test(value)) {
-          return moment().add(moment.duration(value)).toISOString();
+          return moment().add(moment.duration(value)).format('YYYY-MM-DD');
         }
         return String(value);
       } else if (block.type === 'select') {

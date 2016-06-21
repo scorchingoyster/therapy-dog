@@ -196,10 +196,7 @@ describe('Form', function() {
         ]);
         assert.equal(values.info.title, 'My Article');
         assert.deepEqual(values.info.language, { code: 'eng', name: 'English' });
-        // Check that the embargo date is roughly a year in the future,
-        // with a little wiggle room to deal with time passing during run
-        assert.ok(moment(values.embargo).isBetween(
-          moment().add(1, 'year').subtract(5, 'minute'), moment().add(1, 'year')));
+        assert.equal(values.embargo, moment().add(1, 'year').format('YYYY-MM-DD'));
         assert.deepEqual(values.roles, ['Staff', 'Faculty']);
         assert.equal(values.review, 'no');
         assert.equal(values.article.name, 'article.pdf');
