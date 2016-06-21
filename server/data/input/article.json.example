@@ -10,9 +10,9 @@
     }
   ],
   "info": {
-    "title": "Test"
+    "title": "Test",
+    "language": "eng"
   },
-  "language": "eng",
   "roles": ["Student", "Staff"],
   "review": "yes",
   "license": "CC-BY",
