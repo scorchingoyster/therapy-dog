@@ -74,7 +74,8 @@ function generateAgreementFileItem(agreements, values) {
     type: 'acl:accessControl',
     properties: {
       'xmlns:acl': 'http://cdr.unc.edu/definitions/acl',
-      'acl:published': 'false'
+      'acl:published': 'false',
+      'acl:inherit': 'false'
     },
     children: []
   });
