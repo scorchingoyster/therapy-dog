@@ -2,6 +2,13 @@
 
 const inherits = require('util').inherits;
 
+/**
+ * @class ModelNotFoundError
+ * @constructor
+ * @param {string} message
+ * @param {Object} extra
+ * @param {Error} [extra.cause]
+ */
 exports.ModelNotFoundError = function(message, extra) {
   Error.captureStackTrace(this, this.constructor);
   this.name = this.constructor.name;
@@ -13,6 +20,13 @@ exports.ModelNotFoundError = function(message, extra) {
 };
 inherits(exports.ModelNotFoundError, Error);
 
+/**
+ * @class UploadNotFoundError
+ * @constructor
+ * @param {string} message
+ * @param {Object} extra
+ * @param {Error} [extra.cause]
+ */
 exports.UploadNotFoundError = function(message, extra) {
   Error.captureStackTrace(this, this.constructor);
   this.name = this.constructor.name;
@@ -24,6 +38,13 @@ exports.UploadNotFoundError = function(message, extra) {
 };
 inherits(exports.UploadNotFoundError, Error);
 
+/**
+ * @class SwordError
+ * @constructor
+ * @param {string} message
+ * @param {Object} extra
+ * @param {Error} [extra.cause]
+ */
 exports.SwordError = function(message, extra) {
   Error.captureStackTrace(this, this.constructor);
   this.name = this.constructor.name;

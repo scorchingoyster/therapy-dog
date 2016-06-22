@@ -150,6 +150,13 @@ function evaluateBody(expressions, context) {
   }, []);
 }
 
+/**
+ * @function
+ * @name evaluate
+ * @param {Object} expression
+ * @param {Object} context - The context to use for lookups.
+ * @return {*}
+ */
 function evaluateExpression(expression, context) {
   /* istanbul ignore else */
   if (expression.type === 'string') {

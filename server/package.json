@@ -5,6 +5,7 @@
     "style": "jscs .",
     "test": "NODE_ENV=test mocha \"test/**/*-test.js\"",
     "cover": "NODE_ENV=test istanbul cover _mocha \"test/**/*-test.js\"",
+    "docs": "jsdoc --configure jsdoc.json --destination ./docs/ --recurse lib",
     "start": "node server.js"
   },
   "dependencies": {
@@ -28,6 +29,7 @@
   "devDependencies": {
     "istanbul": "^0.4.3",
     "jscs": "^2.11.0",
+    "jsdoc": "^3.4.0",
     "jshint": "^2.9.1",
     "mocha": "^2.4.5",
     "nock": "^8.0.0",

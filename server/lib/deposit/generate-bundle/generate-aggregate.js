@@ -85,15 +85,14 @@ function generateAgreementFileItem(agreements, values) {
 }
 
 /**
-  Generate a bundle containing an 'Aggregate Work' item, which contains a main
-  file and optional supplemental files, each optionally with metadata, and an
-  optional agreement record. The aggregate item is linked to the main item via
-  the CDR defaultWebObject relationship.
-
-  @method generateAggregate
-  @param {Form} form
-  @param {Object} values
-*/
+ * Generate a bundle containing an 'Aggregate Work' item.
+ * <p>The item will contain a main file and optional supplemental files, each optionally with metadata, and an optional agreement record. The aggregate item is linked to the main item via the CDR defaultWebObject relationship.</p>
+ * @function
+ * @name generateAggregate
+ * @param {Form} form
+ * @param {Object} values
+ * @return {Bundle}
+ */
 module.exports = function(form, values) {
   let children = [];
   if (form.bundle.supplemental) {

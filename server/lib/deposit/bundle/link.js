@@ -1,31 +1,24 @@
 'use strict';
 
-/**
-  @module deposit
-  @submodule bundle
-*/
-
-/**
-  @class Link
-  @constructor
-  @param {Item} target
-  @param {String} rel
-*/
 class Link {
+  /**
+   * @param {Item} target
+   * @param {String} rel
+   */
   constructor(target, rel) {
     this.target = target;
     this.rel = rel;
   }
 
   /**
-    @property target
-    @type Item
-  */
+   * @name Link#target
+   * @type Item
+   */
 
   /**
-    @property rel
-    @type String
-  */
+   * @name Link#rel
+   * @type String
+   */
 }
 
 module.exports = Link;

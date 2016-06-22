@@ -79,6 +79,15 @@ function postZip(form, zipFile, depositorEmail) {
   });
 }
 
+/**
+ * Generate a zip file from the `submission` and submit it to the {@link Form#destination destination} specified by the `form`.
+ * @function
+ * @name submitZip
+ * @param {Form} form
+ * @param {Submission} submission
+ * @param {string} depositorEmail
+ * @return {Promise}
+ */
 function submitZip(form, submission, depositorEmail) {
   return makeZip(submission)
   .then(function(zipFile) {

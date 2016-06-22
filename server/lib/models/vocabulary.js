@@ -4,10 +4,6 @@ const findById = require('./utils').findById;
 const checker = require('../checker');
 const config = require('../../config');
 
-/**
-  @module models
-*/
-
 // Define checkers for checking attributes in the Vocabulary constructor.
 
 let vocabularyChecker = checker.oneOf([
@@ -22,55 +18,49 @@ let vocabularyChecker = checker.oneOf([
   })
 ]);
 
-/**
-  @class Vocabulary
-  @constructor
-  @private
-  @param {String} id
-  @param {Object} attributes
-*/
 class Vocabulary {
+  /**
+   * @param {String} id
+   * @param {Object} attributes
+   */
   constructor(id, attributes) {
     this.id = id;
     this.attributes = vocabularyChecker(attributes);
   }
 
   /**
-    @property terms
-    @type {Array}
-  */
+   * @type {Array}
+   */
   get terms() {
     return this.attributes.terms;
   }
 
   /**
-    @property labelKey
-    @type {String}
-  */
+   * @type {string}
+   */
   get labelKey() {
     return this.attributes.labelKey;
   }
 
   /**
-    @property valueKey
-    @type {String}
-  */
+   * @type {string}
+   */
   get valueKey() {
     return this.attributes.valueKey;
   }
 
   /**
-    @property noteKey
-    @type {String}
-  */
+   * @type {string}
+   */
   get noteKey() {
     return this.attributes.noteKey;
   }
 
   /**
-    @method getOptions
-    @type {Array}
-  */
+   * The terms of this vocabulary as objects with `label`, `value`, and optionally `note` properties.
+   * <p>This is used to send a compact representation of the vocabulary to the client for display to users.</p>
+   * @type {Array<Object>}
+   */
   get options() {
     return this.terms.map((term) => {
       if (typeof term === 'object') {
@@ -94,10 +84,10 @@ class Vocabulary {
   }
 
   /**
-    @method getTerm
-    @param {String} value
-    @return {String|Object}
-  */
+   * Find the term with the given `value`.
+   * @param {String} value
+   * @return {String|Object}
+   */
   getTerm(value) {
     return this.terms.find((term) => {
       if (typeof term === 'object') {
@@ -109,13 +99,10 @@ class Vocabulary {
   }
 
   /**
-    Find the vocabulary with the given id.
-
-    @method findById
-    @static
-    @param {String} id
-    @return {Promise}
-  */
+   * Find the vocabulary with the given `id`.
+   * @param {String} id
+   * @return {Promise<Vocabulary>}
+   */
   static findById(id) {
     return findById(config.VOCABULARIES_DIRECTORY, this, id);
   }

@@ -1,11 +1,5 @@
 'use strict';
 
-// Flatten the result of the template. 'string' and 'data' nodes are flattened to their values, and 'structure' nodes are have their 'type' property replaced with their 'name' property. 'structure' nodes also have properties related to the compact and presence propagation steps removed.
-//
-//   { type: 'string', value: s } => s
-//   { type: 'data', value: d } => d
-//   { type: 'structure', name: n, properties: p, children: c, ... } => { type: n, properties: flatten(p), children: flatten(c) }
-
 function flattenNode(node) {
   /* istanbul ignore else */
   if (node.type === 'string') {
@@ -40,6 +34,21 @@ function flattenBody(body) {
   }, []);
 }
 
+/**
+ * Flatten the node and its descendants.
+ * <p>'string' and 'data' nodes are replaced with their values, and 'structure' nodes are have their 'type' property replaced with their 'name' property. 'structure' nodes also have properties related to the compact step removed.</p>
+ * <pre>
+ * { type: 'string', value: s, ... } => s
+ * { type: 'data', value: d, ... } => d
+ * { type: 'structure', name: n, properties: p, children: c, ... } =>
+ *     { type: n, properties: flattenProperties(p), children: flatten(c) }
+ * </pre>
+ * 
+ * @function
+ * @name flatten
+ * @param {Object} node
+ * @return The flattened node.
+ */
 module.exports = function(node) {
   if (Array.isArray(node)) {
     return flattenBody(node);

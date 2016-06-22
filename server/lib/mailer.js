@@ -59,6 +59,12 @@ const depositNotificationSender = transport.templateSender({
   from: config.FROM_EMAIL
 });
 
+/**
+ * Flatten the summary into a form usable by the mailer templates.
+ * @param {Array} blocks
+ * @param {Object} summary
+ * @return {Array}
+ **/
 function flattenSummary(blocks, summary) {
   return blocks.map(function(block) {
     let value = summary[block.key];
@@ -108,6 +114,14 @@ function flattenSummary(blocks, summary) {
 
 exports.flattenSummary = flattenSummary;
 
+/**
+ * Send a deposit receipt email.
+ * @function sendDepositReceipt
+ * @param {Form} form
+ * @param {Object} summary
+ * @param {string} address
+ * @return {Promise}
+ **/
 exports.sendDepositReceipt = function(form, summary, address) {
   return Promise.try(function() {
     let items = flattenSummary(form.children, summary);
@@ -116,6 +130,14 @@ exports.sendDepositReceipt = function(form, summary, address) {
   });
 };
 
+/**
+ * Send a deposit notification email.
+ * @function sendDepositNotification
+ * @param {Form} form
+ * @param {Object} summary
+ * @param {Array<string>} addresses
+ * @return {Promise}
+ **/
 exports.sendDepositNotification = function(form, summary, addresses) {
   return Promise.try(function() {
     let items = flattenSummary(form.children, summary);

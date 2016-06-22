@@ -171,6 +171,21 @@ function generateStructLink(mets, bundle) {
   }
 }
 
+/**
+ * An object representing the files to be submitted.
+ * <p>The key of each property may indicate a file path, the name of an entry in an archive file, or something else, depending on how the submission will be deposited. In our case, {@link submitZip} uses the keys as names for entries in a zip file. The value of each property is either a path to a file on disk or a Buffer.</p>
+ * @typedef {Object.<string, string|Buffer>} Submission
+ */
+
+/**
+ * Generate a METS {@link Submission} for deposit into the CDR.
+ * <p>The {@link Submission} will contain a "mets.xml" property with a Buffer containing METS XML, and contents of the {@link File} instances in `bundle` as either paths or Buffers keyed by their {@link File#id id}.</p>
+ * @function
+ * @name generateSubmission
+ * @param {Form} form
+ * @param {Bundle} bundle
+ * @return {Promise<Submission>}
+ */
 module.exports = function(form, bundle) {
   // Build a hash of file locations (just the file id right now) by file id.
   // This is where we'd assign staging URLs if we wanted to refer to files outside of the submission proper.

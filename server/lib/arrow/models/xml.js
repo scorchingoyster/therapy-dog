@@ -2,11 +2,6 @@
 
 const Xmlbuilder = require('xmlbuilder');
 
-/**
-  @module arrow
-  @submodule arrow-models
-*/
-
 function renderElementStructure(node, parent) {
   let element = parent.element(node.type);
 
@@ -59,30 +54,30 @@ function renderBody(body, parent) {
 }
 
 /**
-  @class XML
-  @constructor
-  @param {Object} root
-*/
+ * Renders XML from Arrow structures using Xmlbuilder.
+ */
 class XML {
+  /**
+   * @param {Object} root - the Arrow structure used to render XML.
+   */
   constructor(root) {
     this.root = root;
   }
 
   /**
-    @property root
-    @type Object
-  */
+    * @name XML#root
+    * @type Object
+    */
 
   /**
-    Render the elements described by root, optionally using builder as a parent.
-
-    @method evaluate
-    @param {Object} [builder]
-    @return {Object}
-  */
+   * Render the elements described by XML#root, optionally using builder as a parent node.
+   * 
+   * @param {XMLNode} [builder]
+   * @return {XMLNode}
+   */
   render(builder) {
     if (builder) {
-      renderNode(this.root, builder);
+      return renderNode(this.root, builder);
     } else {
       let builder = Xmlbuilder.begin();
       renderNode(this.root, builder);

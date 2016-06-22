@@ -5,11 +5,6 @@ const Item = require('./item');
 const Metadata = require('./metadata');
 const Link = require('./link');
 
-/**
-  @module deposit
-  @submodule bundle
-*/
-
 function collectNodes(parent, constructor) {
   return parent.children.reduce(function(items, child) {
     if (child instanceof constructor) {
@@ -24,12 +19,10 @@ function collectNodes(parent, constructor) {
   }, []);
 }
 
-/**
-  @class Bundle
-  @constructor
-  @param {Array} children
-*/
 class Bundle {
+  /**
+   * @param {Array<Item>} children
+   */
   constructor(children) {
     children.forEach(function(child) {
       if (!(child instanceof Item)) {
@@ -41,38 +34,38 @@ class Bundle {
   }
 
   /**
-    @property children
-    @type {Array}
-  */
+   * @name Bundle#children
+   * @type {Array<Item>}
+   */
 
   /**
-    @property files
-    @type {Array}
-  */
+   * All of the {@link File} instances in this {@link Bundle}.
+   * @type {Array<File>}
+   */
   get files() {
     return collectNodes(this, File);
   }
 
   /**
-    @property items
-    @type {Array}
-  */
+   * All of the {@link Item} instances in this {@link Bundle}.
+   * @type {Array<Item>}
+   */
   get items() {
     return collectNodes(this, Item);
   }
 
   /**
-    @property metadata
-    @type {Array}
-  */
+   * All of the {@link Metadata} instances in this {@link Bundle}.
+   * @type {Array<Metadata>}
+   */
   get metadata() {
     return collectNodes(this, Metadata);
   }
 
   /**
-    @property links
-    @type {Array}
-  */
+   * All of the {@link Link} instances in this {@link Bundle}.
+   * @type {Array<Link>}
+   */
   get links() {
     return collectNodes(this, Link);
   }
