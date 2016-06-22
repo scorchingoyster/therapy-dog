@@ -4,17 +4,34 @@ For example, a "map" block.
 
 ## Server
 
-### Add a type alias for the form block
+### Add a checker
 
-### Handle the block type in Form#transformValues
+server/lib/models/form/block-checkers.js
 
-### Handle the block type in Form#summarizeInput
+    exports.map = checker.shape({
+      key: checker.string(),
+      label: checker.optional(checker.string()),
+      // ...
+    });
+    
+    // ...
+    
+    exports.block = checker.recordTypes({
+      // ...
+      map: checker.lookup(exports, 'map')
+    });
 
-server/lib/models/form.js
+### Add a deserializer
 
-### Handle the block type in flattenSummary
+server/lib/models/form/block-deserializers.js
 
-server/lib/mailer.js
+### Add a summarizer
+
+server/lib/models/form/block-summarizers.js
+
+### Add a resource attributes function
+
+server/lib/models/form/block-resource-attributes.js
 
 ## Client
 
