@@ -14,12 +14,14 @@ const Link = require('./link');
   @class Item
   @constructor
   @param {Array} children
-  @param {Object} options
+  @param {Object} [options]
   @param {String} [options.type]
   @param {String} [options.label]
 */
 class Item {
-  constructor(children, options) {
+  constructor(children/*, options={}*/) {
+    let options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
     children.forEach(function(child) {
       if (!(child instanceof Item || child instanceof File || child instanceof Metadata || child instanceof Link)) {
         throw new TypeError('An item may only contain items, files, metadata, and links');

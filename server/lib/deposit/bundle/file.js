@@ -15,12 +15,14 @@ const Upload = require('../../models/upload');
   @class File
   @constructor
   @param {Upload|Buffer} contents
-  @param {Object} options
+  @param {Object} [options]
   @param {String} [options.name]
   @param {String} [options.mimetype]
 */
 class File {
-  constructor(contents, options) {
+  constructor(contents/*, options={}*/) {
+    let options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
     if (contents instanceof Upload) {
       this.contents = contents;
     } else if (contents instanceof Buffer) {

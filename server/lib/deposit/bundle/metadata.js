@@ -12,11 +12,13 @@ const XML = require('../../arrow/models/xml');
   @class Metadata
   @constructor
   @param {XML} contents
-  @param {Object} options
+  @param {Object} [options]
   @param {String} [options.type]
 */
 class Metadata {
-  constructor(contents, options) {
+  constructor(contents/*, options={}*/) {
+    let options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
     if (contents instanceof XML) {
       this.contents = contents;
     } else {
