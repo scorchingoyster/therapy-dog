@@ -181,7 +181,7 @@ module.exports = function(form, bundle) {
 
   // Build an array of promises which calculate the checksum for each file.
   let checksums = bundle.files.map(function(file) {
-    return file.getHashDigest('md5', 'hex');
+    return file.getHashDigest('md5');
   });
 
   // Calculate all of the checksums, and then proceed with generating METS.

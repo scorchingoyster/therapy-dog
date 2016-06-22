@@ -107,10 +107,12 @@ class File {
   /**
     @method getHashDigest
     @param {String} algorithm
-    @param {String} [encoding='utf8']
+    @param {String} [encoding='hex']
     @return {Promise}
   */
-  getHashDigest(algorithm, encoding) {
+  getHashDigest(algorithm/*, encoding='hex'*/) {
+    let encoding = arguments.length <= 1 || arguments[1] === undefined ? 'hex' : arguments[1];
+
     if (this.isUpload) {
       let path = this.contents.path;
 
