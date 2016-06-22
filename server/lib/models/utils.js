@@ -7,17 +7,15 @@ const assert = require('assert');
 const ModelNotFoundError = require('../errors').ModelNotFoundError;
 
 /**
-  Look in the `directory` for a file named by `id` with the extension ".json" and attempt to create a new instance using the `constructor`, passing the `id` and the parsed JSON contents of the file. Return a Promise resolving to the new instance.
-
-  This function is used by the Form and Vocabulary models.
-
-  @method findById
-  @param {String} directory The directory to search.
-  @param {Object} constructor The constructor function.
-  @param {String} id The identifier of the model to search for.
-  @return {Promise}
-  @throws {ModelNotFoundError} If the identifier is invalid or would cause the function to access a file outside the `directory`, or the file cannot be found or read, or there is a JSON parsing error, or the constructor throws an error.
-*/
+ * Look in the directory for a file named by id with the extension ".json" and attempt to create a new instance using the constructor, passing the id and the parsed JSON contents of the file. Return a Promise resolving to the new instance.
+ * <p>This function is used by the Form and Vocabulary models.</p>
+ * @function findById
+ * @param {String} directory The directory to search.
+ * @param {Object} constructor The constructor function.
+ * @param {String} id The identifier of the model to search for.
+ * @return {Promise}
+ * @throws {ModelNotFoundError} If the identifier is invalid or would cause the function to access a file outside the `directory`, or the file cannot be found or read, or there is a JSON parsing error, or the constructor throws an error.
+ */
 exports.findById = function(directory, constructor, id) {
   return Promise.try(function() {
     assert(typeof id === 'string', 'id must be a string');

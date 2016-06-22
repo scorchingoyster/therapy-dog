@@ -8,12 +8,13 @@ const Metadata = require('../bundle/metadata');
 const Bundle = require('../bundle');
 
 /**
-  Generates a bundle containing a 'File' item, optionally with metadata.
-
-  @method generateSingle
-  @param {Form} form
-  @param {Object} values
-*/
+ * Generate a bundle containing an 'File' item, optionally with metadata.
+ * @function
+ * @name generateSingle
+ * @param {Form} form
+ * @param {Object} values
+ * @return {Bundle}
+ */
 module.exports = function(form, values) {
   let context;
   if (form.bundle.file.context) {

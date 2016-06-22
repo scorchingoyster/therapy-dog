@@ -6,9 +6,9 @@ const compact = require('./compact');
 const flatten = require('./flatten');
 
 /**
-  @module arrow
-*/
-
+ * @namespace expressionCheckers
+ * @memberof Arrow
+ */
 let expressionCheckers = {};
 
 let predicateChecker = checker.recordTypes({
@@ -24,14 +24,38 @@ let choiceChecker = checker.shape({
   body: checker.arrayOf(checker.lookup(expressionCheckers, 'expression'))
 });
 
+/**
+ * Check the string expression.
+ * @function
+ * @memberof Arrow.expressionCheckers
+ * @param {*} value
+ * @return {*} The checked value.
+ * @throws CheckerError
+ */
 expressionCheckers.string = checker.shape({
   value: checker.string()
 });
 
+/**
+ * Check the lookup expression.
+ * @function
+ * @memberof Arrow.expressionCheckers
+ * @param {*} value
+ * @return {*} The checked value.
+ * @throws CheckerError
+ */
 expressionCheckers.lookup = checker.shape({
   path: checker.arrayOf(checker.string())
 });
 
+/**
+ * Check the structure expression.
+ * @function
+ * @memberof Arrow.expressionCheckers
+ * @param {*} value
+ * @return {*} The checked value.
+ * @throws CheckerError
+ */
 expressionCheckers.structure = checker.shape({
   keep: checker.optional(checker.boolean()),
   name: checker.string(),
@@ -42,6 +66,14 @@ expressionCheckers.structure = checker.shape({
   children: checker.optional(checker.arrayOf(checker.lookup(expressionCheckers, 'expression')))
 });
 
+/**
+ * Check the each expression.
+ * @function
+ * @memberof Arrow.expressionCheckers
+ * @param {*} value
+ * @return {*} The checked value.
+ * @throws CheckerError
+ */
 expressionCheckers.each = checker.shape({
   items: checker.recordTypes({
     lookup: checker.lookup(expressionCheckers, 'lookup')
@@ -50,11 +82,27 @@ expressionCheckers.each = checker.shape({
   body: checker.arrayOf(checker.lookup(expressionCheckers, 'expression'))
 });
 
+/**
+ * Check the choose expression.
+ * @function
+ * @memberof Arrow.expressionCheckers
+ * @param {*} value
+ * @return {*} The checked value.
+ * @throws CheckerError
+ */
 expressionCheckers.choose = checker.shape({
   choices: checker.arrayOf(choiceChecker),
   otherwise: checker.optional(checker.arrayOf(checker.lookup(expressionCheckers, 'expression')))
 });
 
+/**
+ * Check the arrow expression.
+ * @function
+ * @memberof Arrow.expressionCheckers
+ * @param {*} value
+ * @return {*} The checked value.
+ * @throws CheckerError
+ */
 expressionCheckers.arrow = checker.shape({
   items: checker.recordTypes({
     lookup: checker.lookup(expressionCheckers, 'lookup')
@@ -64,6 +112,14 @@ expressionCheckers.arrow = checker.shape({
   }))
 });
 
+/**
+ * Check an Arrow expression.
+ * @function
+ * @memberof Arrow.expressionCheckers
+ * @param {*} value
+ * @return {*} The checked value.
+ * @throws CheckerError
+ */
 expressionCheckers.expression = checker.recordTypes({
   string: checker.lookup(expressionCheckers, 'string'),
   lookup: checker.lookup(expressionCheckers, 'lookup'),
@@ -80,13 +136,11 @@ expressionCheckers.expression = checker.recordTypes({
 */
 class Arrow {
   /**
-    Check that the expression is a valid Arrow expression.
-
-    @method check
-    @static
-    @param {Object} expression
-    @return {Boolean}
-  */
+   * Check that the expression is a valid Arrow expression.
+   * 
+   * @param {Object} expression
+   * @return {Boolean}
+   */
   static check(expression) {
     try {
       expressionCheckers.expression(expression);
@@ -100,17 +154,25 @@ class Arrow {
     }
   }
 
+  /**
+   * @param {Object} expression
+   * @throws {CheckerError}
+   */
   constructor(expression) {
     this.expression = expressionCheckers.expression(expression);
   }
 
   /**
-    Evaluate this template using the context.
+    * @name Arrow#expression
+    * @type Object
+    */
 
-    @method evaluate
-    @param {Object} context
-    @return {any}
-  */
+  /**
+   * Evaluate this template using the context.
+   * 
+   * @param {Object} context
+   * @return {*}
+   */
   evaluate(context) {
     let result = evaluate(this.expression, context);
     result = compact(result);

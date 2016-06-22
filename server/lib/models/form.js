@@ -11,10 +11,6 @@ const moment = require('moment');
 
 const DURATION_REGEX = /^P.+$/;
 
-/**
-  @module models
-*/
-
 // Define checkers for checking attributes in the Form constructor.
 
 // Form options
@@ -187,18 +183,7 @@ let formChecker = checker.shape({
   metadata: checker.arrayOf(metadataChecker)
 });
 
-/**
-  Traverse the given blocks and values, yielding non-section blocks and their
-  values to the iterator. Collect the results from the iterator in an object.
-  The iterator may return promises, which are resolved in the final result.
-
-  @method mapValues
-  @private
-  @param {Array} blocks
-  @param {Object} values
-  @param {Function} iterator
-  @return {Promise}
-*/
+// Traverse the given blocks and values, yielding non-section blocks and their values to the iterator. Collect the results from the iterator in an object. The iterator may return promises, which are resolved in the final result.
 function mapValues(blocks, values, iterator) {
   let result = {};
 
@@ -234,16 +219,7 @@ function mapValues(blocks, values, iterator) {
   });
 }
 
-/**
-  Traverse the given blocks, returning a copy of the blocks with vocabulary
-  references (any non-section block with a string for its options property)
-  replaced with that vocabulary's terms.
-
-  @method resolveVocabularies
-  @private
-  @param {Array} blocks
-  @return {Promise}
-*/
+// Traverse the given blocks, returning a copy of the blocks with vocabulary references (any non-section block with a string for its options property) replaced with that vocabulary's terms.
 function resolveVocabularies(blocks) {
   return Promise.all(blocks.map(function(block) {
     if (block.type === 'section') {
@@ -272,10 +248,6 @@ function resolveVocabularies(blocks) {
   }));
 }
 
-/**
-  @method transformOptionValue
-  @private
-*/
 function transformOptionValue(options, value) {
   if (typeof options === 'string') {
     return Vocabulary.findById(options).then(function(vocabulary) {
@@ -338,97 +310,76 @@ function getOptionLabel(options, value) {
   }
 }
 
-/**
-  @class Form
-  @constructor
-  @private
-  @param {String} id
-  @param {Object} attributes
-*/
 class Form {
+  /**
+    * @param {String} id
+    * @param {Object} attributes
+    */
   constructor(id, attributes) {
     this.id = id;
     this.attributes = formChecker(attributes);
   }
 
   /**
-    @property destination
-    @type {String}
-  */
+   * @type {String}
+   */
   get destination() {
     return this.attributes.destination;
   }
 
   /**
-    @property contact
-    @type {String}
-  */
+   * @type {Object}
+   */
   get contact() {
     return this.attributes.contact;
   }
 
   /**
-    @property notificationRecipientEmails
-    @type {String}
-  */
+   * @type {Array<Object>}
+   */
   get notificationRecipientEmails() {
     return this.attributes.notificationRecipientEmails;
   }
 
   /**
-    @property title
-    @type {String}
-  */
+   * @type {String}
+   */
   get title() {
     return this.attributes.title;
   }
 
   /**
-    @property description
-    @type {String}
-  */
+   * @type {String}
+   */
   get description() {
     return this.attributes.description;
   }
 
   /**
-    @property children
-    @type {Array}
-  */
+   * @type {Array}
+   */
   get children() {
     return this.attributes.children;
   }
 
   /**
-    @property bundle
-    @type {String}
-  */
+   * @type {Object}
+   */
   get bundle() {
     return this.attributes.bundle;
   }
 
   /**
-    @property templates
-    @type {Array}
-  */
-  get templates() {
-    return this.attributes.templates;
-  }
-
-  /**
-    @property metadata
-    @type {Array}
+   * @type {Array<Object>}
   */
   get metadata() {
     return this.attributes.metadata;
   }
 
   /**
-    Return a JSON API resource object representing this form.
-
-    @method getResourceObject
-    @return {Promise}
-  */
+   * Return a JSON API resource object representing this form.
+   * @return {Promise<Object>}
+   */
   getResourceObject() {
     let options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
@@ -460,15 +411,16 @@ class Form {
   }
 
   /**
-    Transform the given values object so that:
-    - it is in the shape defined by the form,
-    - values for text and date blocks are strings, and
-    - references to Upload instances are replaced with the instances themselves.
-
-    @method transformValues
-    @param {Object} values
-    @return {Promise}
-  */
+   * Transform the given values object so that:
+   * <ul>
+   *   <li>it is in the shape defined by the form,</li>
+   *   <li>values for text and date blocks are strings,</li>
+   *   <li>references to vocabulary terms are replaced by the terms themselves, and</li>
+   *   <li>references to Upload instances are replaced with the instances themselves.</li>
+   * </ul>
+   * @param {Object} values
+   * @return {Promise}
+   */
   transformValues(values) {
     return mapValues(this.children, values, function(block, value) {
       if (block.type === 'text') {
@@ -510,6 +462,12 @@ class Form {
     });
   }
 
+  /**
+   * Transform the input, similarly to transformValues, except that references to vocabulary terms are replaced by their label.
+   * <p>This is used in mailers to provide a human-readable description of user input.</p>
+   * @param {Object} input
+   * @return {Promise}
+   */
   summarizeInput(input) {
     return mapValues(this.children, input, function(block, value) {
       if (block.type === 'text') {
@@ -552,13 +510,10 @@ class Form {
   }
 
   /**
-    Find the form with the given id.
-
-    @method findById
-    @static
-    @param {String} id
-    @return {Promise}
-  */
+   * Find the form with the given id.
+   * @param {String} id
+   * @return {Promise<Form>}
+   */
   static findById(id) {
     return findById(config.FORMS_DIRECTORY, this, id);
   }

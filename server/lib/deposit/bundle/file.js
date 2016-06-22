@@ -6,20 +6,13 @@ const Promise = require('bluebird');
 const uuid = require('uuid');
 const Upload = require('../../models/upload');
 
-/**
-  @module deposit
-  @submodule bundle
-*/
-
-/**
-  @class File
-  @constructor
-  @param {Upload|Buffer} contents
-  @param {Object} [options]
-  @param {String} [options.name]
-  @param {String} [options.mimetype]
-*/
 class File {
+  /**
+   * @param {Upload|Buffer} contents
+   * @param {Object} [options]
+   * @param {String} [options.name]
+   * @param {String} [options.mimetype]
+  */
   constructor(contents/*, options={}*/) {
     let options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
@@ -37,35 +30,32 @@ class File {
   }
 
   /**
-    @property contents
-    @type {Upload|Buffer}
-  */
+    * @name File#contents
+    * @type {Upload|Buffer}
+    */
 
   /**
-    @property id
-    @type {String}
-  */
+    * @name File#id
+    * @type {String}
+    */
 
   /**
-    @property isUpload
-    @type {Boolean}
-  */
+   * @type {Boolean}
+   */
   get isUpload() {
     return this.contents instanceof Upload;
   }
 
   /**
-    @property isBuffer
-    @type {Boolean}
-  */
+   * @type {Boolean}
+   */
   get isBuffer() {
     return this.contents instanceof Buffer;
   }
 
   /**
-    @property name
-    @type {String}
-  */
+   * @type {String}
+   */
   get name() {
     if (this._name) {
       return this._name;
@@ -79,9 +69,8 @@ class File {
   }
 
   /**
-    @property mimetype
-    @type {String}
-  */
+   * @type {String}
+   */
   get mimetype() {
     if (this._mimetype) {
       return this._mimetype;
@@ -95,9 +84,8 @@ class File {
   }
 
   /**
-    @property size
-    @type {Number}
-  */
+   * @type {Number}
+   */
   get size() {
     if (this.isUpload) {
       return this.contents.size;
@@ -107,11 +95,12 @@ class File {
   }
 
   /**
-    @method getHashDigest
-    @param {String} algorithm
-    @param {String} [encoding='hex']
-    @return {Promise}
-  */
+   * Calculate a hash digest of the contents of this File, using the specified `algorithm` and `encoding`.
+   * <p>`algorithm` may be any of the algorithms supported by {@link https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm crypto.createHash}, such as 'md5' or 'sha256'. `encoding` may be any encoding supported by {@link https://nodejs.org/api/buffer.html#buffer_buffers_and_character_encodings Buffer}.</p>
+   * @param {String} algorithm
+   * @param {String} [encoding='hex']
+   * @return {Promise<String>}
+   */
   getHashDigest(algorithm/*, encoding='hex'*/) {
     let encoding = arguments.length <= 1 || arguments[1] === undefined ? 'hex' : arguments[1];
 

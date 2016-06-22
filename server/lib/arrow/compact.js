@@ -2,10 +2,6 @@
 
 const isEmpty = require('./utils').isEmpty;
 
-// Mark all nodes in the result with a 'presence' property. There are three possible values for this property: 'literal', 'present', and 'absent'. 'string' nodes are always marked 'literal'. 'data' nodes are marked 'present' or 'absent' depending on whether their value is non-empty or empty, respectively. 'structure' nodes are marked based on the combination of the 'presence' property of their properties and children according to the combinePresence() function.
-//
-// The effect of this step is that structure nodes with all lookups or arrows resulting in no output are marked as 'absent', nodes only involving boilerplate (structures and strings) are marked 'literal', and other nodes are marked 'present'.
-
 function combinePresence(p1, p2) {
   if (p1 === 'present' || p2 === 'present') {
     return 'present';
@@ -60,8 +56,6 @@ function compactBody(body) {
   }, []);
 }
 
-// Compact the result of the template. Remove any nodes with a 'presence' property of 'absent'.
-
 function compactNode(node) {
   if (node.type === 'structure') {
     let children = compactBody(node.children);
@@ -80,6 +74,22 @@ function compactNode(node) {
   }
 }
 
+/**
+ * Compact this node and its descendants.
+ * <p>First mark all nodes in the input with a 'presence' property, which may be 'literal', 'present', and 'absent'. Nodes are marked as follows:</p>
+ * <ul>
+ *   <li>'string' nodes are always marked 'literal'.</li>
+ *   <li>'data' nodes are marked 'present' or 'absent' depending on whether their value is non-empty or empty, respectively.</li>
+ *   <li>'structure' nodes are marked based on the combination of the 'presence' property of their properties and children according to the combinePresence function.</li>
+ * </ul>
+ * <p>Effectively, structure nodes with all of their lookups or arrows resulting in no output are marked as 'absent', nodes only involving boilerplate (structures and strings) are marked 'literal', and other nodes are marked 'present'.</p>
+ * <p>Finally, remove any nodes with a 'presence' property of 'absent'.</p>
+ * 
+ * @function
+ * @name compact
+ * @param {Object} node
+ * @return The compacted node.
+ */
 module.exports = function(node) {
   if (Array.isArray(node)) {
     return compactBody(markBody(node));

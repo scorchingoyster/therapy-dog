@@ -1,4 +1,4 @@
-.PHONY: help run-server run-client examples deps check
+.PHONY: help run-server run-client examples deps check docs
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -25,3 +25,6 @@ check: ## Run code style checks, linting, and unit tests.
 	cd server && npm run style
 	cd server && npm run test
 	cd client && jshint app
+
+docs: ## Generate API documentation
+	cd server && npm run docs

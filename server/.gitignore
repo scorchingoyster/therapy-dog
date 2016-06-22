@@ -5,6 +5,8 @@ data/input/*.json
 
 coverage
 
+docs
+
 # npm binaries
 node_modules/.bin
 

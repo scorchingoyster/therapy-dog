@@ -3,19 +3,12 @@
 const uuid = require('uuid');
 const XML = require('../../arrow/models/xml');
 
-/**
-  @module deposit
-  @submodule bundle
-*/
-
-/**
-  @class Metadata
-  @constructor
-  @param {XML} contents
-  @param {Object} [options]
-  @param {String} [options.type]
-*/
 class Metadata {
+  /**
+   * @param {XML} contents
+   * @param {Object} [options]
+   * @param {String} [options.type]
+   */
   constructor(contents/*, options={}*/) {
     let options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
@@ -30,27 +23,26 @@ class Metadata {
   }
 
   /**
-    @property contents
-    @type XML
-  */
+   * @name Metadata#contents
+   * @type XML
+   */
 
   /**
-    @property isXML
-    @type Boolean
-  */
+   * @type Boolean
+   */
   get isXML() {
     return true;
   }
 
   /**
-    @property id
-    @type String
-  */
+   * @name Metadata#id
+   * @type String
+   */
 
   /**
-    @property type
-    @type String
-  */
+   * @name Metadata#type
+   * @type String
+   */
 }
 
 module.exports = Metadata;

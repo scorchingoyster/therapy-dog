@@ -5,20 +5,13 @@ const File = require('./file');
 const Metadata = require('./metadata');
 const Link = require('./link');
 
-/**
-  @module deposit
-  @submodule bundle
-*/
-
-/**
-  @class Item
-  @constructor
-  @param {Array} children
-  @param {Object} [options]
-  @param {String} [options.type]
-  @param {String} [options.label]
-*/
 class Item {
+  /**
+   * @param {Array<Item|File|Metadata|Link>} children
+   * @param {Object} [options]
+   * @param {String} [options.type]
+   * @param {String} [options.label]
+   */
   constructor(children/*, options={}*/) {
     let options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
@@ -35,24 +28,24 @@ class Item {
   }
 
   /**
-    @property children
-    @type Array
-  */
+   * @name Item#children
+   * @type Array<Item|File|Metadata|Link>
+   */
 
   /**
-    @property id
-    @type String
-  */
+   * @name Item#id
+   * @type String
+   */
 
   /**
-    @property type
-    @type String
-  */
+   * @name Item#type
+   * @type String
+   */
 
   /**
-    @property label
-    @type String
-  */
+   * @name Item#label
+   * @type String
+   */
 }
 
 module.exports = Item;
