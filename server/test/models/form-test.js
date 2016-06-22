@@ -164,7 +164,7 @@ describe('Form', function() {
     });
   });
 
-  describe('#transformValues()', function() {
+  describe('#deserializeInput()', function() {
     it('transforms values to the correct shape, with correct vocabulary terms and upload instances', function() {
       let form = Form.findById('article');
       let uploads = Promise.props({
@@ -172,7 +172,7 @@ describe('Form', function() {
         supplemental: createTestUpload('data.csv', 'application/csv', new Buffer('lorem ipsum'))
       });
 
-      return Promise.all([form, uploads]).spread((form, uploads) => form.transformValues({
+      return Promise.all([form, uploads]).spread((form, uploads) => form.deserializeInput({
         authors: [
           { first: 'Some', last: 'Author' },
           { first: 'Another', last: 'Author' }
@@ -207,7 +207,7 @@ describe('Form', function() {
     it('does not assign terms not found in an object array vocabulary', function() {
       return Form.findById('article')
       .then(function(form) {
-        return form.transformValues({ info: { language: 'other' } });
+        return form.deserializeInput({ info: { language: 'other' } });
       })
       .then(function(values) {
         assert.equal(values.language, undefined);
@@ -217,7 +217,7 @@ describe('Form', function() {
     it('does not assign terms not found in a string array vocabulary', function() {
       return Form.findById('article')
       .then(function(form) {
-        return form.transformValues({ roles: ['Student', 'President'] });
+        return form.deserializeInput({ roles: ['Student', 'President'] });
       })
       .then(function(values) {
         assert.deepEqual(values.roles, ['Student']);
@@ -227,7 +227,7 @@ describe('Form', function() {
     it('does not assign terms not found in a literal options array', function() {
       return Form.findById('article')
       .then(function(form) {
-        return form.transformValues({ review: 'maybe' });
+        return form.deserializeInput({ review: 'maybe' });
       })
       .then(function(values) {
         assert.deepEqual(values.review, undefined);
@@ -237,7 +237,7 @@ describe('Form', function() {
     it('transforms agreements to an object representing the agreement', function() {
       return Form.findById('article')
       .then(function(form) {
-        return form.transformValues({ agreement: true });
+        return form.deserializeInput({ agreement: true });
       })
       .then(function(values) {
         assert.deepEqual(values.agreement, {
@@ -251,7 +251,7 @@ describe('Form', function() {
     it('rejects when an upload is not found by the id given', function() {
       return Form.findById('article')
       .then(function(form) {
-        return form.transformValues({
+        return form.deserializeInput({
           article: { id: '71c5a4d1-eb04-4a25-9786-331c27c959d7' }
         });
       })

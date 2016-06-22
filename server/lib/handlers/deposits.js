@@ -17,15 +17,15 @@ exports.create = function(req, res, next) {
   let form = Form.findById(deposit.form);
 
   // Transform input...
-  let transformedValues = form.then(f => f.transformValues(deposit.values));
+  let input = form.then(f => f.deserializeInput(deposit.values));
   let inputSummary = form.then(f => f.summarizeInput(deposit.values));
 
   // Generate a bundle and submission...
-  let bundle = Promise.join(form, transformedValues, generateBundle);
+  let bundle = Promise.join(form, input, generateBundle);
   let submission = Promise.join(form, bundle, generateSubmission);
 
   // Collect notification recipients...
-  let notificationRecipientEmails = Promise.join(form, transformedValues, collectNotificationRecipientEmails);
+  let notificationRecipientEmails = Promise.join(form, input, collectNotificationRecipientEmails);
 
   // Submit the deposit, send email notifications, send response.
   Promise.join(form, submission, deposit.depositorEmail, submitZip)
@@ -50,10 +50,10 @@ exports.debug = function(req, res, next) {
   let form = Form.findById(deposit.form);
 
   // Transform input...
-  let transformedValues = form.then(f => f.transformValues(deposit.values));
+  let input = form.then(f => f.deserializeInput(deposit.values));
 
   // Generate a bundle and submission...
-  let bundle = Promise.join(form, transformedValues, generateBundle);
+  let bundle = Promise.join(form, input, generateBundle);
   let submission = Promise.join(form, bundle, generateSubmission);
 
   // Respond with the METS.

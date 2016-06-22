@@ -411,7 +411,7 @@ class Form {
   }
 
   /**
-   * Transform the given values object so that:
+   * Transform the input so that:
    * <ul>
    *   <li>it is in the shape defined by the form,</li>
    *   <li>values for text and date blocks are strings,</li>
@@ -421,8 +421,8 @@ class Form {
    * @param {Object} values
    * @return {Promise}
    */
-  transformValues(values) {
-    return mapValues(this.children, values, function(block, value) {
+  deserializeInput(input) {
+    return mapValues(this.children, input, function(block, value) {
       if (block.type === 'text') {
         return String(value);
       } else if (block.type === 'email') {
