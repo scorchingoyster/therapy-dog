@@ -137,7 +137,7 @@ expressionCheckers.expression = checker.recordTypes({
 class Arrow {
   /**
    * Check that the expression is a valid Arrow expression.
-   * 
+   *
    * @param {Object} expression
    * @return {Boolean}
    */
@@ -169,7 +169,7 @@ class Arrow {
 
   /**
    * Evaluate this template using the context.
-   * 
+   *
    * @param {Object} context
    * @return {*}
    */

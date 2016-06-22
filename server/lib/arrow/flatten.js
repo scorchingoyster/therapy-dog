@@ -43,7 +43,7 @@ function flattenBody(body) {
  * { type: 'structure', name: n, properties: p, children: c, ... } =>
  *     { type: n, properties: flattenProperties(p), children: flatten(c) }
  * </pre>
- * 
+ *
  * @function
  * @name flatten
  * @param {Object} node

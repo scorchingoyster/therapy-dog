@@ -155,16 +155,16 @@ exports.regexp = function(regexp) {
  * Build a {@link checkerFunction checker function} that returns an object with the checked properties of `value` if each {@link checkerFunction checker function} in `spec` does not throw a {@link CheckerError} for its corresponding property, and throws a {@link CheckerError} otherwise. Properties not in `spec` are ignored and absent in the output.
  * @example
  * let contactChecker = checker.shape({ name: checker.string(), email: checker.string() });
- * 
+ *
  * // returns { name: 'Someone', email: 'someone@example.com' }
  * contactChecker({ name: 'Someone', email: 'someone@example.com' });
- * 
+ *
  * // returns { name: 'Someone', email: 'someone@example.com' }
  * contactChecker({ name: 'Someone', email: 'someone@example.com', sign: 'Gemini' });
- * 
+ *
  * // throws CheckerError
  * contactChecker({ name: { first: 'Someone' }, email: 'someone@example.com' });
- * 
+ *
  * // throws CheckerError
  * contactChecker('someone@example.com');
  * @function shape
@@ -235,10 +235,10 @@ exports.array = function() {
  * Build a {@link checkerFunction checker function} that returns an array containing the checked elements of `value` if the {@link checkerFunction checker function} does not throw a {@link CheckerError} for any of the items, and throws a {@link CheckerError} otherwise.
  * @example
  * let numbersChecker = checker.arrayOf(checker.number());
- * 
+ *
  * // returns [1, 2, 3]
  * numbersChecker([1, 2, 3]);
- * 
+ *
  * // throws CheckerError
  * numbersChecker(['a', 'b', 'c']);
  * @function arrayOf
@@ -278,10 +278,10 @@ exports.arrayOf = function(inner) {
  * Build a {@link checkerFunction checker function} that returns an object containing the checked properties of `value` if the {@link checkerFunction checker function} does not throw a {@link CheckerError} for any of the values, and throws a {@link CheckerError} otherwise.
  * @example
  * let numbersChecker = checker.mapOf(checker.number());
- * 
+ *
  * // returns { a: 1, b: 2 }
  * numbersChecker({ a: 1, b: 2 });
- * 
+ *
  * // throws CheckerError
  * numbersChecker({ a: true, b: false });
  * @function mapOf
@@ -323,13 +323,13 @@ exports.mapOf = function(inner) {
  * Build a {@link checkerFunction checker function} that returns the corresponding checked value of `value` if any of the {@link checkerFunction checker functions} in `types` do not throw a {@link CheckerError}, and throws a {@link CheckerError} otherwise.
  * @example
  * let numbersStringsChecker = checker.oneOf([checker.number(), checker.string()]);
- * 
+ *
  * // returns 'a'
  * numbersStringsChecker('a');
- * 
+ *
  * // returns 1
  * numbersStringsChecker(1);
- * 
+ *
  * // throws CheckerError
  * numbersStringsChecker(true);
  * @function oneOf
@@ -367,13 +367,13 @@ exports.oneOf = function(types) {
  *   string: checker.shape({ value: checker.string() }),
  *   lookup: checker.shape({ path: checker.arrayOf(checker.string()) })
  * });
- * 
+ *
  * // returns { type: 'string', value: 'abc' }
  * expressionsChecker({ type: 'string', value: 'abc' });
- * 
+ *
  * // returns { type: 'lookup', path: ['x', 'y'] }
  * expressionsChecker({ type: 'lookup', path: ['x', 'y'] });
- * 
+ *
  * // throws CheckerError
  * expressionsChecker({ type: 'string', value: 123 });
  * expressionsChecker({ type: 'lookup', path: 'x' });
@@ -413,13 +413,13 @@ exports.recordTypes = function(types) {
  * Build a {@link checkerFunction checker function} that returns the `value` if it is undefined or null, and the checked value of `value` of `inner` otherwise.
  * @example
  * let optionalStringChecker = checker.optional(checker.string()));
- * 
+ *
  * // returns 'abc'
  * optionalStringChecker('abc');
- * 
+ *
  * // returns undefined
  * optionalStringChecker(undefined);
- * 
+ *
  * // throws CheckerError
  * optionalStringChecker(123);
  * @function optional
@@ -447,15 +447,15 @@ exports.optional = function(inner) {
  * Build a {@link checkerFunction checker function} that looks up the checker corresponding to `key` in `checkers` and returns its checked value. This can be used to support mutually-recursive types.
  * @example
  * let checkers = {};
- * 
+ *
  * checkers.twice = checker.shape({
  *   body: checker.arrayOf(checker.lookup(checkers, 'expression'))
  * });
- * 
+ *
  * checkers.string = checker.shape({
  *   value: checker.string()
  * });
- * 
+ *
  * checkers.expression = checker.recordTypes({
  *   twice: checker.lookup(checkers, 'twice'),
  *   string: checker.lookup(checkers, 'string')

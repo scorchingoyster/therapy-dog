@@ -71,7 +71,7 @@ class XML {
 
   /**
    * Render the elements described by XML#root, optionally using builder as a parent node.
-   * 
+   *
    * @param {XMLNode} [builder]
    * @return {XMLNode}
    */

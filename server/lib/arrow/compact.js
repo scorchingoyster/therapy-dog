@@ -84,7 +84,7 @@ function compactNode(node) {
  * </ul>
  * <p>Effectively, structure nodes with all of their lookups or arrows resulting in no output are marked as 'absent', nodes only involving boilerplate (structures and strings) are marked 'literal', and other nodes are marked 'present'.</p>
  * <p>Finally, remove any nodes with a 'presence' property of 'absent'.</p>
- * 
+ *
  * @function
  * @name compact
  * @param {Object} node
