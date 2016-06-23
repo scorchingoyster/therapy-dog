@@ -56,7 +56,7 @@ function buildTypeofChecker(type) {
 }
 
 /**
- * Build a {@link checkerFunction checker function} that returns the `value` if it is a string, and throws a {@link CheckerError} otherwise.
+ * Build a {@link checkerFunction checker function} that returns its argument if it is a string, and throws a {@link CheckerError} otherwise.
  * @function string
  * @memberof checker
  * @return {checkerFunction}
@@ -64,7 +64,7 @@ function buildTypeofChecker(type) {
 exports.string = buildTypeofChecker('string');
 
 /**
- * Build a {@link checkerFunction checker function} that returns the `value` if it is a number, and throws a {@link CheckerError} otherwise.
+ * Build a {@link checkerFunction checker function} that returns its argument if it is a number, and throws a {@link CheckerError} otherwise.
  * @function number
  * @memberof checker
  * @return {checkerFunction}
@@ -72,7 +72,7 @@ exports.string = buildTypeofChecker('string');
 exports.number = buildTypeofChecker('number');
 
 /**
- * Build a {@link checkerFunction checker function} that returns the `value` if it is a boolean, and throws a {@link CheckerError} otherwise.
+ * Build a {@link checkerFunction checker function} that returns its argument if it is a boolean, and throws a {@link CheckerError} otherwise.
  * @function boolean
  * @memberof checker
  * @return {checkerFunction}
@@ -80,7 +80,7 @@ exports.number = buildTypeofChecker('number');
 exports.boolean = buildTypeofChecker('boolean');
 
 /**
- * Build a {@link checkerFunction checker function} that returns the `value` if it is an object, and throws a {@link CheckerError} otherwise.
+ * Build a {@link checkerFunction checker function} that returns its argument if it is an object, and throws a {@link CheckerError} otherwise.
  * @function object
  * @memberof checker
  * @return {checkerFunction}
@@ -88,7 +88,29 @@ exports.boolean = buildTypeofChecker('boolean');
 exports.object = buildTypeofChecker('object');
 
 /**
- * Build a {@link checkerFunction checker function} that just returns the `value`.
+ * Build a {@link checkerFunction checker function} that returns its argument if it is an array, and throws a {@link CheckerError} otherwise.
+ * @function array
+ * @memberof checker
+ * @return {checkerFunction}
+ **/
+exports.array = function() {
+  let checker = function(value) {
+    if (!Array.isArray(value)) {
+      throw new CheckerError(`Expected ${checker}`);
+    }
+
+    return value;
+  };
+
+  checker.toString = function() {
+    return 'array';
+  };
+
+  return checker;
+};
+
+/**
+ * Build a {@link checkerFunction checker function} that just returns its argument.
  * @function any
  * @memberof checker
  * @return {checkerFunction}
@@ -106,7 +128,7 @@ exports.any = function() {
 };
 
 /**
- * Build a {@link checkerFunction checker function} that returns the `value` if it is equal to `literal`, and throws a {@link CheckerError} otherwise.
+ * Build a {@link checkerFunction checker function} that returns its argument if it is equal to `literal`, and throws a {@link CheckerError} otherwise.
  * @function literal
  * @memberof checker
  * @param literal
@@ -129,7 +151,7 @@ exports.literal = function(literal) {
 };
 
 /**
- * Build a {@link checkerFunction checker function} that returns the `value` if it is a string that matches the `regexp`, and throws a {@link CheckerError} otherwise.
+ * Build a {@link checkerFunction checker function} that returns its argument if it is a string that matches the `regexp`, and throws a {@link CheckerError} otherwise.
  * @function regexp
  * @memberof checker
  * @param regexp
@@ -152,7 +174,7 @@ exports.regexp = function(regexp) {
 };
 
 /**
- * Build a {@link checkerFunction checker function} that returns an object with the checked properties of `value` if each {@link checkerFunction checker function} in `spec` does not throw a {@link CheckerError} for its corresponding property, and throws a {@link CheckerError} otherwise. Properties not in `spec` are ignored and absent in the output.
+ * Build a {@link checkerFunction checker function} that returns an object with the checked properties of its argument if each {@link checkerFunction checker function} in `spec` does not throw a {@link CheckerError} for the corresponding property, and throws a {@link CheckerError} otherwise. Properties not in `spec` are ignored and absent in the output.
  * @example
  * let contactChecker = checker.shape({ name: checker.string(), email: checker.string() });
  *
@@ -210,29 +232,7 @@ exports.shape = function(spec) {
 };
 
 /**
- * Build a {@link checkerFunction checker function} that returns the `value` if it is an array, and throws a {@link CheckerError} otherwise.
- * @function array
- * @memberof checker
- * @return {checkerFunction}
- **/
-exports.array = function() {
-  let checker = function(value) {
-    if (!Array.isArray(value)) {
-      throw new CheckerError(`Expected ${checker}`);
-    }
-
-    return value;
-  };
-
-  checker.toString = function() {
-    return 'array';
-  };
-
-  return checker;
-};
-
-/**
- * Build a {@link checkerFunction checker function} that returns an array containing the checked elements of `value` if the {@link checkerFunction checker function} does not throw a {@link CheckerError} for any of the items, and throws a {@link CheckerError} otherwise.
+ * Build a {@link checkerFunction checker function} that returns an array containing the checked elements of its argument if the {@link checkerFunction checker function} does not throw a {@link CheckerError} for any of the items, and throws a {@link CheckerError} otherwise.
  * @example
  * let numbersChecker = checker.arrayOf(checker.number());
  *
@@ -243,10 +243,10 @@ exports.array = function() {
  * numbersChecker(['a', 'b', 'c']);
  * @function arrayOf
  * @memberof checker
- * @param inner
+ * @param type
  * @return {checkerFunction}
  **/
-exports.arrayOf = function(inner) {
+exports.arrayOf = function(type) {
   let checker = function(value) {
     if (!Array.isArray(value)) {
       throw new CheckerError(`Expected array`);
@@ -255,7 +255,7 @@ exports.arrayOf = function(inner) {
     let result = [];
     for (let i = 0; i < value.length; i++) {
       try {
-        result[i] = inner(value[i]);
+        result[i] = type(value[i]);
       } catch (err) {
         if (err instanceof CheckerError) {
           throw new CheckerError(err.originalMessage, [i].concat(err.path));
@@ -275,7 +275,7 @@ exports.arrayOf = function(inner) {
 };
 
 /**
- * Build a {@link checkerFunction checker function} that returns an object containing the checked properties of `value` if the {@link checkerFunction checker function} does not throw a {@link CheckerError} for any of the values, and throws a {@link CheckerError} otherwise.
+ * Build a {@link checkerFunction checker function} that returns an object containing the checked properties of its argument if the {@link checkerFunction checker function} `type` does not throw a {@link CheckerError} for any of the values, and throws a {@link CheckerError} otherwise.
  * @example
  * let numbersChecker = checker.mapOf(checker.number());
  *
@@ -286,10 +286,10 @@ exports.arrayOf = function(inner) {
  * numbersChecker({ a: true, b: false });
  * @function mapOf
  * @memberof checker
- * @param inner
+ * @param type
  * @return {checkerFunction}
  **/
-exports.mapOf = function(inner) {
+exports.mapOf = function(type) {
   let checker = function(value) {
     if (typeof value !== 'object') {
       throw new CheckerError(`Expected object`);
@@ -300,7 +300,7 @@ exports.mapOf = function(inner) {
     for (let i = 0; i < keys.length; i++) {
       let key = keys[i];
       try {
-        result[key] = inner(value[key]);
+        result[key] = type(value[key]);
       } catch (err) {
         if (err instanceof CheckerError) {
           throw new CheckerError(err.originalMessage, [key].concat(err.path));
@@ -320,7 +320,7 @@ exports.mapOf = function(inner) {
 };
 
 /**
- * Build a {@link checkerFunction checker function} that returns the corresponding checked value of `value` if any of the {@link checkerFunction checker functions} in `types` do not throw a {@link CheckerError}, and throws a {@link CheckerError} otherwise.
+ * Build a {@link checkerFunction checker function} that returns the corresponding checked value of its argument for the first {@link checkerFunction checker functions} in `types` that does not throw a {@link CheckerError}, and throws a {@link CheckerError} if all of the {@link checkerFunction checker functions} throw a {@link CheckerError}.
  * @example
  * let numbersStringsChecker = checker.oneOf([checker.number(), checker.string()]);
  *
@@ -361,7 +361,7 @@ exports.oneOf = function(types) {
 };
 
 /**
- * Build a {@link checkerFunction checker function} that checks that the `type` property of the `value` is one of the keys in `types`, and if so, returns an object with a `type` property set to that key, and with the properties from the checked value of `value` using the {@link checkerFunction checker function} in `types` for that key, if it does not throw a {@link CheckerError}, and throws a {@link CheckerError} otherwise.
+ * Build a {@link checkerFunction checker function} that checks that the `type` property of its argument is one of the keys in `types`, and if so, returns an object with a `type` property set to that key, and with the properties from the checked value of the checker function's argument using the {@link checkerFunction checker function} in `types` for that key if it does not throw a {@link CheckerError}, and throws a {@link CheckerError} otherwise.
  * @example
  * let expressionsChecker = checker.recordTypes({
  *   string: checker.shape({ value: checker.string() }),
@@ -410,7 +410,7 @@ exports.recordTypes = function(types) {
 };
 
 /**
- * Build a {@link checkerFunction checker function} that returns the `value` if it is undefined or null, and the checked value of `value` of `inner` otherwise.
+ * Build a {@link checkerFunction checker function} that returns its argument if it is undefined or null, and returns the result of passing its argument to the {@link checkerFunction checker function} `type` otherwise.
  * @example
  * let optionalStringChecker = checker.optional(checker.string()));
  *
@@ -424,20 +424,20 @@ exports.recordTypes = function(types) {
  * optionalStringChecker(123);
  * @function optional
  * @memberof checker
- * @param inner
+ * @param type
  * @return {checkerFunction}
  **/
-exports.optional = function(inner) {
+exports.optional = function(type) {
   let checker = function(value) {
     if (value === undefined || value === null) {
       return value;
     }
 
-    return inner(value);
+    return type(value);
   };
 
   checker.toString = function() {
-    return `optional ${inner}`;
+    return `optional ${type}`;
   };
 
   return checker;
