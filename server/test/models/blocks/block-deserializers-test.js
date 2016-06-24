@@ -5,8 +5,12 @@ const Promise = require('bluebird');
 const blockDeserializers = require('../../../lib/models/form/block-deserializers');
 const UploadNotFoundError = require('../../../lib/errors').UploadNotFoundError;
 
-describe('Blocks', function() {
-  describe('select block deserializer', function() {
+function deserializeInput(block, value) {
+  return Promise.resolve(blockDeserializers[block.type](block, value));
+}
+
+describe('Block deserializer', function() {
+  describe('select block', function() {
     it('outputs undefined for terms not found in an object array vocabulary', function() {
       let block = {
         type: 'select',
@@ -15,7 +19,7 @@ describe('Blocks', function() {
         options: 'language'
       };
 
-      return Promise.resolve(blockDeserializers.select(block, 'other'))
+      return deserializeInput(block, 'other')
       .then(function(result) {
         assert.deepEqual(result, undefined);
       });
@@ -32,14 +36,14 @@ describe('Blocks', function() {
         ]
       };
 
-      return Promise.resolve(blockDeserializers.select(block, 'maybe'))
+      return deserializeInput(block, 'maybe')
       .then(function(result) {
         assert.deepEqual(result, undefined);
       });
     });
   });
 
-  describe('checkboxes block deserializer', function() {
+  describe('checkboxes block', function() {
     it('does not output terms not found in a string array vocabulary', function() {
       let block = {
         type: 'checkboxes',
@@ -48,14 +52,14 @@ describe('Blocks', function() {
         options: 'role'
       };
 
-      return Promise.resolve(blockDeserializers.checkboxes(block, ['Student', 'President']))
+      return deserializeInput(block, ['Student', 'President'])
       .then(function(result) {
         assert.deepEqual(result, ['Student']);
       });
     });
   });
 
-  describe('file block deserializer', function() {
+  describe('file block', function() {
     it('rejects when an upload is not found by the id given', function() {
       let block = {
         type: 'file',
@@ -63,7 +67,7 @@ describe('Blocks', function() {
         label: 'Article'
       };
 
-      return Promise.resolve(blockDeserializers.file(block, '71c5a4d1-eb04-4a25-9786-331c27c959d7'))
+      return deserializeInput(block, '71c5a4d1-eb04-4a25-9786-331c27c959d7')
       .then(function() {
         assert(false, 'should reject');
       })
