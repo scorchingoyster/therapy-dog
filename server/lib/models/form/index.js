@@ -8,6 +8,7 @@ const blockCheckers = require('./block-checkers');
 const blockDeserializers = require('./block-deserializers');
 const blockSummarizers = require('./block-summarizers');
 const blockResourceAttributes = require('./block-resource-attributes');
+const blockInputCheckers = require('./block-input-checkers');
 const config = require('../../../config');
 
 // Define checkers for checking attributes in the Form constructor.
@@ -141,9 +142,27 @@ class Form {
 
   /**
    * @type {Array<Object>}
-  */
+   */
   get metadata() {
     return this.attributes.metadata;
+  }
+
+ /**
+  * @type {checkerFunction}
+  */
+  get inputChecker() {
+    return checker.shape(this.children.reduce(function(result, child) {
+      return Object.assign(result, { [child.key]: blockInputCheckers[child.type](child) });
+    }, {}));
+  }
+
+ /**
+  * Returns the checked version of the input if it is in the shape expected by {@link Form#inputChecker} and throws a {@link CheckerError} otherwise.
+  * @return {Object}
+  * @throws CheckerError
+  */
+  checkInput(input) {
+    return this.inputChecker(input);
   }
 
   /**
