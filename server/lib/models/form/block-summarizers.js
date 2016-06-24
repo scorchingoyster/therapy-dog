@@ -66,6 +66,18 @@ exports.checkboxes = function(block, value) {
   }
 };
 
+exports.tokens = function(block, value) {
+  if (Array.isArray(value)) {
+    if (value.length === 0) {
+      return { label: block.label, value: '(none)' };
+    } else {
+      return { label: block.label, value: value.join(', ') };
+    }
+  } else {
+    return { label: block.label, value: '(none)' };
+  }
+};
+
 exports.radio = function(block, value) {
   return getOptionLabel(block.options, value)
   .then(function(summary) {

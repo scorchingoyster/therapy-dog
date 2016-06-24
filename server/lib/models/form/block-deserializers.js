@@ -78,3 +78,11 @@ exports.agreement = function(block, value) {
     return { name: block.name, uri: block.uri, prompt: block.prompt };
   }
 };
+
+exports.tokens = function(block, value) {
+  if (Array.isArray(value)) {
+    return value;
+  } else {
+    return [];
+  }
+};

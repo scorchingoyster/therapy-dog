@@ -91,6 +91,16 @@ exports.text = checker.shape({
   note: checker.optional(checker.string())
 });
 
+exports.tokens = checker.shape({
+  key: checker.string(),
+  label: checker.optional(checker.string()),
+  options: checker.optional(optionsChecker),
+  required: checker.optional(checker.boolean()),
+  defaultValue: checker.optional(checker.arrayOf(checker.string())),
+  placeholder: checker.optional(checker.string()),
+  note: checker.optional(checker.string())
+});
+
 exports.block = checker.recordTypes({
   agreement: checker.lookup(exports, 'agreement'),
   checkboxes: checker.lookup(exports, 'checkboxes'),
@@ -100,5 +110,6 @@ exports.block = checker.recordTypes({
   radio: checker.lookup(exports, 'radio'),
   section: checker.lookup(exports, 'section'),
   select: checker.lookup(exports, 'select'),
-  text: checker.lookup(exports, 'text')
+  text: checker.lookup(exports, 'text'),
+  tokens: checker.lookup(exports, 'tokens')
 });
