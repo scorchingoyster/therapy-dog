@@ -8,7 +8,6 @@ const config = require('../../config');
 const CheckerError = require('../../lib/checker').CheckerError;
 const Form = require('../../lib/models/form');
 const ModelNotFoundError = require('../../lib/errors').ModelNotFoundError;
-const UploadNotFoundError = require('../../lib/errors').UploadNotFoundError;
 const createTestUpload = require('../test-helpers').createTestUpload;
 
 function assertFindById(id) {
@@ -164,7 +163,7 @@ describe('Form', function() {
     });
   });
 
-  describe('#transformValues()', function() {
+  describe('#deserializeInput()', function() {
     it('transforms values to the correct shape, with correct vocabulary terms and upload instances', function() {
       let form = Form.findById('article');
       let uploads = Promise.props({
@@ -172,7 +171,7 @@ describe('Form', function() {
         supplemental: createTestUpload('data.csv', 'application/csv', new Buffer('lorem ipsum'))
       });
 
-      return Promise.all([form, uploads]).spread((form, uploads) => form.transformValues({
+      return Promise.all([form, uploads]).spread((form, uploads) => form.deserializeInput({
         authors: [
           { first: 'Some', last: 'Author' },
           { first: 'Another', last: 'Author' }
@@ -187,7 +186,8 @@ describe('Form', function() {
         article: uploads.article.id,
         supplemental: [
           uploads.supplemental.id
-        ]
+        ],
+        agreement: true
       }))
       .then(function(values) {
         assert.deepEqual(values.authors, [
@@ -201,45 +201,6 @@ describe('Form', function() {
         assert.equal(values.review, 'no');
         assert.equal(values.article.name, 'article.pdf');
         assert.deepEqual(values.supplemental.map(u => u.name), ['data.csv']);
-      });
-    });
-
-    it('does not assign terms not found in an object array vocabulary', function() {
-      return Form.findById('article')
-      .then(function(form) {
-        return form.transformValues({ info: { language: 'other' } });
-      })
-      .then(function(values) {
-        assert.equal(values.language, undefined);
-      });
-    });
-
-    it('does not assign terms not found in a string array vocabulary', function() {
-      return Form.findById('article')
-      .then(function(form) {
-        return form.transformValues({ roles: ['Student', 'President'] });
-      })
-      .then(function(values) {
-        assert.deepEqual(values.roles, ['Student']);
-      });
-    });
-
-    it('does not assign terms not found in a literal options array', function() {
-      return Form.findById('article')
-      .then(function(form) {
-        return form.transformValues({ review: 'maybe' });
-      })
-      .then(function(values) {
-        assert.deepEqual(values.review, undefined);
-      });
-    });
-
-    it('transforms agreements to an object representing the agreement', function() {
-      return Form.findById('article')
-      .then(function(form) {
-        return form.transformValues({ agreement: true });
-      })
-      .then(function(values) {
         assert.deepEqual(values.agreement, {
           name: 'Deposit Agreement',
           uri: 'http://example.com/agreement',
@@ -247,32 +208,17 @@ describe('Form', function() {
         });
       });
     });
-
-    it('rejects when an upload is not found by the id given', function() {
-      return Form.findById('article')
-      .then(function(form) {
-        return form.transformValues({
-          article: { id: '71c5a4d1-eb04-4a25-9786-331c27c959d7' }
-        });
-      })
-      .then(function() {
-        assert(false, 'should reject');
-      })
-      .catch(function(error) {
-        assert.ok(error instanceof UploadNotFoundError, 'should reject with UploadNotFoundError');
-      });
-    });
   });
 
-  describe('#summarizeInput()', function() {
-    it('transforms values to the correct shape, with correct vocabulary terms and upload instances', function() {
+  describe('#checkInput()', function() {
+    it('should return a checked version of the input', function() {
       let form = Form.findById('article');
       let uploads = Promise.props({
         article: createTestUpload('article.pdf', 'application/pdf', new Buffer('lorem ipsum')),
         supplemental: createTestUpload('data.csv', 'application/csv', new Buffer('lorem ipsum'))
       });
 
-      return Promise.all([form, uploads]).spread((form, uploads) => form.summarizeInput({
+      return Promise.all([form, uploads]).spread((form, uploads) => form.checkInput({
         authors: [
           { first: 'Some', last: 'Author' },
           { first: 'Another', last: 'Author' }
@@ -281,34 +227,134 @@ describe('Form', function() {
           title: 'My Article',
           language: 'eng'
         },
+        embargo: 'P1Y',
         roles: ['Staff', 'Faculty'],
         review: 'no',
         article: uploads.article.id,
         supplemental: [
           uploads.supplemental.id
-        ]
+        ],
+        agreement: true
       }))
-      .then(function(values) {
-        assert.deepEqual(values.authors, [
+      .then(function(checked) {
+        assert.deepEqual(checked.authors, [
           { first: 'Some', last: 'Author' },
           { first: 'Another', last: 'Author' }
         ]);
-        assert.equal(values.info.title, 'My Article');
-        assert.deepEqual(values.info.language, 'English');
-        assert.deepEqual(values.roles, ['Staff', 'Faculty']);
-        assert.equal(values.review, 'No');
-        assert.equal(values.article.name, 'article.pdf');
-        assert.deepEqual(values.supplemental.map(u => u.name), ['data.csv']);
+        assert.equal(checked.info.title, 'My Article');
+        assert.equal(checked.info.language, 'eng');
+        assert.equal(checked.embargo, 'P1Y');
+        assert.deepEqual(checked.roles, ['Staff', 'Faculty']);
+        assert.equal(checked.review, 'no');
+        assert.equal(typeof checked.article, 'string');
+        assert.deepEqual(checked.supplemental.map(id => typeof id), ['string']);
+        assert.equal(checked.agreement, true);
+      });
+    });
+  });
+
+  describe('#summarizeInput()', function() {
+    it('should transform input to a summary usable by mailers', function() {
+      let form = Form.findById('article');
+      let article = createTestUpload('article.pdf', 'application/pdf', new Buffer('lorem ipsum'));
+      let summary = Promise.all([form, article]).spread((f, a) => f.summarizeInput({
+        authors: [
+          { first: 'Some', last: 'Author' }
+        ],
+        info: {
+          title: 'My Article',
+          language: 'eng'
+        },
+        roles: ['Staff', 'Faculty'],
+        embargo: '',
+        review: 'no',
+        license: 'CC-BY',
+        agreement: true,
+        article: a.id,
+        supplemental: []
+      }));
+
+      return summary.then(function(s) {
+        assert.deepEqual(s, [
+          {
+            label: 'Authors',
+            section: true,
+            repeat: true,
+            value: [
+              [
+                { label: 'First Name', value: 'Some' },
+                { label: 'Last Name', value: 'Author' }
+              ]
+            ]
+          },
+          {
+            label: 'Info',
+            section: true,
+            value: [
+              { label: 'Title', value: 'My Article' },
+              { label: 'Language', value: 'English' }
+            ]
+          },
+          { label: 'Embargo', value: '' },
+          { label: 'Roles', value: 'Staff, Faculty' },
+          { label: 'Needs Review?', value: 'No' },
+          { label: 'License', value: 'CC-BY' },
+          { label: 'Deposit Agreement', value: 'Accepted' },
+          { label: 'Article', value: 'article.pdf' },
+          { label: 'Supplemental', value: '(none)' }
+        ]);
       });
     });
 
     it('does not assign terms not found in a literal options array', function() {
-      return Form.findById('article')
-      .then(function(form) {
-        return form.summarizeInput({ review: 'maybe' });
-      })
-      .then(function(values) {
-        assert.deepEqual(values.review, undefined);
+      let form = Form.findById('article');
+      let article = createTestUpload('article.pdf', 'application/pdf', new Buffer('lorem ipsum'));
+      let summary = Promise.all([form, article]).spread((f, a) => f.summarizeInput({
+        authors: [
+          { first: 'Some', last: 'Author' }
+        ],
+        info: {
+          title: 'My Article',
+          language: 'eng'
+        },
+        roles: ['Staff', 'Faculty', 'President'],
+        embargo: '',
+        review: 'maybe',
+        license: 'CC-BY',
+        agreement: true,
+        article: a.id,
+        supplemental: []
+      }));
+
+      return summary.then(function(s) {
+        assert.deepEqual(s, [
+          {
+            label: 'Authors',
+            section: true,
+            repeat: true,
+            value: [
+              [
+                { label: 'First Name', value: 'Some' },
+                { label: 'Last Name', value: 'Author' }
+              ]
+            ]
+          },
+          {
+            label: 'Info',
+            section: true,
+            value: [
+              { label: 'Title', value: 'My Article' },
+              { label: 'Language', value: 'English' }
+            ]
+          },
+          { label: 'Embargo', value: '' },
+          { label: 'Roles', value: 'Staff, Faculty' },
+          { label: 'Needs Review?', value: '(none)' },
+          { label: 'License', value: 'CC-BY' },
+          { label: 'Deposit Agreement', value: 'Accepted' },
+          { label: 'Article', value: 'article.pdf' },
+          { label: 'Supplemental', value: '(none)' }
+        ]);
       });
     });
   });

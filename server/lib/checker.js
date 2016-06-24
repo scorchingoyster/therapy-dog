@@ -198,7 +198,7 @@ exports.shape = function(spec) {
   let keys = Object.keys(spec);
 
   let checker = function(value) {
-    if (typeof value !== 'object') {
+    if (typeof value !== 'object' || Array.isArray(value)) {
       throw new CheckerError(`Expected object`);
     }
 

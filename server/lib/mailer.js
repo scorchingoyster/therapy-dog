@@ -60,61 +60,6 @@ const depositNotificationSender = transport.templateSender({
 });
 
 /**
- * Flatten the summary into a form usable by the mailer templates.
- * @param {Array} blocks
- * @param {Object} summary
- * @return {Array}
- **/
-function flattenSummary(blocks, summary) {
-  return blocks.map(function(block) {
-    let value = summary[block.key];
-
-    if (block.type === 'section') {
-      if (block.repeat) {
-        return {
-          section: true,
-          repeat: true,
-          label: block.label,
-          value: value.map(function(item) {
-            return flattenSummary(block.children, item);
-          })
-        };
-      } else {
-        return {
-          section: true,
-          label: block.label,
-          value: flattenSummary(block.children, value)
-        };
-      }
-    } else if (block.type === 'checkboxes') {
-      if (value.length === 0) {
-        return { label: block.label, value: '(none)' };
-      } else {
-        return { label: block.label, value: value.join(', ') };
-      }
-    } else if (block.type === 'file') {
-      if (block.multiple) {
-        if (value.length === 0) {
-          return { label: block.label, value: '(none)' };
-        } else {
-          return { label: block.label, value: value.map(u => u.name).join(', ') };
-        }
-      } else if (typeof value !== 'undefined') {
-        return { label: block.label, value: value.name };
-      } else {
-        return { label: block.label, value: '(none)' };
-      }
-    } else if (block.type === 'agreement') {
-      return { label: block.name, value: 'Accepted' };
-    } else {
-      return { label: block.label, value };
-    }
-  });
-}
-
-exports.flattenSummary = flattenSummary;
-
-/**
  * Send a deposit receipt email.
  * @function sendDepositReceipt
  * @param {Form} form
@@ -124,9 +69,7 @@ exports.flattenSummary = flattenSummary;
  **/
 exports.sendDepositReceipt = function(form, summary, address) {
   return Promise.try(function() {
-    let items = flattenSummary(form.children, summary);
-
-    return depositReceiptSender({ to: address }, { form, items });
+    return depositReceiptSender({ to: address }, { form, items: summary });
   });
 };
 
@@ -140,10 +83,8 @@ exports.sendDepositReceipt = function(form, summary, address) {
  **/
 exports.sendDepositNotification = function(form, summary, addresses) {
   return Promise.try(function() {
-    let items = flattenSummary(form.children, summary);
-
     if (addresses.length > 0) {
-      return depositNotificationSender({ to: addresses }, { form, items });
+      return depositNotificationSender({ to: addresses }, { form, items: summary });
     }
   });
 };
