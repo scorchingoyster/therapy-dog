@@ -1,10 +1,10 @@
 import Ember from 'ember';
 
-const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-const DATE_DAY_REGEX = /^\d{4}-\d{2}-\d{2}$/;
-const DATE_MONTH_REGEX = /^\d{4}-\d{2}$/;
-const DATE_YEAR_REGEX = /^\d{4}$/;
-const DURATION_REGEX = /^P.+$/;
+const EMAIL_REGEXP = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+const DATE_DAY_REGEXP = /^\d{4}-\d{2}-\d{2}$/;
+const DATE_MONTH_REGEXP = /^\d{4}-\d{2}$/;
+const DATE_YEAR_REGEXP = /^\d{4}$/;
+const DURATION_REGEXP = /^P.+$/;
 
 export default Ember.Object.extend({
   required: Ember.computed('block.type', 'block.required', function() {
@@ -37,22 +37,22 @@ export default Ember.Object.extend({
       return [`Please check at least one option.`];
     } else if (required && Ember.isEmpty(value)) {
       return [`This field is required.`];
-    } else if (type === 'email' && !Ember.isEmpty(value) && !EMAIL_REGEX.test(value)) {
+    } else if (type === 'email' && !Ember.isEmpty(value) && !EMAIL_REGEXP.test(value)) {
       return [`The entered value is not a valid email address.`];
     } else if (type === 'date') {
       let precision = this.get('block.precision');
       
       // Duration date valid according to pattern 
-      if (DURATION_REGEX.test(value)) {
+      if (DURATION_REGEXP.test(value)) {
         return [];
       }
 
       // A date is invalid if it is not blank and does not match the pattern corresponding to the block's precision property.
-      if (precision === 'year' && !Ember.isEmpty(value) && !DATE_YEAR_REGEX.test(value)) {
+      if (precision === 'year' && !Ember.isEmpty(value) && !DATE_YEAR_REGEXP.test(value)) {
         return [`Please enter a valid year.`];
-      } else if (precision === 'month' && !Ember.isEmpty(value) && !DATE_MONTH_REGEX.test(value)) {
+      } else if (precision === 'month' && !Ember.isEmpty(value) && !DATE_MONTH_REGEXP.test(value)) {
         return [`Please enter a valid month.`];
-      } else if ((precision === 'day' || Ember.isEmpty(precision)) && !Ember.isEmpty(value) && !DATE_DAY_REGEX.test(value)) {
+      } else if ((precision === 'day' || Ember.isEmpty(precision)) && !Ember.isEmpty(value) && !DATE_DAY_REGEXP.test(value)) {
         return [`Please enter a valid date.`];
       }
     } else {
