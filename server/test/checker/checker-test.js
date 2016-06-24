@@ -145,6 +145,7 @@ describe('Checker', function() {
       assertCheckerEqual(c, { key: 'x', label: '123' });
       assertCheckerEqual(c, { key: 'x' });
       assertCheckerThrows(c, { label: '123' });
+      assertCheckerThrows(c, []);
 
       assertCheckerErrorMessage(c, 'test', 'Expected object');
       assertCheckerErrorPath(c, 'test', []);
