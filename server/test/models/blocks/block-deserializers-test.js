@@ -75,5 +75,18 @@ describe('Block deserializer', function() {
         assert.ok(error instanceof UploadNotFoundError, 'should reject with UploadNotFoundError');
       });
     });
+
+    it('does not reject for an absent optional file', function() {
+      let block = {
+        type: 'file',
+        key: 'article',
+        label: 'Article'
+      };
+
+      return deserializeInput(block, undefined)
+      .then(function(result) {
+        assert.equal(result, undefined);
+      });
+    });
   });
 });
