@@ -53,11 +53,23 @@ exports.radio = function(block, value) {
 
 exports.file = function(block, value) {
   if (block.multiple) {
-    return Promise.all(value.map(function(v) {
-      return Upload.findById(v);
-    }));
+    if (Array.isArray(value)) {
+      return Promise.all(value.map(function(v) {
+        if (typeof v === 'string') {
+          return Upload.findById(v);
+        } else {
+          return undefined;
+        }
+      }));
+    } else {
+      return [];
+    }
   } else {
-    return Upload.findById(value);
+    if (typeof value === 'string') {
+      return Upload.findById(value);
+    } else {
+      return undefined;
+    }
   }
 };
 

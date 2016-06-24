@@ -4,7 +4,7 @@ For example, a "map" block.
 
 ## Server
 
-### Add a block checker
+### Add a checker
 
 server/lib/models/form/block-checkers.js
 
@@ -20,10 +20,6 @@ server/lib/models/form/block-checkers.js
       // ...
       map: checker.lookup(exports, 'map')
     });
-
-### Add an input checker
-
-server/lib/models/form/block-input-checkers.js
 
 ### Add a deserializer
 
