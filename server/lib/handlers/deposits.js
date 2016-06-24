@@ -15,27 +15,24 @@ exports.create = function(req, res, next) {
 
   // Find the form...
   let form = Form.findById(deposit.form);
-  
-  // Check input...
-  let checkedInput = form.then(f => f.checkInput(deposit.values));
 
   // Transform input...
-  let deserializedInput = Promise.join(form, checkedInput, (f, i) => f.deserializeInput(i));
-  let summarizedInput = Promise.join(form, checkedInput, (f, i) => f.summarizeInput(i));
+  let input = form.then(f => f.deserializeInput(deposit.values));
+  let inputSummary = form.then(f => f.summarizeInput(deposit.values));
 
   // Generate a bundle and submission...
-  let bundle = Promise.join(form, deserializedInput, generateBundle);
+  let bundle = Promise.join(form, input, generateBundle);
   let submission = Promise.join(form, bundle, generateSubmission);
 
   // Collect notification recipients...
-  let notificationRecipientEmails = Promise.join(form, deserializedInput, collectNotificationRecipientEmails);
+  let notificationRecipientEmails = Promise.join(form, input, collectNotificationRecipientEmails);
 
   // Submit the deposit, send email notifications, send response.
   Promise.join(form, submission, deposit.depositorEmail, submitZip)
   .then(() => { res.status(204).end(); })
   .then(() => Promise.all([
-    Promise.join(form, summarizedInput, deposit.depositorEmail, mailer.sendDepositReceipt),
-    Promise.join(form, summarizedInput, notificationRecipientEmails, mailer.sendDepositNotification)
+    Promise.join(form, inputSummary, deposit.depositorEmail, mailer.sendDepositReceipt),
+    Promise.join(form, inputSummary, notificationRecipientEmails, mailer.sendDepositNotification)
   ]))
   .catch(function(err) {
     if (err instanceof SwordError) {
@@ -51,15 +48,12 @@ exports.debug = function(req, res, next) {
 
   // Find the form...
   let form = Form.findById(deposit.form);
-  
-  // Check input...
-  let checkedInput = form.then(f => f.checkInput(deposit.values));
 
   // Transform input...
-  let deserializedInput = Promise.join(form, checkedInput, (f, i) => f.deserializeInput(i));
+  let input = form.then(f => f.deserializeInput(deposit.values));
 
   // Generate a bundle and submission...
-  let bundle = Promise.join(form, deserializedInput, generateBundle);
+  let bundle = Promise.join(form, input, generateBundle);
   let submission = Promise.join(form, bundle, generateSubmission);
 
   // Respond with the METS.

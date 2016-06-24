@@ -210,49 +210,6 @@ describe('Form', function() {
     });
   });
 
-  describe('#checkInput()', function() {
-    it('should return a checked version of the input', function() {
-      let form = Form.findById('article');
-      let uploads = Promise.props({
-        article: createTestUpload('article.pdf', 'application/pdf', new Buffer('lorem ipsum')),
-        supplemental: createTestUpload('data.csv', 'application/csv', new Buffer('lorem ipsum'))
-      });
-
-      return Promise.all([form, uploads]).spread((form, uploads) => form.checkInput({
-        authors: [
-          { first: 'Some', last: 'Author' },
-          { first: 'Another', last: 'Author' }
-        ],
-        info: {
-          title: 'My Article',
-          language: 'eng'
-        },
-        embargo: 'P1Y',
-        roles: ['Staff', 'Faculty'],
-        review: 'no',
-        article: uploads.article.id,
-        supplemental: [
-          uploads.supplemental.id
-        ],
-        agreement: true
-      }))
-      .then(function(checked) {
-        assert.deepEqual(checked.authors, [
-          { first: 'Some', last: 'Author' },
-          { first: 'Another', last: 'Author' }
-        ]);
-        assert.equal(checked.info.title, 'My Article');
-        assert.equal(checked.info.language, 'eng');
-        assert.equal(checked.embargo, 'P1Y');
-        assert.deepEqual(checked.roles, ['Staff', 'Faculty']);
-        assert.equal(checked.review, 'no');
-        assert.equal(typeof checked.article, 'string');
-        assert.deepEqual(checked.supplemental.map(id => typeof id), ['string']);
-        assert.equal(checked.agreement, true);
-      });
-    });
-  });
-
   describe('#summarizeInput()', function() {
     it('should transform input to a summary usable by mailers', function() {
       let form = Form.findById('article');
