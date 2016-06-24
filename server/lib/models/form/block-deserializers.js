@@ -5,7 +5,7 @@ const moment = require('moment');
 const Upload = require('../upload');
 const getOptionTerm = require('./options').getOptionTerm;
 
-const DURATION_REGEX = /^P.+$/;
+const DURATION_REGEXP = /^P.+$/;
 
 exports.section = function(block, value, reduceChildren) {
   if (block.repeat) {
@@ -24,7 +24,7 @@ exports.email = function(block, value) {
 };
 
 exports.date = function(block, value) {
-  if (DURATION_REGEX.test(value)) {
+  if (DURATION_REGEXP.test(value)) {
     return moment().add(moment.duration(value)).format('YYYY-MM-DD');
   } else {
     return String(value);
