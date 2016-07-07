@@ -42,6 +42,10 @@ exports.radio = function(block) {
   return optionallyGetOptionsResourceAttributes(block);
 };
 
+exports.tokens = function(block) {
+  return optionallyGetOptionsResourceAttributes(block);
+};
+
 exports.file = function(block) {
   return block;
 };

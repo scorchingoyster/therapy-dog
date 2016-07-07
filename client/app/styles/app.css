@@ -212,6 +212,7 @@ html, body {
 /* blocks */
 
 .block.text label,
+.block.tokens label,
 .block.date label,
 .block.select label,
 .block.email label,
@@ -227,6 +228,7 @@ html, body {
 }
 
 .block.text.required label:after,
+.block.tokens.required label:after,
 .block.date.required label:after,
 .block.select.required label:after,
 .block.file.required label:after,
@@ -280,6 +282,27 @@ html, body {
   max-height: 200px;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+
+/* tokens blocks */
+
+.block.tokens ul.tagit {
+  margin: 8px 0;
+  font-size: 16px;
+  padding: 2px 4px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 0;
+}
+
+.block.tokens ul.tagit.tagit-focus {
+  outline: #000 dotted 1px;
+  outline: -webkit-focus-ring-color auto 5px;
+}
+
+#form.invalid .block.tokens.invalid ul.tagit {
+  border-color: #c00;
 }
 
 
@@ -357,6 +380,7 @@ html, body {
 }
 
 .section .block.text label,
+.section .block.tokens label,
 .section .block.date label,
 .section .block.select label,
 .section .block.file label,

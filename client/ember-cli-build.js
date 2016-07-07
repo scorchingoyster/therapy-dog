@@ -39,6 +39,9 @@ module.exports = function(defaults) {
   fs.readdirSync(imagesDir).forEach(function(file) {
     app.import(path.join(imagesDir, file), { destDir: "/assets/images" });
   });
+  
+  app.import('vendor/tag-it/js/tag-it.js');
+  app.import('vendor/tag-it/css/jquery.tagit.css');
 
   return app.toTree();
 };

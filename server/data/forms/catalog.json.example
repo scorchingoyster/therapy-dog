@@ -78,6 +78,12 @@
     },
     
     {
+      "type": "tokens",
+      "key": "tokens",
+      "label": "Tokens"
+    },
+    
+    {
       "type": "select",
       "key": "select",
       "label": "Select",

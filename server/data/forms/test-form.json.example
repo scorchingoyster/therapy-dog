@@ -17,9 +17,9 @@
         },
         {
           "key": "keywords",
-          "type": "text",
+          "type": "tokens",
           "label": "Keywords",
-          "defaultValue": "stuff"
+          "defaultValue": ["stuff"]
         },
         {
           "key": "pubdate",
@@ -196,6 +196,20 @@
             "target": [
               { "type": "structure", "name": "titleInfo" },
               { "type": "structure", "name": "title" }
+            ]
+          },
+          
+          {
+            "type": "arrow",
+            "items": { "type": "lookup", "path": ["info", "keywords"] },
+            "target": [
+              {
+                "type": "structure",
+                "name": "note",
+                "properties": {
+                  "displayLabel": { "type": "string", "value": "Keywords" }
+                }
+              }
             ]
           },
           
