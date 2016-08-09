@@ -23,6 +23,7 @@ exports.date = checker.shape({
   key: checker.string(),
   label: checker.optional(checker.string()),
   options: checker.optional(optionsChecker),
+  defaultValue: checker.optional(checker.string()),
   precision: checker.optional(checker.oneOf([
     checker.literal('year'),
     checker.literal('month'),
