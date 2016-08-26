@@ -16,6 +16,10 @@ export default Ember.Component.extend({
         this.set('entry.value', [this.createBlankEntry()]);
       }
     }
+
+    if (/author/.test(this.get('entry.block.key'))) {
+      this.classNames.push('authors');
+    }
   },
   
   createBlankEntry() {
