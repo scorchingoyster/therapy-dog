@@ -10,8 +10,7 @@ export default Ember.Component.extend(FocusEntryAction, {
 
   didReceiveAttrs() {
     this._super(...arguments);
-    
-    console.log("Whoa whoa whoa", this.get('entry.value'), this.get('entry.block'))
+
     if (Ember.isBlank(this.get('entry.value'))) {
       this.set('entry.value', this.get('entry.block.defaultValue') || '');
     }
