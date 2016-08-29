@@ -64,6 +64,7 @@ exports.section = checker.shape({
   key: checker.string(),
   label: checker.optional(checker.string()),
   repeat: checker.optional(checker.boolean()),
+  displayInline: checker.optional(checker.boolean()),
   note: checker.optional(checker.string()),
   children: checker.arrayOf(checker.lookup(exports, 'block'))
 });

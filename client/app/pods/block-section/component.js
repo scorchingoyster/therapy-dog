@@ -17,7 +17,7 @@ export default Ember.Component.extend({
       }
     }
 
-    if (/author/.test(this.get('entry.block.key'))) {
+    if (this.get('entry.block.displayInline')) {
       this.classNames.push('authors');
     }
   },
