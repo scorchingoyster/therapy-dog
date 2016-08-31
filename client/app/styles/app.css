@@ -287,13 +287,13 @@ html, body {
 
 /* Side by side text blocks (For authors only) */
 
-.authors.section.repeat .block.text {
+.authors.section .block.text {
   display: inline-block;
   width: 250px;
   margin-right: 15px;
 }
 
-.authors.section.repeat .add {
+.authors.section .add {
     margin-top: -30px;
 }
 
