@@ -527,3 +527,7 @@ html, body {
 .block.date .month-input input {
   display: inline;
 }
+
+.in-admin-iframe {
+  display: none;
+}
