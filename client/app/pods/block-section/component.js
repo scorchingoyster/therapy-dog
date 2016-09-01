@@ -16,6 +16,10 @@ export default Ember.Component.extend({
         this.set('entry.value', [this.createBlankEntry()]);
       }
     }
+
+    if (this.get('entry.block.displayInline')) {
+      this.classNames.push('displayed-inline');
+    }
   },
   
   createBlankEntry() {

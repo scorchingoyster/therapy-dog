@@ -285,6 +285,21 @@ html, body {
 }
 
 
+/* Side by side text blocks */
+
+.displayed-inline.section .block.text,
+.displayed-inline.section.repeat .block.text {
+  display: inline-block;
+  width: 250px;
+  margin-right: 15px;
+}
+
+.displayed-inline.section .add,
+.displayed-inline.section.repeat .add {
+    margin-top: -30px;
+}
+
+
 /* tokens blocks */
 
 .block.tokens ul.tagit {

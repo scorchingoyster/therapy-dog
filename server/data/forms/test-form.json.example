@@ -107,6 +107,7 @@
       "type": "section",
       "label": "Authors",
       "repeat": true,
+      "displayInline": true,
       "children": [
         {
           "key": "first",
