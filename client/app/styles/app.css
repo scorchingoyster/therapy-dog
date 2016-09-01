@@ -208,6 +208,12 @@ html, body {
   display: inherit;
 }
 
+/* Inline block errors */
+#form.invalid .displayed-inline.block .errors {
+  display: inline-block;
+  margin-top: -10px;
+}
+
 
 /* blocks */
 
