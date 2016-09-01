@@ -285,15 +285,17 @@ html, body {
 }
 
 
-/* Side by side text blocks (For authors only) */
+/* Side by side text blocks */
 
-.authors.section .block.text {
+.displayed-inline.section .block.text,
+.displayed-inline.section.repeat .block.text {
   display: inline-block;
   width: 250px;
   margin-right: 15px;
 }
 
-.authors.section .add {
+.displayed-inline.section .add,
+.displayed-inline.section.repeat .add {
     margin-top: -30px;
 }
 

@@ -18,7 +18,7 @@ export default Ember.Component.extend({
     }
 
     if (this.get('entry.block.displayInline')) {
-      this.classNames.push('authors');
+      this.classNames.push('displayed-inline');
     }
   },
   
