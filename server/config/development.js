@@ -5,7 +5,7 @@ const path = require('path');
 module.exports = {
   HOST: '127.0.0.1',
   PORT: '3000',
-  SWORD_BASE_URL: 'https://localhost:8443/services/sword/collection/',
+  SWORD_BASE_URL: 'http://localhost:8182/services/sword/collection/',
   SWORD_USERNAME: 'depositforms',
   SWORD_PASSWORD: 'depositforms',
   FORMS_DIRECTORY: path.join(__dirname, '../data/forms'),
