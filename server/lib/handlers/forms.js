@@ -6,6 +6,7 @@ const logging = require('../../lib/logging');
 const ModelNotFoundError = require('../errors').ModelNotFoundError;
 
 exports.show = function(req, res, next) {
+  console.log(req.params)
   Form.findById(req.params.id)
   .then(function(form) {
     if (req.remoteUser) {

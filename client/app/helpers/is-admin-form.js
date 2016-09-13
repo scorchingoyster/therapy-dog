@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export function isAdminForm() {
-  if (location.search.length > 0) {
+  if (/adminOnly/.test(location.href)) {
     return 'in-admin-iframe';
   }
 	

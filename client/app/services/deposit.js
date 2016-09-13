@@ -31,14 +31,19 @@ function buildPayload(deposit) {
 }
 
 export default Ember.Service.extend({
-  get(formId) {
+  get(params) {
     return new Ember.RSVP.Promise(function(resolve, reject) {
       let headers = {};
+      let additionalParams = '';
       if (ENV.APP.spoofRemoteUser) {
         headers['remote_user'] = ENV.APP.spoofRemoteUser;
       }
-      
-      $.ajax('/' + ENV.APP.apiNamespace + '/forms/' + formId, {
+
+      if (params.collection !== undefined) {
+        additionalParams += '/' + params.collection + '/adminOnly'
+      }
+
+      $.ajax('/' + ENV.APP.apiNamespace + '/forms/' + params.form_id + additionalParams, {
         method: 'GET',
         headers
       })
