@@ -15,6 +15,7 @@
       "key": "authors",
       "label": "Authors",
       "repeat": true,
+      "displayInline": false,
       "children": [
         {
           "type": "text",

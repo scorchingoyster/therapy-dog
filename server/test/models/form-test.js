@@ -237,6 +237,7 @@ describe('Form', function() {
             label: 'Authors',
             section: true,
             repeat: true,
+            displayInline: false,
             value: [
               [
                 { label: 'First Name', value: 'Some' },
@@ -247,6 +248,7 @@ describe('Form', function() {
           {
             label: 'Info',
             section: true,
+            displayInline: false,
             value: [
               { label: 'Title', value: 'My Article' },
               { label: 'Language', value: 'English' }
@@ -289,6 +291,7 @@ describe('Form', function() {
             label: 'Authors',
             section: true,
             repeat: true,
+            displayInline: false,
             value: [
               [
                 { label: 'First Name', value: 'Some' },
@@ -299,6 +302,7 @@ describe('Form', function() {
           {
             label: 'Info',
             section: true,
+            displayInline: false,
             value: [
               { label: 'Title', value: 'My Article' },
               { label: 'Language', value: 'English' }

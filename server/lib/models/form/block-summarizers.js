@@ -10,7 +10,7 @@ exports.section = function(block, value, reduceChildren) {
       return {
         section: true,
         repeat: true,
-        displayInline: (block.inline !== null) ? block.inline : false,
+        displayInline: (block.inline !== null && block.inline !== undefined) ? block.inline : false,
         label: block.label,
         value: summary
       };
@@ -19,7 +19,7 @@ exports.section = function(block, value, reduceChildren) {
     return reduceChildren(block.children, value, []).then((summary) => {
       return {
         section: true,
-        displayInline: (block.inline !== null) ? block.inline : false,
+        displayInline: (block.inline !== null && block.inline !== undefined) ? block.inline : false,
         label: block.label,
         value: summary
       };
