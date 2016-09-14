@@ -98,6 +98,13 @@ class Form {
   }
 
   /**
+   * @param {String} destination
+   */
+  set destination(destination) {
+    this.attributes.destination = destination;
+  }
+
+  /**
    * @type {Object}
    */
   get contact() {

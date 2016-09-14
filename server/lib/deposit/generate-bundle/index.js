@@ -10,9 +10,14 @@ const generateAggregate = require('./generate-aggregate');
  * @name generateBundle
  * @param {Form} form
  * @param {Object} values
+ * @param {String} destination
  * @return {Bundle}
  */
-module.exports = function(form, values) {
+module.exports = function(form, values, destination) {
+  if (destination !== '') {
+    form.destination = destination;
+  }
+
   /* istanbul ignore else */
   if (form.bundle.type === 'single') {
     return generateSingle(form, values);

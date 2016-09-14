@@ -22,9 +22,10 @@ function buildPayload(deposit) {
   
   let depositorEmail = values[DEPOSITOR_EMAIL_KEY];
   delete values[DEPOSITOR_EMAIL_KEY];
-  
+
   return {
     form: deposit.get('form.id'),
+    destination: deposit.get('form.destination'),
     values,
     depositorEmail
   };
@@ -40,7 +41,7 @@ export default Ember.Service.extend({
       }
 
       if (params.collection !== undefined) {
-        additionalParams += '/' + params.collection + '/adminOnly'
+        additionalParams += '/adminOnly';
       }
 
       $.ajax('/' + ENV.APP.apiNamespace + '/forms/' + params.form_id + additionalParams, {
@@ -50,11 +51,14 @@ export default Ember.Service.extend({
       .done(function(response) {
         let form = Ember.Object.create({
           id: response.data.id,
+          destination: params.collection,
           title: response.data.attributes.title,
           contact: response.data.attributes.contact,
           description: response.data.attributes.description,
           children: deserializeChildren(response.data.attributes.children)
         });
+
+
         
         let depositorEmailBlock = Ember.Object.create({
           type: 'email',
