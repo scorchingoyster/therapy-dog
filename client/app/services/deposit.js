@@ -96,6 +96,12 @@ export default Ember.Service.extend({
   
   submit(deposit) {
     let payload = buildPayload(deposit);
+    let depositCollection = location.href;
+    let isAdminForm = (/adminOnly/.test(depositCollection)) ? true : false;
+    let results = {
+      path: depositCollection,
+      admin: isAdminForm
+    };
     
     return new Ember.RSVP.Promise(function(resolve) {
       let headers = {};
@@ -110,10 +116,12 @@ export default Ember.Service.extend({
         headers
       })
       .done(function() {
-        resolve({ success: true });
+        results.success = true;
+        resolve(results);
       })
       .fail(function() {
-        resolve({ success: false });
+        results.success = false;
+        resolve(results);
       });
     });
   },

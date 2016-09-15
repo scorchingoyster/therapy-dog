@@ -8,7 +8,11 @@
     
     <p>There was an error submitting your deposit.</p>
   {{/if}}
-  
+
+  {{#if model.result.admin}}
+    <p>Add another item in this <a href="{{model.result.path}}">collection</a></p>
+  {{/if}}
+
   {{partial "deposit/contact"}}
 
   <p class="button"><a href="/Shibboleth.sso/Logout?return=https%3a%2f%2fcdr.lib.unc.edu%2f">Sign Out</a></p>
