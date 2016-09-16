@@ -1,5 +1,13 @@
 {{#if model.form.contact}}
-  <p>If you have any questions, please contact <a href="mailto:{{model.form.contact.email}}">{{model.form.contact.name}}</a>.</p>
+  {{#if model.result.success}}
+    <p>If you have any questions, please contact <a href="mailto:{{model.form.contact.email}}">{{model.form.contact.name}}</a>.</p>
+  {{else}}
+    <p>If the problem persists or you have any questions, please contact <a href="mailto:{{model.form.contact.email}}">{{model.form.contact.name}}</a>.</p>
+  {{/if}}
 {{else}}
-  <p>If you have any questions, please <a href="http://blogs.lib.unc.edu/cdr/index.php/contact-us/">contact us</a>.</p>
+  {{#if model.result.success}}
+    <p>If you have any questions, please <a href="http://blogs.lib.unc.edu/cdr/index.php/contact-us/">contact us</a>.</p>
+  {{else}}
+    <p>If the problem persists or you have any questions, please <a href="http://blogs.lib.unc.edu/cdr/index.php/contact-us/">contact us</a>.</p>
+  {{/if}}
 {{/if}}
