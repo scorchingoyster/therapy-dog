@@ -2,7 +2,7 @@
   "destination": "uuid:destination-pid-goes-here",
   
   "title": "Test Form",
-  
+  "allowDestinationOverride": true,
   "children": [
     {
       "key": "info",
