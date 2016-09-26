@@ -16,19 +16,26 @@ exports.create = function(req, res, next) {
 
   // Find the form...
   let form = Form.findById(deposit.form);
-  let destination = '';
 
-  // If the form is coming in from the CDR admin reset the destination UUID to the one it provides.
-  if (deposit.destination !== undefined) {
-    destination = deposit.destination
-  }
+  // Check to see if form destination should go somewhere other than the default location
+  form.then((form) => {
+    let canOverride = false;
+    if (form.allowDestinationOverride !== undefined) {
+      canOverride = form.allowDestinationOverride;
+    }
+
+    // If the form is coming in from the CDR admin reset the destination UUID to the one it provides.
+    if (deposit.destination !== undefined && canOverride) {
+      form.destination = deposit.destination
+    }
+  });
 
   // Transform input...
   let input = form.then(f => f.deserializeInput(deposit.values));
   let inputSummary = form.then(f => f.summarizeInput(deposit.values));
 
   // Generate a bundle and submission...
-  let bundle = Promise.join(form, input, destination, generateBundle);
+  let bundle = Promise.join(form, input, generateBundle);
   let submission = Promise.join(form, bundle, generateSubmission);
 
   // Collect notification recipients...
