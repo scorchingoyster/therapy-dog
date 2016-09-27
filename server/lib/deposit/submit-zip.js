@@ -69,7 +69,7 @@ function postZip(form, zipFile, depositorEmail) {
         // Ignoring ECONNRESETs for the purpose of determining if the deposit failed
         // as SWORD in some containers closes connections in a way that results in this
         // error while the deposit actually succeeds
-        if (err.stack.indexOf("ECONNRESET") != -1 && config.DEBUG !== undefined && config.DEBUG) {
+        if (err.stack.indexOf('ECONNRESET') !== -1 && config.DEBUG !== undefined && config.DEBUG) {
           resolve();
         } else {
           reject(err);

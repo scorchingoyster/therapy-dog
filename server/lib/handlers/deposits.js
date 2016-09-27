@@ -2,7 +2,6 @@
 
 const Promise = require('bluebird');
 const Form = require('../models/form');
-const destination = require('../models/form');
 const generateBundle = require('../deposit/generate-bundle');
 const generateSubmission = require('../deposit/generate-submission');
 const collectNotificationRecipientEmails = require('../deposit/collect-notification-recipient-emails');
@@ -26,7 +25,7 @@ exports.create = function(req, res, next) {
 
     // If the form is coming in from the CDR admin reset the destination UUID to the one it provides.
     if (deposit.destination !== undefined && canOverride) {
-      form.destination = deposit.destination
+      form.destination = deposit.destination;
     }
   });
 
