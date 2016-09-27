@@ -440,52 +440,52 @@ html, body {
 }
 
 .section.repeat .item:last-of-type > .remove {
-	display: inline;
+  display: inline;
 }
 
 .section.repeat .item:first-of-type > .remove {
-	display: none;
+  display: none;
 }
 
 .section.repeat .item:nth-last-child(n+2) > .remove {
-	display: inline;
+  display: inline;
 }
 
 .section.repeat .item:last-of-type > .add {
-	display: inline;
+  display: inline;
 }
 
 .section.repeat .item:nth-last-child(n+2) > .add {
-	display: none;
+  display: none;
 }
 
 .section.repeat .add button {
-	position: absolute;
+  position: absolute;
   top: 0;
   right: 50px;
   margin: 8px 0;
 }
 
 #form button.plus {
-	border-style: none;
-	background: none;
+  border-style: none;
+  background: none;
 }
 
 #form button.plus > i {
-	display: inline-block;
-	color: #6A6A6A;
-	font-size: 32px;
+  display: inline-block;
+  color: #6A6A6A;
+  font-size: 32px;
 }
 
 #form button.minus {
-	border-style: none;
-	background: none;
+  border-style: none;
+  background: none;
 }
 
 #form button.minus > i {
-	display: inline-block;
-	color: #6A6A6A;
-	font-size: 32px;
+  display: inline-block;
+  color: #6A6A6A;
+  font-size: 32px;
 }
 
 .section.repeat .remove button {
