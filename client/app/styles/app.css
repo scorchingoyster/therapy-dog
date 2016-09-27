@@ -1,3 +1,5 @@
+
+
 @import 'cdr.css';
 
 /* basic styles */
@@ -248,7 +250,7 @@ html, body {
 
 .block p.note {
   font-size: 14px;
-  margin: 8px 0;
+  margin: 4px 0;
   line-height: 18px;
 }
 
@@ -258,7 +260,7 @@ html, body {
 .block.text input,
 .block.email input {
   display: block;
-  margin: 8px 0;
+  margin: 0;
   font-size: 16px;
   padding: 4px;
   width: 100%;
@@ -363,7 +365,7 @@ html, body {
 
 .block.date input {
   display: block;
-  margin: 8px 0;
+  margin: 0;
   font-size: 16px;
   padding: 4px;
   width: 150px;
@@ -391,6 +393,7 @@ html, body {
 .block.section h2 {
   font-size: 18px;
   margin: 16px 0;
+  color: #005B90;
 }
 
 
@@ -409,7 +412,7 @@ html, body {
 .section .block.checkboxes h2,
 .section .block.radio h2,
 .section .block.agreement h2 {
-  margin: 8px 0;
+  margin: 4px 0;
   font-size: 14px;
   line-height: 18px;
 }
@@ -421,6 +424,7 @@ html, body {
   position: relative;
   margin: 24px 0;
   border-top: 1px solid #ddd;
+  padding-bottom: 0;
 }
 
 .section.repeat .item:first-of-type {
@@ -435,25 +439,60 @@ html, body {
   margin-top: 18px;
 }
 
-.section.repeat .add {
-  margin-top: 18px;
-  border-top: 1px solid #ddd;
+.section.repeat .item:last-of-type > .remove {
+	display: inline;
+}
+
+.section.repeat .item:first-of-type > .remove {
+	display: none;
+}
+
+.section.repeat .item:nth-last-child(n+2) > .remove {
+	display: inline;
+}
+
+.section.repeat .item:last-of-type > .add {
+	display: inline;
+}
+
+.section.repeat .item:nth-last-child(n+2) > .add {
+	display: none;
 }
 
 .section.repeat .add button {
-  margin: 24px 0;
-  margin-bottom: 0;
-  font-size: 16px;
-  padding: 8px 16px;
+	position: absolute;
+  top: 0;
+  right: 50px;
+  margin: 8px 0;
+}
+
+#form button.plus {
+	border-style: none;
+	background: none;
+}
+
+#form button.plus > i {
+	display: inline-block;
+	color: #6A6A6A;
+	font-size: 32px;
+}
+
+#form button.minus {
+	border-style: none;
+	background: none;
+}
+
+#form button.minus > i {
+	display: inline-block;
+	color: #6A6A6A;
+	font-size: 32px;
 }
 
 .section.repeat .remove button {
   position: absolute;
   top: 0;
   right: 0;
-  font-size: 14px;
-  padding: 6px 12px;
-  margin: 24px 0;
+  margin: 10px 0;
 }
 
 
