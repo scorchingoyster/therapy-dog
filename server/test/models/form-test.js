@@ -118,6 +118,12 @@ describe('Form', function() {
     });
   });
 
+  it('may have an overridden destination', function() {
+    return Form.findById('article').then(function(form) {
+      assert.deepEqual(form.allowDestinationOverride, true);
+    });
+  });
+
   describe('#getResourceObject()', function() {
     it('converts object array vocabularies to options arrays', function() {
       return Form.findById('article')
