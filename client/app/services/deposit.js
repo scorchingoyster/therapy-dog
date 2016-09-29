@@ -33,7 +33,7 @@ function buildPayload(deposit) {
 }
 
 export default Ember.Service.extend({
-  get(params) {
+  get(formId) {
     return new Ember.RSVP.Promise(function(resolve, reject) {
       let headers = {};
 
@@ -45,11 +45,11 @@ export default Ember.Service.extend({
       let adminOnly = parameterValue('adminOnly');
       let additionalParams = '';
 
-      if (adminOnly !== undefined && adminOnly) {
-        additionalParams += '/adminOnly';
+      if (adminOnly === 'true') {
+        additionalParams += '?adminOnly=' + adminOnly;
       }
 
-      $.ajax('/' + ENV.APP.apiNamespace + '/forms/' + params.form_id + additionalParams, {
+      $.ajax('/' + ENV.APP.apiNamespace + '/forms/' + formId + additionalParams, {
         method: 'GET',
         headers
       })
