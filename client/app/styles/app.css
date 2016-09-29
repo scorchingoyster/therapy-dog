@@ -10,6 +10,7 @@
 
 html, body {
   height: 100%;
+  font-size: 12px;
 }
 
 
@@ -41,7 +42,7 @@ html, body {
 #body h1 {
   margin: 32px 0 24px 0;
   text-align: center;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 600;
   line-height: 1.2;
   font-family: "Avenir Next", helvetica, sans-serif;
@@ -123,9 +124,14 @@ html, body {
   color: red;
 }
 
+.required-fields-description {
+  color: #6E6E6E;
+}
+
 .description {
   margin: 16px 0;
   line-height: 20px;
+  color: #6E6E6E;
 }
 
 
@@ -202,7 +208,7 @@ html, body {
   display: none;
   list-style: none;
   padding: 0;
-  margin: 8px 0;
+  margin: 8px 0 8px 200px;
   color: #c00;
 }
 
@@ -233,7 +239,24 @@ html, body {
   font-size: 16px;
   line-height: 20px;
   font-weight: bold;
+  width: 200px;
+  float: left;
 }
+
+.block.text label ~ p.note,
+.block.tokens label ~ p.note,
+.block.date label ~ p.note,
+.block.select label ~ p.note,
+.block.email label ~ p.note,
+.block.file label ~ p.note,
+.block.checkboxes h2 ~ p.note,
+.block.radio h2 ~ p.note,
+.block.agreement h2 ~ p.note {
+/*  float: left;
+  width: 100%;*/
+  margin-left: 200px;
+}
+
 
 .block.text.required label:after,
 .block.tokens.required label:after,
@@ -249,9 +272,10 @@ html, body {
 }
 
 .block p.note {
-  font-size: 14px;
+  font-size: 12px;
   margin: 4px 0;
   line-height: 18px;
+  color: #6E6E6E;
 }
 
 
@@ -260,10 +284,10 @@ html, body {
 .block.text input,
 .block.email input {
   display: block;
-  margin: 0;
+  margin: 0 0 0 200px;
   font-size: 16px;
   padding: 4px;
-  width: 100%;
+  width: 500px;
   border: 1px solid #ccc;
 }
 
@@ -274,10 +298,10 @@ html, body {
 
 .block.text textarea {
   display: block;
-  margin: 8px 0;
+  margin: 8px 0 8px 200px;
   font-size: 16px;
   padding: 4px;
-  width: 100%;
+  width: 500px;
   height: 96px;
   border: 1px solid #ccc;
 }
@@ -290,6 +314,10 @@ html, body {
   max-height: 200px;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.section.repeat .block.text textarea {
+  width: 400px;
 }
 
 
@@ -311,10 +339,10 @@ html, body {
 /* tokens blocks */
 
 .block.tokens ul.tagit {
-  margin: 8px 0;
+  margin: 8px 0 8px 200px;
   font-size: 16px;
   padding: 2px 4px;
-  width: 100%;
+  width: 500px;
   border: 1px solid #ccc;
   border-radius: 0;
 }
@@ -336,7 +364,7 @@ html, body {
 .block.agreement label {
   display: block;
   padding-left: 20px;
-  margin: 4px 0;
+  margin: 4px 0 4px 200px;
   min-height: 20px;
   line-height: 20px;
   font-size: 14px;
@@ -368,12 +396,16 @@ html, body {
   margin: 0;
   font-size: 16px;
   padding: 4px;
-  width: 150px;
+  width: 120px;
   border: 1px solid #ccc;
 }
 
 #form.invalid .block.date.invalid > input {
   border: 1px solid #c00;
+}
+
+.block.date p.note ~ input {
+  margin-left: 200px;
 }
 
 
@@ -388,6 +420,7 @@ html, body {
 
 .block.section {
   margin: 32px 0;
+  border-bottom: 1px solid #ddd;
 }
 
 .block.section h2 {
@@ -401,6 +434,7 @@ html, body {
 
 .section .block {
   margin: 24px 0;
+  overflow: hidden;
 }
 
 .section .block.text label,
@@ -415,6 +449,8 @@ html, body {
   margin: 4px 0;
   font-size: 14px;
   line-height: 18px;
+  float: left;
+  width: 200px;
 }
 
 
@@ -429,10 +465,15 @@ html, body {
 
 .section.repeat .item:first-of-type {
   margin-top: 18px;
+  border-top: 1px solid #fff;
 }
 
 .section.repeat .block {
-  width: 500px;
+  width: 600px;
+}
+
+.section.repeat .block.text input {
+  width: 400px;
 }
 
 .section.repeat .block:first-of-type {
@@ -459,11 +500,11 @@ html, body {
   display: none;
 }
 
-.section.repeat .add button {
+.section.repeat .add {
+  box-sizing: unset;
   position: absolute;
-  top: 0;
-  right: 50px;
-  margin: 8px 0;
+  top: 10px;
+  right: 30px;
 }
 
 #form button.plus {
@@ -474,7 +515,7 @@ html, body {
 #form button.plus > i {
   display: inline-block;
   color: #6A6A6A;
-  font-size: 32px;
+  font-size: 28px;
 }
 
 #form button.minus {
@@ -485,14 +526,13 @@ html, body {
 #form button.minus > i {
   display: inline-block;
   color: #6A6A6A;
-  font-size: 32px;
+  font-size: 28px;
 }
 
-.section.repeat .remove button {
+.section.repeat .remove {
   position: absolute;
-  top: 0;
+  top: 10px;
   right: 0;
-  margin: 8px 0;
 }
 
 
@@ -504,13 +544,13 @@ html, body {
 
 .block.file.multiple .upload,
 .block.file.multiple .new-upload {
-  margin: -1px 0 0 0;
+  margin: -1px 0 0 200px;
 }
 
 .block.file .upload,
 .block.file .new-upload {
   position: relative;
-  margin: 8px 0;
+  margin: 8px 0 8px 200px;
   border: 1px solid #ccc;
   display: flex;
   padding: 4px;
@@ -562,6 +602,9 @@ html, body {
 
 /* date blocks */
 
+.block.date .month-input {
+  margin-left: 200px;
+}
 .block.date .month-input select,
 .block.date .month-input input {
   display: inline;
