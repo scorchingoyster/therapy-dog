@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import ENV from 'therapy-dog/config/environment';
 import ObjectEntry from 'therapy-dog/utils/object-entry';
+import { parameterValue } from 'therapy-dog/utils/get-parameter';
 /* globals $ */
 
 const DEPOSITOR_EMAIL_KEY = 'virtual:depositor-email';
@@ -35,12 +36,16 @@ export default Ember.Service.extend({
   get(params) {
     return new Ember.RSVP.Promise(function(resolve, reject) {
       let headers = {};
-      let additionalParams = '';
+
       if (ENV.APP.spoofRemoteUser) {
         headers['remote_user'] = ENV.APP.spoofRemoteUser;
       }
 
-      if (params.collection !== undefined) {
+      let collection = parameterValue('collection');
+      let adminOnly = parameterValue('adminOnly');
+      let additionalParams = '';
+
+      if (adminOnly !== undefined && adminOnly) {
         additionalParams += '/adminOnly';
       }
 
@@ -51,14 +56,12 @@ export default Ember.Service.extend({
       .done(function(response) {
         let form = Ember.Object.create({
           id: response.data.id,
-          destination: params.collection,
+          destination: collection,
           title: response.data.attributes.title,
           contact: response.data.attributes.contact,
           description: response.data.attributes.description,
           children: deserializeChildren(response.data.attributes.children)
         });
-
-
         
         let depositorEmailBlock = Ember.Object.create({
           type: 'email',
