@@ -6,7 +6,7 @@ export function _parameters() {
 export function parameterValue(regex) {
   let parameters = _parameters();
   let re = new RegExp(regex);
-  let value = undefined;
+  let value;
 
   for (let i=0; i<parameters.length; i++) {
     if (re.test(parameters[i])) {
