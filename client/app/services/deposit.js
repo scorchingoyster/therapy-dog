@@ -104,7 +104,6 @@ export default Ember.Service.extend({
     let depositCollection = location.href;
     let isAdminForm = (parameterValue('adminOnly') === 'true') ? true : false;
     let addAnother = (payload.addAnother !== undefined) ? payload.addAnother : false;
-    console.log(addAnother)
 
     let results = {
       path: depositCollection,
