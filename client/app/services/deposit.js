@@ -27,6 +27,7 @@ function buildPayload(deposit) {
   return {
     form: deposit.get('form.id'),
     destination: deposit.get('form.destination'),
+    addAnother: deposit.get('form.addAnother'),
     values,
     depositorEmail
   };
@@ -58,6 +59,7 @@ export default Ember.Service.extend({
           id: response.data.id,
           destination: collection,
           title: response.data.attributes.title,
+          addAnother: response.data.attributes.addAnother,
           contact: response.data.attributes.contact,
           description: response.data.attributes.description,
           children: deserializeChildren(response.data.attributes.children)
@@ -101,9 +103,13 @@ export default Ember.Service.extend({
     let payload = buildPayload(deposit);
     let depositCollection = location.href;
     let isAdminForm = (parameterValue('adminOnly') === 'true') ? true : false;
+    let addAnother = (payload.addAnother !== undefined) ? payload.addAnother : false;
+    console.log(addAnother)
+
     let results = {
       path: depositCollection,
-      admin: isAdminForm
+      admin: isAdminForm,
+      addAnother: addAnother
     };
     
     return new Ember.RSVP.Promise(function(resolve) {

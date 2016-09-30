@@ -3,6 +3,7 @@
   
   "title": "Test Form",
   "allowDestinationOverride": true,
+  "addAnother": true,
   "children": [
     {
       "key": "info",
