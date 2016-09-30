@@ -20,4 +20,4 @@ export function parameterValue(regex) {
 
 export default {
   parameterValue: parameterValue
-}
+};
