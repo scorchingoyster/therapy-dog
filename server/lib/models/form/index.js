@@ -61,6 +61,8 @@ let formChecker = checker.shape({
     email: checker.string()
   })),
   title: checker.string(),
+  allowDestinationOverride: checker.optional(checker.boolean()),
+  addAnother: checker.optional(checker.boolean()),
   description: checker.optional(checker.string()),
   notificationRecipientEmails: checker.optional(checker.arrayOf(notificationRecipientEmailChecker)),
   children: checker.arrayOf(blockCheckers.block),
@@ -95,6 +97,27 @@ class Form {
    */
   get destination() {
     return this.attributes.destination;
+  }
+
+  /**
+   * @param {String} destination
+   */
+  set destination(destination) {
+    this.attributes.destination = destination;
+  }
+
+   /**
+   * @type {Boolean}
+   */
+  get allowDestinationOverride() {
+    return this.attributes.allowDestinationOverride;
+  }
+
+   /**
+   * @type {Boolean}
+   */
+  get addAnother() {
+    return this.attributes.addAnother;
   }
 
   /**
@@ -163,6 +186,8 @@ class Form {
           id: this.id,
           attributes: {
             title: this.title,
+            allowDestinationOverride: this.allowDestinationOverride,
+            addAnother: this.addAnother,
             description: this.description,
             contact: this.contact,
             children: children
@@ -175,6 +200,8 @@ class Form {
         id: this.id,
         attributes: {
           title: this.title,
+          allowDestinationOverride: this.allowDestinationOverride,
+          addAnother: this.addAnother,
           description: this.description,
           contact: this.contact
         }

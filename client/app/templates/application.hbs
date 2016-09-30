@@ -1,4 +1,4 @@
-<div class="darkest fluid-cap-container" id="header">
+<div class="darkest fluid-cap-container {{isAdminForm 'in-admin-iframe' ''}}" id="header">
   <div class="dark fluid-cap-highlight">
     <div class="fluid-cap-contents">
       <div class="fluid-cap-right-wrap darkest">
@@ -14,12 +14,11 @@
     </div>
   </div>
 </div>
-
 <div id="body">
 {{outlet}}
 </div>
 
-<div id="footer" class="darkest fluid-cap-container">
+<div id="footer" class="darkest fluid-cap-container {{isAdminForm 'in-admin-iframe' ''}}">
   <div class="dark fluid-cap-highlight">
     <div class="fluid-cap-contents">
       <div class="fluid-cap-right-wrap darkest">

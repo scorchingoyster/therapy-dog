@@ -2,6 +2,8 @@
   "destination": "uuid:1234",
   "title": "Article Form",
   "description": "This is a form for articles.",
+  "allowDestinationOverride": true,
+  "addAnother": true,
   "contact": {
     "name": "Someone",
     "email": "someone@example.com"

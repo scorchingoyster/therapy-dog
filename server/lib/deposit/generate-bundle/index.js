@@ -10,6 +10,7 @@ const generateAggregate = require('./generate-aggregate');
  * @name generateBundle
  * @param {Form} form
  * @param {Object} values
+ * @param {String} destination
  * @return {Bundle}
  */
 module.exports = function(form, values) {

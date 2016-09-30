@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import ENV from 'therapy-dog/config/environment';
 import ObjectEntry from 'therapy-dog/utils/object-entry';
+import { parameterValue } from 'therapy-dog/utils/get-parameter';
 /* globals $ */
 
 const DEPOSITOR_EMAIL_KEY = 'virtual:depositor-email';
@@ -22,9 +23,11 @@ function buildPayload(deposit) {
   
   let depositorEmail = values[DEPOSITOR_EMAIL_KEY];
   delete values[DEPOSITOR_EMAIL_KEY];
-  
+
   return {
     form: deposit.get('form.id'),
+    destination: deposit.get('form.destination'),
+    addAnother: deposit.get('form.addAnother'),
     values,
     depositorEmail
   };
@@ -34,18 +37,29 @@ export default Ember.Service.extend({
   get(formId) {
     return new Ember.RSVP.Promise(function(resolve, reject) {
       let headers = {};
+
       if (ENV.APP.spoofRemoteUser) {
         headers['remote_user'] = ENV.APP.spoofRemoteUser;
       }
-      
-      $.ajax('/' + ENV.APP.apiNamespace + '/forms/' + formId, {
+
+      let collection = parameterValue('collection');
+      let adminOnly = parameterValue('adminOnly');
+      let additionalParams = '';
+
+      if (adminOnly === 'true') {
+        additionalParams += '?adminOnly=' + adminOnly;
+      }
+
+      $.ajax('/' + ENV.APP.apiNamespace + '/forms/' + formId + additionalParams, {
         method: 'GET',
         headers
       })
       .done(function(response) {
         let form = Ember.Object.create({
           id: response.data.id,
+          destination: collection,
           title: response.data.attributes.title,
+          addAnother: response.data.attributes.addAnother,
           contact: response.data.attributes.contact,
           description: response.data.attributes.description,
           children: deserializeChildren(response.data.attributes.children)
@@ -87,6 +101,15 @@ export default Ember.Service.extend({
   
   submit(deposit) {
     let payload = buildPayload(deposit);
+    let depositCollection = location.href;
+    let isAdminForm = (parameterValue('adminOnly') === 'true') ? true : false;
+    let addAnother = (payload.addAnother !== undefined) ? payload.addAnother : false;
+
+    let results = {
+      path: depositCollection,
+      admin: isAdminForm,
+      addAnother: addAnother
+    };
     
     return new Ember.RSVP.Promise(function(resolve) {
       let headers = {};
@@ -101,10 +124,12 @@ export default Ember.Service.extend({
         headers
       })
       .done(function() {
-        resolve({ success: true });
+        results.success = true;
+        resolve(results);
       })
       .fail(function() {
-        resolve({ success: false });
+        results.success = false;
+        resolve(results);
       });
     });
   },
