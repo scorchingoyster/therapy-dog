@@ -12,7 +12,7 @@ const SwordError = require('../errors').SwordError;
 
 exports.create = function(req, res, next) {
   let deposit = req.body;
-
+  let adminUserGroups = parseHeaders(req.headers.cookie);
   // Find the form...
   let form = Form.findById(deposit.form);
 
@@ -27,6 +27,9 @@ exports.create = function(req, res, next) {
     if (deposit.destination !== undefined && canOverride) {
       form.destination = deposit.destination;
     }
+
+    form.depositor = adminUserGroups.depositor;
+    form.isMemberOf = adminUserGroups.isMemberOf;
   });
 
   // Transform input...
@@ -76,3 +79,34 @@ exports.debug = function(req, res, next) {
     next(err);
   });
 };
+
+/**
+ * Private function to discern user and CDR groups
+ * @param values
+ */
+function parseHeaders(values) {
+  let setValues = decodeURIComponent(values).split(/;\s/);
+  let cdrValues = {
+    depositor: null,
+    isMemberOf: null
+  };
+  let format = function(string) {
+    return string.trim().toLowerCase();
+  };
+
+  setValues.forEach(function(d) {
+    let keyValues = d.split('=');
+    let key = format(keyValues[0]);
+    let value = format(keyValues[1]);
+
+    if (/remote_user/.test(key)) {
+      cdrValues.depositor = value;
+    }
+
+    if (/ismemberof/.test(key)) {
+      cdrValues.isMemberOf = value;
+    }
+  });
+
+  return cdrValues;
+}
