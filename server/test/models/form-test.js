@@ -130,6 +130,12 @@ describe('Form', function() {
     });
   });
 
+  it('may submit a form as the currently logged in user', function() {
+    return Form.findById('article').then(function(form) {
+      assert.deepEqual(form.submitAsCurrentUser, true);
+    });
+  });
+
   describe('#getResourceObject()', function() {
     it('converts object array vocabularies to options arrays', function() {
       return Form.findById('article')

@@ -63,6 +63,7 @@ let formChecker = checker.shape({
   title: checker.string(),
   allowDestinationOverride: checker.optional(checker.boolean()),
   addAnother: checker.optional(checker.boolean()),
+  submitAsCurrentUser: checker.optional(checker.boolean()),
   description: checker.optional(checker.string()),
   notificationRecipientEmails: checker.optional(checker.arrayOf(notificationRecipientEmailChecker)),
   children: checker.arrayOf(blockCheckers.block),
@@ -118,6 +119,13 @@ class Form {
    */
   get addAnother() {
     return this.attributes.addAnother;
+  }
+
+   /**
+   * @type {Boolean}
+   */
+  get submitAsCurrentUser() {
+    return this.attributes.submitAsCurrentUser;
   }
 
   /**
@@ -188,6 +196,7 @@ class Form {
             title: this.title,
             allowDestinationOverride: this.allowDestinationOverride,
             addAnother: this.addAnother,
+            submitAsCurrentUser: this.submitAsCurrentUser,
             description: this.description,
             contact: this.contact,
             children: children
@@ -202,6 +211,7 @@ class Form {
           title: this.title,
           allowDestinationOverride: this.allowDestinationOverride,
           addAnother: this.addAnother,
+          submitAsCurrentUser: this.submitAsCurrentUser,
           description: this.description,
           contact: this.contact
         }

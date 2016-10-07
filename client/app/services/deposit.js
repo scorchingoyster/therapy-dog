@@ -60,6 +60,7 @@ export default Ember.Service.extend({
           destination: collection,
           title: response.data.attributes.title,
           addAnother: response.data.attributes.addAnother,
+          submitAsCurrentUser: response.data.attributes.submitAsCurrentUser,
           contact: response.data.attributes.contact,
           description: response.data.attributes.description,
           children: deserializeChildren(response.data.attributes.children)

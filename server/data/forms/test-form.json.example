@@ -4,6 +4,7 @@
   "title": "Test Form",
   "allowDestinationOverride": true,
   "addAnother": true,
+  "submitAsCurrentUser": true,
   "children": [
     {
       "key": "info",

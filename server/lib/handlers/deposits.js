@@ -28,8 +28,11 @@ exports.create = function(req, res, next) {
       form.destination = deposit.destination;
     }
 
-    form.depositor = adminUserGroups.depositor;
-    form.isMemberOf = adminUserGroups.isMemberOf;
+    // Override default depositor if allowed by the form.
+    if (form.submitAsCurrentUser !== undefined && form.submitAsCurrentUser) {
+      form.depositor = adminUserGroups.depositor;
+      form.isMemberOf = adminUserGroups.isMemberOf;
+    }
   });
 
   // Transform input...
@@ -90,23 +93,29 @@ function parseHeaders(values) {
     depositor: null,
     isMemberOf: null
   };
-  let format = function(string) {
-    return string.trim().toLowerCase();
+  let format = function(stringValue) {
+    if (stringValue !== undefined) {
+      return stringValue.trim().toLowerCase();
+    }
+    return null;
   };
 
-  setValues.forEach(function(d) {
-    let keyValues = d.split('=');
-    let key = format(keyValues[0]);
-    let value = format(keyValues[1]);
+  if (setValues.length > 0) {
+    setValues.forEach(function(d) {
+      let keyValues = d.split('=');
+      let key = format(keyValues[0]);
+      let value = format(keyValues[1]);
 
-    if (/remote_user/.test(key)) {
-      cdrValues.depositor = value;
-    }
+      if (/remote_user/.test(key)) {
+        cdrValues.depositor = value;
+      }
 
-    if (/ismemberof/.test(key)) {
-      cdrValues.isMemberOf = value;
-    }
-  });
+      if (/ismemberof/.test(key)) {
+        cdrValues.isMemberOf = value;
+      }
+    });
+  }
+
 
   return cdrValues;
 }
