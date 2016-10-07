@@ -196,7 +196,6 @@ class Form {
             title: this.title,
             allowDestinationOverride: this.allowDestinationOverride,
             addAnother: this.addAnother,
-            submitAsCurrentUser: this.submitAsCurrentUser,
             description: this.description,
             contact: this.contact,
             children: children
@@ -211,7 +210,6 @@ class Form {
           title: this.title,
           allowDestinationOverride: this.allowDestinationOverride,
           addAnother: this.addAnother,
-          submitAsCurrentUser: this.submitAsCurrentUser,
           description: this.description,
           contact: this.contact
         }
