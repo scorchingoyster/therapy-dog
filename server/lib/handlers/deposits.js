@@ -12,7 +12,7 @@ const SwordError = require('../errors').SwordError;
 
 exports.create = function(req, res, next) {
   let deposit = req.body;
-  let adminUserGroups = parseHeaders(req.headers.cookie);
+
   // Find the form...
   let form = Form.findById(deposit.form);
 
@@ -29,7 +29,9 @@ exports.create = function(req, res, next) {
     }
 
     // Override default depositor if allowed by the form.
-    if (form.submitAsCurrentUser !== undefined && form.submitAsCurrentUser) {
+    if (form.submitAsCurrentUser) {
+      let adminUserGroups = parseAuthenticationHeaders(req.headers.cookie);
+
       form.depositor = adminUserGroups.depositor;
       form.isMemberOf = adminUserGroups.isMemberOf;
     }
@@ -87,14 +89,14 @@ exports.debug = function(req, res, next) {
  * Private function to discern user and CDR groups
  * @param values
  */
-function parseHeaders(values) {
+function parseAuthenticationHeaders(values) {
   let setValues = decodeURIComponent(values).split(/;\s/);
   let cdrValues = {
     depositor: null,
     isMemberOf: null
   };
   let format = function(stringValue) {
-    if (stringValue !== undefined) {
+    if (stringValue !== undefined && stringValue !== null) {
       return stringValue.trim().toLowerCase();
     }
     return null;
