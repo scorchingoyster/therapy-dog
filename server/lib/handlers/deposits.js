@@ -9,6 +9,7 @@ const submitZip = require('../deposit/submit-zip');
 const mailer = require('../mailer');
 const logging = require('../logging');
 const SwordError = require('../errors').SwordError;
+const config = require('../../config');
 
 exports.create = function(req, res, next) {
   let deposit = req.body;
@@ -30,10 +31,11 @@ exports.create = function(req, res, next) {
 
     // Override default depositor if allowed by the form.
     if (form.submitAsCurrentUser) {
-      if (process.env.NODE_ENV === 'production') {
+      if (!config.DEBUG) {
         form.depositor = (req.headers['remote_user'] !== undefined) ? req.headers['remote_user'] : null;
         form.isMemberOf = (req.headers['ismemberof'] !== undefined) ? req.headers['ismemberof'] : null;
       } else {
+        // Parses the cookie set by the Spoofing app
         let adminUserGroups = parseAuthenticationHeaders(req.headers.cookie);
         form.depositor = adminUserGroups.depositor;
         form.isMemberOf = adminUserGroups.isMemberOf;
