@@ -31,7 +31,7 @@ exports.create = function(req, res, next) {
 
     // Override default depositor if allowed by the form.
     if (form.submitAsCurrentUser) {
-      if (config.NODE_ENV === 'production') {
+      if (config.PORT !== '3000') {
         form.depositor = (req.headers['remote_user'] !== undefined) ? req.headers['remote_user'] : null;
         form.isMemberOf = (req.headers['ismemberof'] !== undefined) ? req.headers['ismemberof'] : null;
       } else {

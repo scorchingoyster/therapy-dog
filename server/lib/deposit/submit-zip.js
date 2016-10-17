@@ -56,7 +56,7 @@ function postZip(form, zipFile, depositorEmail) {
 
     if (form.depositor !== null) {
       headers['On-Behalf-Of'] = form.depositor;
-      headers['forwardedGroups'] = 'unc:app:lib:cdr:depositor:depositforms';
+      headers['forwardedGroups'] = config.GROUPS_BASE;
 
       if (form.isMemberOf !== null) {
         headers['forwardedGroups'] += ';' + form.isMemberOf;
