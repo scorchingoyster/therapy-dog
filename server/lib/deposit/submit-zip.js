@@ -56,9 +56,10 @@ function postZip(form, zipFile, depositorEmail) {
 
     if (form.depositor !== null) {
       headers['On-Behalf-Of'] = form.depositor;
+      headers['forwardedGroups'] = config.GROUPS_BASE;
 
       if (form.isMemberOf !== null) {
-        headers.forwardedGroups = form.isMemberOf;
+        headers['forwardedGroups'] += ';' + form.isMemberOf;
       }
     }
 
