@@ -31,7 +31,7 @@ exports.create = function(req, res, next) {
 
     // Override default depositor if allowed by the form.
     if (form.submitAsCurrentUser) {
-      if (config.DEBUG === '1' && ('AUTHENTICATION_SPOOFING-REMOTE_USER' in req.headers.cookie)) {
+      if (config.DEBUG && /AUTHENTICATION_SPOOFING/.test(req.headers.cookie)) {
          // Parses the cookie set by the Spoofing app
         let adminUserGroups = parseAuthenticationHeaders(req.headers.cookie);
         form.depositor = adminUserGroups.depositor;
