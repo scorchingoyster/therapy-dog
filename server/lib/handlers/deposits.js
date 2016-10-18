@@ -31,14 +31,14 @@ exports.create = function(req, res, next) {
 
     // Override default depositor if allowed by the form.
     if (form.submitAsCurrentUser) {
-      if (config.PORT !== '3000') {
-        form.depositor = (req.headers['remote_user'] !== undefined) ? req.headers['remote_user'] : null;
-        form.isMemberOf = (req.headers['ismemberof'] !== undefined) ? req.headers['ismemberof'] : null;
-      } else {
-        // Parses the cookie set by the Spoofing app
+      if (config.DEBUG === '1' && ('AUTHENTICATION_SPOOFING-REMOTE_USER' in req.headers.cookie)) {
+         // Parses the cookie set by the Spoofing app
         let adminUserGroups = parseAuthenticationHeaders(req.headers.cookie);
         form.depositor = adminUserGroups.depositor;
         form.isMemberOf = adminUserGroups.isMemberOf;
+      } else {
+        form.depositor = (req.headers['remote_user'] !== undefined) ? req.headers['remote_user'] : null;
+        form.isMemberOf = (req.headers['ismemberof'] !== undefined) ? req.headers['ismemberof'] : null;
       }
     }
   });
