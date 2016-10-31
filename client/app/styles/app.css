@@ -220,6 +220,7 @@ html, body {
 #form.invalid .displayed-inline.block .errors {
   display: inline-block;
   margin-top: -10px;
+  margin-left: 0;
 }
 
 
@@ -414,6 +415,9 @@ html, body {
   max-width: 100%;
 }
 
+p.note ~ select {
+  margin-left: 200px;
+}
 
 /* section blocks */
 
