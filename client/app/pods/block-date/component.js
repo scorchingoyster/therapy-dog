@@ -23,7 +23,7 @@ export default Ember.Component.extend(FocusEntryAction, {
   }),
 
   precision: Ember.computed('entry.block.precision', function() {
-    let precision = this.get('entry.block.precision'); console.log(precision)
+    let precision = this.get('entry.block.precision');
     if (Ember.isEmpty(precision)) {
       return 'day';
     } else {
