@@ -4,6 +4,7 @@ const EMAIL_REGEXP = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-
 const DATE_DAY_REGEXP = /^\d{4}-\d{2}-\d{2}$/;
 const DATE_MONTH_REGEXP = /^\d{4}-\d{2}$/;
 const DATE_YEAR_REGEXP = /^\d{4}$/;
+const DATE_ADMIN_REGEXP = /^(\d{4}-\d{2}-\d{2}|\d{4}-\d{2}|\d{4})$/;
 const DURATION_REGEXP = /^P.+$/;
 
 export default Ember.Object.extend({
@@ -48,7 +49,9 @@ export default Ember.Object.extend({
       }
 
       // A date is invalid if it is not blank and does not match the pattern corresponding to the block's precision property.
-      if (precision === 'year' && !Ember.isEmpty(value) && !DATE_YEAR_REGEXP.test(value)) {
+      if (precision === 'admin' && !Ember.isEmpty(value) && !DATE_ADMIN_REGEXP.test(value)) {
+        return [`Please enter a valid date (YYYY or YYYY-MM or YYYY-MM-DD).`];
+      } else if (precision === 'year' && !Ember.isEmpty(value) && !DATE_YEAR_REGEXP.test(value)) {
         return [`Please enter a valid year.`];
       } else if (precision === 'month' && !Ember.isEmpty(value) && !DATE_MONTH_REGEXP.test(value)) {
         return [`Please enter a valid month.`];

@@ -256,7 +256,8 @@ html, body {
 /* text blocks */
 
 .block.text input,
-.block.email input {
+.block.email input,
+.block.date input.admin-date-block {
   display: block;
   margin: 8px 0;
   font-size: 16px;
@@ -368,6 +369,10 @@ html, body {
   padding: 4px;
   width: 150px;
   border: 1px solid #ccc;
+}
+
+.block.date input.admin-date-block {
+  width: 50%;
 }
 
 #form.invalid .block.date.invalid > input {

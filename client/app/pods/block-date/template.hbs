@@ -20,6 +20,8 @@
     {{else}}
       {{input type="text" value=entry.value class="datepicker" placeholder="YYYY-MM-DD" id=(object-guid entry)}}
     {{/if}}
+  {{else if (eq precision "admin")}}
+    {{input class="admin-date-block" value=entry.value placeholder="YYYY or YYYY-MM or YYYY-MM-DD" id=(object-guid entry)}}
   {{else if (eq precision "month")}}
     {{month-input value=entry.value id=(object-guid entry)}}
   {{else if (eq precision "year")}}

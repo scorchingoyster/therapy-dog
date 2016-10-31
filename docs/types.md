@@ -123,7 +123,7 @@ type | `"date"` | --
 key | string | --
 label | optional string | --
 options | optional [options](#options) | --
-precision | optional `"year"`, `"month"`, or `"day"` (default `"day"`) | --
+precision | optional `"admin"`, `"year"`, `"month"`, or `"day"` (default `"day"`) | `"admin"` precision allows all date precisions: `"year"`, `"month"`, and `"day"`
 required | optional boolean | --
 note | optional string | --
 
