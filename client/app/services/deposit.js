@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import ENV from 'therapy-dog/config/environment';
 import ObjectEntry from 'therapy-dog/utils/object-entry';
-import { parameterValue } from 'therapy-dog/utils/get-parameter';
+import * as formUtils from 'therapy-dog/utils/get-parameter';
 /* globals $ */
 
 const DEPOSITOR_EMAIL_KEY = 'virtual:depositor-email';
@@ -42,8 +42,8 @@ export default Ember.Service.extend({
         headers['remote_user'] = ENV.APP.spoofRemoteUser;
       }
 
-      let collection = parameterValue('collection');
-      let adminOnly = parameterValue('adminOnly');
+      let collection = formUtils.parameterValue('collection');
+      let adminOnly = formUtils.parameterValue('adminOnly');
       let additionalParams = '';
 
       if (adminOnly === 'true') {
@@ -102,13 +102,15 @@ export default Ember.Service.extend({
   submit(deposit) {
     let payload = buildPayload(deposit);
     let depositCollection = location.href;
-    let isAdminForm = (parameterValue('adminOnly') === 'true') ? true : false;
+    let isAdminForm = (formUtils.parameterValue('adminOnly') === 'true') ? true : false;
+    let formType = formUtils.formType();
     let addAnother = (payload.addAnother !== undefined) ? payload.addAnother : false;
 
     let results = {
       path: depositCollection,
       admin: isAdminForm,
-      addAnother: addAnother
+      addAnother: addAnother,
+      formType: formType
     };
     
     return new Ember.RSVP.Promise(function(resolve) {

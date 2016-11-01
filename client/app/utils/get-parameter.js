@@ -1,10 +1,5 @@
-export function _parameters() {
-  let parameters = location.search;
-  return parameters.split('&');
-}
-
 export function parameterValue(regex) {
-  let parameters = _parameters();
+  let parameters = location.search.split('&');
   let re = new RegExp(regex);
   let value;
 
@@ -18,6 +13,18 @@ export function parameterValue(regex) {
   return value;
 }
 
+/**
+ * Returns the form type, which is always the last part of the url, minus any parameters
+ * @returns string
+ */
+export function formType() {
+  let urlBase = location.href.split('?')[0].split('/');
+  let itemType = urlBase[urlBase.length - 1];
+
+  return itemType.split('-')[0];
+}
+
 export default {
-  parameterValue: parameterValue
+  parameterValue: parameterValue,
+  formType: formType
 };
