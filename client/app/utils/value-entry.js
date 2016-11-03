@@ -1,10 +1,10 @@
 import Ember from 'ember';
 
 const EMAIL_REGEXP = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-const DATE_DAY_REGEXP = /^\d{4}-\d{2}-\d{2}$/;
-const DATE_MONTH_REGEXP = /^\d{4}-\d{2}$/;
-const DATE_YEAR_REGEXP = /^\d{4}$/;
-const DATE_ADMIN_REGEXP = /^(\d{4}-\d{2}-\d{2}|\d{4}-\d{2}|\d{4})$/;
+const DATE_DAY_REGEXP = /^[1-2]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2]\d|3[0-1])$/;
+const DATE_MONTH_REGEXP = /^[1-2]\d{3}-(0[1-9]|1[0-2])$/;
+const DATE_YEAR_REGEXP = /^[1-2]\d{3}$/;
+const DATE_ADMIN_REGEXP = /^([1-2]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2]\d|3[0-1])|[1-2]\d{3}-(0[1-9]|1[0-2])|^[1-2]\d{3}$)$/;
 const DURATION_REGEXP = /^P.+$/;
 
 export default Ember.Object.extend({
