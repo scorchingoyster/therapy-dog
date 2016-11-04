@@ -10,9 +10,7 @@
 <div id="form" class={{if model.entry.hasInvalidEntries "invalid" ""}}>
   <p class="description">{{sanitize-html model.form.description}}</p>
   
-  <p>Fields marked with <span class="required-example">*</span> are required.</p>
-  
-  {{partial "deposit/contact"}}
+  <p class="required-fields-description">Fields marked with <span class="required-example">*</span> are required.<span>{{partial "deposit/contact"}}</span></p>
   
   {{object-entry entry=model.entry}}
   

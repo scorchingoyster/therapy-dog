@@ -8,20 +8,17 @@
   {{#each entry.value as |item|}}
     <div class="item">
       {{object-entry entry=item}}
-    
-      <div class="remove">
-        <button {{action "remove" item}}>Remove</button>
-      </div>
+
+        {{#if entry.value}}
+        <div class="add">
+                <button class="plus" {{action "add"}}><i class="fa fa-plus-square-o"></i></button>
+            </div>
+        <div class="remove">
+                <button class="minus"{{action "remove" item}}><i class="fa fa-minus-square-o"></i></button>
+            </div>
+        {{/if}}
     </div>
   {{/each}}
-  
-  <div class="add">
-    {{#if entry.value}}
-      <button {{action "add"}}>Add Another</button>
-    {{else}}
-      <button {{action "add"}}>Add</button>
-    {{/if}}
-  </div>
 {{else}}
   {{object-entry entry=entry}}
 {{/if}}

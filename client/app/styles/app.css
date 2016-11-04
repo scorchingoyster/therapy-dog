@@ -1,3 +1,5 @@
+
+
 @import 'cdr.css';
 
 /* basic styles */
@@ -8,6 +10,7 @@
 
 html, body {
   height: 100%;
+  font-size: 14px;
 }
 
 
@@ -39,7 +42,7 @@ html, body {
 #body h1 {
   margin: 32px 0 24px 0;
   text-align: center;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 600;
   line-height: 1.2;
   font-family: "Avenir Next", helvetica, sans-serif;
@@ -121,9 +124,14 @@ html, body {
   color: red;
 }
 
+.required-fields-description {
+  color: #6E6E6E;
+}
+
 .description {
   margin: 16px 0;
   line-height: 20px;
+  color: #6E6E6E;
 }
 
 
@@ -200,7 +208,7 @@ html, body {
   display: none;
   list-style: none;
   padding: 0;
-  margin: 8px 0;
+  margin: 8px 0 8px 200px;
   color: #c00;
 }
 
@@ -212,6 +220,7 @@ html, body {
 #form.invalid .displayed-inline.block .errors {
   display: inline-block;
   margin-top: -10px;
+  margin-left: 0;
 }
 
 
@@ -231,7 +240,24 @@ html, body {
   font-size: 16px;
   line-height: 20px;
   font-weight: bold;
+  width: 200px;
+  float: left;
 }
+
+.block.text label ~ p.note,
+.block.tokens label ~ p.note,
+.block.date label ~ p.note,
+.block.select label ~ p.note,
+.block.email label ~ p.note,
+.block.file label ~ p.note,
+.block.checkboxes h2 ~ p.note,
+.block.radio h2 ~ p.note,
+.block.agreement h2 ~ p.note {
+/*  float: left;
+  width: 100%;*/
+  margin-left: 200px;
+}
+
 
 .block.text.required label:after,
 .block.tokens.required label:after,
@@ -248,8 +274,9 @@ html, body {
 
 .block p.note {
   font-size: 14px;
-  margin: 8px 0;
+  margin: 4px 0;
   line-height: 18px;
+  color: #6E6E6E;
 }
 
 
@@ -258,10 +285,10 @@ html, body {
 .block.text input,
 .block.email input {
   display: block;
-  margin: 8px 0;
+  margin: 0 0 0 200px;
   font-size: 16px;
   padding: 4px;
-  width: 100%;
+  width: 500px;
   border: 1px solid #ccc;
 }
 
@@ -272,10 +299,10 @@ html, body {
 
 .block.text textarea {
   display: block;
-  margin: 8px 0;
+  margin: 8px 0 8px 200px;
   font-size: 16px;
   padding: 4px;
-  width: 100%;
+  width: 500px;
   height: 96px;
   border: 1px solid #ccc;
 }
@@ -290,6 +317,10 @@ html, body {
   overflow-x: hidden;
 }
 
+.section.repeat .block.text textarea {
+  width: 400px;
+}
+
 
 /* Side by side text blocks */
 
@@ -300,19 +331,18 @@ html, body {
   margin-right: 15px;
 }
 
-.displayed-inline.section .add,
-.displayed-inline.section.repeat .add {
-    margin-top: -30px;
+.displayed-inline.section .block.text label,
+.displayed-inline.section .block.select label {
+  float: none;
 }
-
 
 /* tokens blocks */
 
 .block.tokens ul.tagit {
-  margin: 8px 0;
+  margin: 8px 0 8px 200px;
   font-size: 16px;
   padding: 2px 4px;
-  width: 100%;
+  width: 500px;
   border: 1px solid #ccc;
   border-radius: 0;
 }
@@ -334,7 +364,7 @@ html, body {
 .block.agreement label {
   display: block;
   padding-left: 20px;
-  margin: 4px 0;
+  margin: 4px 0 4px 200px;
   min-height: 20px;
   line-height: 20px;
   font-size: 14px;
@@ -363,15 +393,19 @@ html, body {
 
 .block.date input {
   display: block;
-  margin: 8px 0;
+  margin: 0;
   font-size: 16px;
   padding: 4px;
-  width: 150px;
+  width: 160px;
   border: 1px solid #ccc;
 }
 
 #form.invalid .block.date.invalid > input {
   border: 1px solid #c00;
+}
+
+.block.date p.note ~ input {
+  margin-left: 200px;
 }
 
 
@@ -381,16 +415,21 @@ html, body {
   max-width: 100%;
 }
 
+p.note ~ select {
+  margin-left: 200px;
+}
 
 /* section blocks */
 
 .block.section {
   margin: 32px 0;
+  border-bottom: 1px solid #ddd;
 }
 
 .block.section h2 {
   font-size: 18px;
   margin: 16px 0;
+  color: #005B90;
 }
 
 
@@ -398,6 +437,7 @@ html, body {
 
 .section .block {
   margin: 24px 0;
+  overflow: hidden;
 }
 
 .section .block.text label,
@@ -409,9 +449,11 @@ html, body {
 .section .block.checkboxes h2,
 .section .block.radio h2,
 .section .block.agreement h2 {
-  margin: 8px 0;
+  margin: 4px 0;
   font-size: 14px;
   line-height: 18px;
+  float: left;
+  width: 200px;
 }
 
 
@@ -421,39 +463,84 @@ html, body {
   position: relative;
   margin: 24px 0;
   border-top: 1px solid #ddd;
+  padding-bottom: 0;
 }
 
 .section.repeat .item:first-of-type {
   margin-top: 18px;
+  border-top: 1px solid #fff;
 }
 
 .section.repeat .block {
-  width: 500px;
+  width: 600px;
+}
+
+.section.repeat .block.text input {
+  width: 400px;
+}
+
+.displayed-inline.section .block.text input {
+  margin-left: 0;
+  width: 250px;
 }
 
 .section.repeat .block:first-of-type {
   margin-top: 18px;
 }
 
+.section.repeat .item:last-of-type > .remove {
+  display: inline;
+}
+
+.section.repeat .item:first-of-type > .remove {
+  display: none;
+}
+
+.section.repeat .item:nth-last-child(n+2) > .remove {
+  display: inline;
+}
+
+.section.repeat .item:last-of-type > .add {
+  display: inline;
+}
+
+.section.repeat .item:nth-last-child(n+2) > .add {
+  display: none;
+}
+
 .section.repeat .add {
-  margin-top: 18px;
-  border-top: 1px solid #ddd;
-}
-
-.section.repeat .add button {
-  margin: 24px 0;
-  margin-bottom: 0;
-  font-size: 16px;
-  padding: 8px 16px;
-}
-
-.section.repeat .remove button {
+  box-sizing: unset;
   position: absolute;
-  top: 0;
+  top: 10px;
+  right: 30px;
+}
+
+#form button.plus {
+  border-style: none;
+  background: none;
+}
+
+#form button.plus > i {
+  display: inline-block;
+  color: #6A6A6A;
+  font-size: 28px;
+}
+
+#form button.minus {
+  border-style: none;
+  background: none;
+}
+
+#form button.minus > i {
+  display: inline-block;
+  color: #6A6A6A;
+  font-size: 28px;
+}
+
+.section.repeat .remove {
+  position: absolute;
+  top: 10px;
   right: 0;
-  font-size: 14px;
-  padding: 6px 12px;
-  margin: 24px 0;
 }
 
 
@@ -465,13 +552,13 @@ html, body {
 
 .block.file.multiple .upload,
 .block.file.multiple .new-upload {
-  margin: -1px 0 0 0;
+  margin: -1px 0 0 200px;
 }
 
 .block.file .upload,
 .block.file .new-upload {
   position: relative;
-  margin: 8px 0;
+  margin: 8px 0 8px 200px;
   border: 1px solid #ccc;
   display: flex;
   padding: 4px;
@@ -523,6 +610,9 @@ html, body {
 
 /* date blocks */
 
+.block.date .month-input {
+  margin-left: 200px;
+}
 .block.date .month-input select,
 .block.date .month-input input {
   display: inline;
