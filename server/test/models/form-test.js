@@ -130,6 +130,12 @@ describe('Form', function() {
     });
   });
 
+  it('may have custom add another text', function() {
+    return Form.findById('article').then(function(form) {
+      assert.deepEqual(form.addAnotherText, 'image');
+    });
+  });
+
   it('may submit a form as the currently logged in user', function() {
     return Form.findById('article').then(function(form) {
       assert.deepEqual(form.submitAsCurrentUser, true);

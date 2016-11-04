@@ -13,18 +13,6 @@ export function parameterValue(regex) {
   return value;
 }
 
-/**
- * Returns the form type, which is always the last part of the url, minus any parameters
- * @returns string
- */
-export function formType() {
-  let urlBase = location.href.split('?')[0].split('/');
-  let itemType = urlBase[urlBase.length - 1];
-
-  return itemType.split('-')[0];
-}
-
 export default {
   parameterValue: parameterValue,
-  formType: formType
 };

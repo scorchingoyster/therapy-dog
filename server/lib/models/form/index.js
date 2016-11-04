@@ -63,6 +63,7 @@ let formChecker = checker.shape({
   title: checker.string(),
   allowDestinationOverride: checker.optional(checker.boolean()),
   addAnother: checker.optional(checker.boolean()),
+  addAnotherText: checker.optional(checker.string()),
   submitAsCurrentUser: checker.optional(checker.boolean()),
   description: checker.optional(checker.string()),
   notificationRecipientEmails: checker.optional(checker.arrayOf(notificationRecipientEmailChecker)),
@@ -119,6 +120,13 @@ class Form {
    */
   get addAnother() {
     return this.attributes.addAnother;
+  }
+
+   /**
+   * @type {String}
+   */
+  get addAnotherText() {
+    return this.attributes.addAnotherText;
   }
 
    /**
@@ -196,6 +204,7 @@ class Form {
             title: this.title,
             allowDestinationOverride: this.allowDestinationOverride,
             addAnother: this.addAnother,
+            addAnotherText: this.addAnotherText,
             description: this.description,
             contact: this.contact,
             children: children
@@ -210,6 +219,7 @@ class Form {
           title: this.title,
           allowDestinationOverride: this.allowDestinationOverride,
           addAnother: this.addAnother,
+          addAnotherText: this.addAnotherText,
           description: this.description,
           contact: this.contact
         }

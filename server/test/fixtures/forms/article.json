@@ -4,6 +4,7 @@
   "description": "This is a form for articles.",
   "allowDestinationOverride": true,
   "addAnother": true,
+  "addAnotherText": "image",
   "submitAsCurrentUser": true,
   "contact": {
     "name": "Someone",

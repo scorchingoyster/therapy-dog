@@ -8,7 +8,8 @@ destination | string | The UUID of the folder or collection to deposit into.
 title | string | The title of the form.
 description | optional string | The description of the form. This is displayed under the form's title on form and sign-in pages. HTML may be used in this property.
 allowDestinationOverride | optional boolean | Whether users can deposit to collection other than that specified in the form.
-addAnother | optional boolean | Whether to display a link in the form success message that links back to the current form.
+addAnother | optional boolean | Whether to display a link in the form success message that links back to the current form. See addAnotherText for customizing addAnother link text.
+addAnotherText | optional string | Used in conjunction with addAnother. The text to display in addAnother message, "Add another {{addAnotherText}} in the current collection". Defaults to "work" if not set.
 submitAsCurrentUser | optional boolean | Whether the form should deposit as the submitted user, instead of the default user specified by the application.
 contact | optional `{ "name": string, "email": string }` | The name and email of the form's contact. This is displayed under the form's title and description on form and sign-in pages.
 notificationRecipientEmails | optional array of [arrow string](#arrow-string-expression) or [arrow lookup](#arrow-lookup-expression) expressions | --
