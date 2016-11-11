@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import ENV from 'therapy-dog/config/environment';
 import ObjectEntry from 'therapy-dog/utils/object-entry';
-import { parameterValue } from 'therapy-dog/utils/get-parameter';
+import * as formUtils from 'therapy-dog/utils/get-parameter';
 /* globals $ */
 
 const DEPOSITOR_EMAIL_KEY = 'virtual:depositor-email';
@@ -28,6 +28,7 @@ function buildPayload(deposit) {
     form: deposit.get('form.id'),
     destination: deposit.get('form.destination'),
     addAnother: deposit.get('form.addAnother'),
+    addAnotherText: deposit.get('form.addAnotherText'),
     values,
     depositorEmail
   };
@@ -42,8 +43,8 @@ export default Ember.Service.extend({
         headers['remote_user'] = ENV.APP.spoofRemoteUser;
       }
 
-      let collection = parameterValue('collection');
-      let adminOnly = parameterValue('adminOnly');
+      let collection = formUtils.parameterValue('collection');
+      let adminOnly = formUtils.parameterValue('adminOnly');
       let additionalParams = '';
 
       if (adminOnly === 'true') {
@@ -60,6 +61,7 @@ export default Ember.Service.extend({
           destination: collection,
           title: response.data.attributes.title,
           addAnother: response.data.attributes.addAnother,
+          addAnotherText: response.data.attributes.addAnotherText,
           contact: response.data.attributes.contact,
           description: response.data.attributes.description,
           children: deserializeChildren(response.data.attributes.children)
@@ -102,13 +104,15 @@ export default Ember.Service.extend({
   submit(deposit) {
     let payload = buildPayload(deposit);
     let depositCollection = location.href;
-    let isAdminForm = (parameterValue('adminOnly') === 'true') ? true : false;
+    let isAdminForm = (formUtils.parameterValue('adminOnly') === 'true') ? true : false;
     let addAnother = (payload.addAnother !== undefined) ? payload.addAnother : false;
+    let addAnotherText = (payload.addAnotherText !== undefined) ? payload.addAnotherText : 'work';
 
     let results = {
       path: depositCollection,
       admin: isAdminForm,
-      addAnother: addAnother
+      addAnother: addAnother,
+      addAnotherText: addAnotherText
     };
     
     return new Ember.RSVP.Promise(function(resolve) {

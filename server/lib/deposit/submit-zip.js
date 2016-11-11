@@ -47,17 +47,27 @@ function makeZip(submission) {
 function postZip(form, zipFile, depositorEmail) {
   return new Promise(function(resolve, reject) {
     let body = fs.readFileSync(zipFile);
+    let headers = {
+      'Packaging': 'http://cdr.unc.edu/METS/profiles/Simple',
+      'Content-Disposition': 'attachment; filename=package.zip',
+      'Content-Type': 'application/zip',
+      'mail': depositorEmail
+    };
+
+    if (form.depositor !== null) {
+      headers['On-Behalf-Of'] = form.depositor;
+      headers['forwardedGroups'] = config.GROUPS_BASE;
+
+      if (form.isMemberOf !== null) {
+        headers['forwardedGroups'] += ';' + form.isMemberOf;
+      }
+    }
 
     request.post(form.destination, {
       strictSSL: false,
       body: body,
       baseUrl: config.SWORD_BASE_URL,
-      headers: {
-        'Packaging': 'http://cdr.unc.edu/METS/profiles/Simple',
-        'Content-Disposition': 'attachment; filename=package.zip',
-        'Content-Type': 'application/zip',
-        'mail': depositorEmail
-      },
+      headers: headers,
       auth: {
         username: config.SWORD_USERNAME,
         password: config.SWORD_PASSWORD,

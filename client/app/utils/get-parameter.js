@@ -1,10 +1,5 @@
-export function _parameters() {
-  let parameters = location.search;
-  return parameters.split('&');
-}
-
 export function parameterValue(regex) {
-  let parameters = _parameters();
+  let parameters = location.search.split('&');
   let re = new RegExp(regex);
   let value;
 
@@ -19,5 +14,5 @@ export function parameterValue(regex) {
 }
 
 export default {
-  parameterValue: parameterValue
+  parameterValue: parameterValue,
 };

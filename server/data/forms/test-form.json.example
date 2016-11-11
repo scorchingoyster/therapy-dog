@@ -4,6 +4,8 @@
   "title": "Test Form",
   "allowDestinationOverride": true,
   "addAnother": true,
+  "addAnotherText": "image",
+  "submitAsCurrentUser": true,
   "children": [
     {
       "key": "info",

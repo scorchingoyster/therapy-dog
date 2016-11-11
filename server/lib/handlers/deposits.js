@@ -9,6 +9,7 @@ const submitZip = require('../deposit/submit-zip');
 const mailer = require('../mailer');
 const logging = require('../logging');
 const SwordError = require('../errors').SwordError;
+const config = require('../../config');
 
 exports.create = function(req, res, next) {
   let deposit = req.body;
@@ -26,6 +27,18 @@ exports.create = function(req, res, next) {
     // If the form is coming in from the CDR admin reset the destination UUID to the one it provides.
     if (deposit.destination !== undefined && canOverride) {
       form.destination = deposit.destination;
+    }
+
+    // Override default depositor if allowed by the form.
+    if (form.submitAsCurrentUser) {
+      if (config.DEBUG && /AUTHENTICATION_SPOOFING/.test(req.headers.cookie)) {
+        let adminUserGroups = parseAuthenticationHeaders(req.headers.cookie);
+        form.depositor = adminUserGroups.depositor;
+        form.isMemberOf = adminUserGroups.isMemberOf;
+      } else {
+        form.depositor = (req.headers['remote_user'] !== undefined) ? req.headers['remote_user'] : null;
+        form.isMemberOf = (req.headers['ismemberof'] !== undefined) ? req.headers['ismemberof'] : null;
+      }
     }
   });
 
@@ -76,3 +89,39 @@ exports.debug = function(req, res, next) {
     next(err);
   });
 };
+
+/**
+ * Private function to discern user and CDR groups
+ * @param values
+ */
+function parseAuthenticationHeaders(values) {
+  let setValues = decodeURIComponent(values).split(/;\s/);
+  let cdrValues = {
+    depositor: null,
+    isMemberOf: null
+  };
+  let format = function(stringValue) {
+    if (stringValue !== undefined && stringValue !== null) {
+      return stringValue.trim().toLowerCase();
+    }
+    return null;
+  };
+
+  if (setValues.length > 0) {
+    setValues.forEach(function(d) {
+      let keyValues = d.split('=');
+      let key = format(keyValues[0]);
+      let value = format(keyValues[1]);
+
+      if (/remote_user/.test(key)) {
+        cdrValues.depositor = value;
+      }
+
+      if (/ismemberof/.test(key)) {
+        cdrValues.isMemberOf = value;
+      }
+    });
+  }
+
+  return cdrValues;
+}
