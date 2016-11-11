@@ -25,6 +25,7 @@ exports.date = checker.shape({
   options: checker.optional(optionsChecker),
   defaultValue: checker.optional(checker.string()),
   precision: checker.optional(checker.oneOf([
+    checker.literal('admin'),
     checker.literal('year'),
     checker.literal('month'),
     checker.literal('day')
