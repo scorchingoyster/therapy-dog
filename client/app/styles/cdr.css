@@ -124,18 +124,19 @@
   list-style: none;
   margin: 0;
   font-size: 12px;
-  padding-top: 2px;
 }
 
 #topbar > li {
 	float: right;
 	text-indent: 0;
 	margin: 0;
+  padding-top: 2px;
+  height: 25px;
 }
 
 #topbar > li > a {
 	display: block;
-	padding: 4px 25px;
+  padding: 4px 25px;
 }
 
 .topbar-menu-option {
