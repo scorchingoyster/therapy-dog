@@ -62,10 +62,15 @@ function generateOneFileItem(itemSpec, metadataSpecs, values) {
   return items[0];
 }
 
-function generateAgreementFileItem(agreements, values) {
+function generateAgreementFileItem(agreements, depositor, values) {
+  let currentDate = new Date();
+  let currentMonth = currentDate.getUTCMonth() + 1;
+  let currentDay = currentDate.getUTCDate();
+  let currentYear = currentDate.getUTCFullYear();
+
   let contents = new Buffer(agreements.map(function(key) {
     let agreement = values[key];
-    return `${agreement.name}\n${agreement.uri}\n${agreement.prompt}\n`;
+    return `${agreement.name}\n${agreement.uri}\n${agreement.prompt}\n${depositor}\n${currentMonth}/${currentDay}/${currentYear}\n`;
   }).join('\n'));
 
   let file = new File(contents, { mimetype: 'text/plain' });
@@ -108,7 +113,7 @@ module.exports = function(form, values) {
 
   let agreement;
   if (form.bundle.agreements) {
-    agreement = generateAgreementFileItem(form.bundle.agreements, values);
+    agreement = generateAgreementFileItem(form.bundle.agreements, form.depositor, values);
   } else {
     agreement = [];
   }
