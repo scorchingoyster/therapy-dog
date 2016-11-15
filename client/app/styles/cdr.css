@@ -1,4 +1,3 @@
-/*#header, */
 #footer {
   font-family: verdana, sans-serif;
   font-size: 12px;
@@ -9,16 +8,10 @@
   margin: 0;
 }
 
-/*
-#header h1 {
-  display: none;
-}
-*/
-
 #header h1 {
 	font-family: "Open Sans", "Arial", "Helvetica", sans-serif;
 	font-size: 22px;
-    font-weight: 400;
+  font-weight: 400;
 }
 
 .white-title {
@@ -124,14 +117,14 @@
 /*Header Top Bar*/
 
 #topbar {
-    background-color: #001B28;
+  background-color: #001B28;
 	height: 25px;
-    font-family: helvetica;
+  font-family: helvetica;
 	color: #fff;
-    list-style: none;
-    margin: 0;
-    font-size: 12px;
-    padding-top: 2px;
+  list-style: none;
+  margin: 0;
+  font-size: 12px;
+  padding-top: 2px;
 }
 
 #topbar > li {
@@ -159,7 +152,7 @@
 }
 
 #topbar li#login {
-    font-weight: 600;
+  font-weight: 600;
 }
 
 #username_wrap {
