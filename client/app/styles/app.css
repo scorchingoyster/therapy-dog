@@ -418,6 +418,7 @@ html, body {
 
 .block.select select {
   max-width: 500px;
+  margin: 8px 0;
 }
 
 p.note ~ select {
