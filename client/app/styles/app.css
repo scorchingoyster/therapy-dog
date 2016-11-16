@@ -22,7 +22,7 @@ html, body {
 }
 
 #header {
-  height: 95px;
+  height: 110px;
   float: none;
 }
 
@@ -417,7 +417,8 @@ html, body {
 /* select blocks */
 
 .block.select select {
-  max-width: 100%;
+  max-width: 500px;
+  margin: 8px 0;
 }
 
 p.note ~ select {
