@@ -70,7 +70,7 @@ function generateAgreementFileItem(agreements, values, depositorSignature) {
 
   let contents = new Buffer(agreements.map(function(key) {
     let agreement = values[key];
-    return `${agreement.name}\n${agreement.uri}\n${agreement.prompt}\n${depositorSignature}\n${currentMonth}/${currentDay}/${currentYear}\n`;
+    return `${agreement.name}\n${agreement.uri}\n${agreement.prompt}\n${currentMonth}/${currentDay}/${currentYear}\n${depositorSignature}\n`;
   }).join('\n'));
 
   let file = new File(contents, { mimetype: 'text/plain' });
