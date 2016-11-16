@@ -62,7 +62,7 @@ function generateOneFileItem(itemSpec, metadataSpecs, values) {
   return items[0];
 }
 
-function generateAgreementFileItem(agreements, depositor, values) {
+function generateAgreementFileItem(agreements, values, depositorSignature) {
   let currentDate = new Date();
   let currentMonth = currentDate.getUTCMonth() + 1;
   let currentDay = currentDate.getUTCDate();
@@ -70,7 +70,7 @@ function generateAgreementFileItem(agreements, depositor, values) {
 
   let contents = new Buffer(agreements.map(function(key) {
     let agreement = values[key];
-    return `${agreement.name}\n${agreement.uri}\n${agreement.prompt}\n${depositor}\n${currentMonth}/${currentDay}/${currentYear}\n`;
+    return `${agreement.name}\n${agreement.uri}\n${agreement.prompt}\n${depositorSignature}\n${currentMonth}/${currentDay}/${currentYear}\n`;
   }).join('\n'));
 
   let file = new File(contents, { mimetype: 'text/plain' });
@@ -98,7 +98,7 @@ function generateAgreementFileItem(agreements, depositor, values) {
  * @param {Object} values
  * @return {Bundle}
  */
-module.exports = function(form, values) {
+module.exports = function(form, values, depositorSignature) {
   let children = [];
   if (form.bundle.supplemental) {
     let supplemental = form.bundle.supplemental.reduce(function(result, itemSpec) {
@@ -113,7 +113,7 @@ module.exports = function(form, values) {
 
   let agreement;
   if (form.bundle.agreements) {
-    agreement = generateAgreementFileItem(form.bundle.agreements, form.depositor, values);
+    agreement = generateAgreementFileItem(form.bundle.agreements, values, depositorSignature);
   } else {
     agreement = [];
   }
