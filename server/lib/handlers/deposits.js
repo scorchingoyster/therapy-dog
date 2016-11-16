@@ -42,12 +42,19 @@ exports.create = function(req, res, next) {
     }
   });
 
+  let depositorSignature;
+  if (config.DEBUG && /AUTHENTICATION_SPOOFING/.test(req.headers.cookie)) {
+    depositorSignature = parseAuthenticationHeaders(req.headers.cookie).depositor;
+  } else {
+    depositorSignature = req.headers['remote_user'];
+  }
+
   // Transform input...
   let input = form.then(f => f.deserializeInput(deposit.values));
   let inputSummary = form.then(f => f.summarizeInput(deposit.values));
 
   // Generate a bundle and submission...
-  let bundle = Promise.join(form, input, generateBundle);
+  let bundle = Promise.join(form, input, depositorSignature, generateBundle);
   let submission = Promise.join(form, bundle, generateSubmission);
 
   // Collect notification recipients...
@@ -71,6 +78,7 @@ exports.create = function(req, res, next) {
 
 exports.debug = function(req, res, next) {
   let deposit = req.body;
+  let depositorSignature = req.headers['remote_user'];
 
   // Find the form...
   let form = Form.findById(deposit.form);
@@ -79,7 +87,7 @@ exports.debug = function(req, res, next) {
   let input = form.then(f => f.deserializeInput(deposit.values));
 
   // Generate a bundle and submission...
-  let bundle = Promise.join(form, input, generateBundle);
+  let bundle = Promise.join(form, input, depositorSignature, generateBundle);
   let submission = Promise.join(form, bundle, generateSubmission);
 
   // Respond with the METS.

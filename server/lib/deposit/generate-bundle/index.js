@@ -13,12 +13,12 @@ const generateAggregate = require('./generate-aggregate');
  * @param {String} destination
  * @return {Bundle}
  */
-module.exports = function(form, values) {
+module.exports = function(form, values, depositorSignature) {
   /* istanbul ignore else */
   if (form.bundle.type === 'single') {
     return generateSingle(form, values);
   } else if (form.bundle.type === 'aggregate') {
-    return generateAggregate(form, values);
+    return generateAggregate(form, values, depositorSignature);
   } else {
     throw new Error('Unknown bundle type: ' + form.bundle.type);
   }
