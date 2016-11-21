@@ -32,5 +32,5 @@ app.use(function(err, req, res, next) {
 });
 
 let server = app.listen(config.PORT, config.HOST, function() {
-  console.log('Server started on %s:%s', server.address().address, server.address().port);
+  logging.info('Server started on %s:%s', server.address().address, server.address().port);
 });
