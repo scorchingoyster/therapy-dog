@@ -23,8 +23,9 @@ function generateMetsHdr(mets) {
 // dmdSec
 
 function generateDmdSec(mets, bundle) {
+
   bundle.metadata.forEach(function(metadata) {
-    if (metadata.type === 'descriptive') {
+    if (metadata.type === 'descriptive' && metadata.contents.root.children.length > 0) {
       let dmdSec =
       mets
         .element('dmdSec', { ID: metadata.id });
@@ -111,7 +112,7 @@ function generateItem(parent, node) {
   });
 
   let dmdIds = metadata.filter(function(node) {
-    return node.type === 'descriptive';
+    return node.type === 'descriptive' && node.contents.root.children.length > 0;
   }).map(function(node) {
     return node.id;
   });
