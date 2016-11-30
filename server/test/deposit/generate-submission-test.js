@@ -86,6 +86,16 @@ describe('Submission generation', function() {
       return new DOMParser().parseFromString(submission['mets.xml'].toString());
     });
 
+    let emptyValues = {
+      thesis: thesis
+    };
+
+    let bundleEmpty = generateBundle(form, emptyValues);
+    let submissionEmpty = generateSubmission(form, bundleEmpty);
+    let docEmpty = submissionEmpty.then(function(submission) {
+      return new DOMParser().parseFromString(submission['mets.xml'].toString());
+    });
+
     it('should contain METS XML as a Buffer, and the upload\'s path', function() {
       let bundleFile = bundle.files[0];
 
@@ -136,6 +146,13 @@ describe('Submission generation', function() {
         let title = select1('mods:titleInfo/mods:title/text()', mods);
         assert.ok(title);
         assert.equal(title, 'My Thesis');
+      });
+    });
+
+    it('should not generate an dmdSec element if MODS is empty', function() {
+      return docEmpty.then(function(doc) {
+        let dmdSec = select1('/mets:mets/mets:dmdSec', doc);
+        assert.ok(!dmdSec);
       });
     });
 

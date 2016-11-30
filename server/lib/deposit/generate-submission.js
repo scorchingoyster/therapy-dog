@@ -23,7 +23,6 @@ function generateMetsHdr(mets) {
 // dmdSec
 
 function generateDmdSec(mets, bundle) {
-
   bundle.metadata.forEach(function(metadata) {
     if (metadata.type === 'descriptive' && metadata.contents.root.children.length > 0) {
       let dmdSec =
