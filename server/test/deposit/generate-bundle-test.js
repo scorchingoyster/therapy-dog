@@ -421,7 +421,7 @@ describe('Bundle generation', function() {
       }
     };
 
-    let bundle = generateBundle(form, values);
+    let bundle = generateBundle(form, values, 'uncUser');
 
     it('should generate the correct number of items, files, metadata', function() {
       assert.equal(bundle.items.length, 3);
@@ -430,11 +430,17 @@ describe('Bundle generation', function() {
     });
 
     it('should generate a file containing a record of the agreements', function() {
+      let currentDate = new Date();
+      let currentMonth = currentDate.getUTCMonth() + 1;
+      let currentDay = currentDate.getUTCDate();
+      let currentYear = currentDate.getUTCFullYear();
+      let formattedDate = `${currentMonth}/${currentDay}/${currentYear}`;
+
       let aggregate = bundle.children[0];
       let item = aggregate.children.find(i => i.type === 'File' && i.label === 'agreements.txt');
       let file = item.children.find(i => i instanceof File);
 
-      assert.equal(file.contents.toString(), 'Deposit Agreement\nhttp://example.com/agreement\nI agree to the terms.\n');
+      assert.equal(file.contents.toString(), 'Deposit Agreement\nhttp://example.com/agreement\nI agree to the terms.\n' + formattedDate + '\nuncUser\n');
     });
 
     it('should generate access control metadata for the agreement record', function() {
