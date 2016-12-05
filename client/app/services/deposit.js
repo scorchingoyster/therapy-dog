@@ -23,16 +23,12 @@ function buildPayload(deposit) {
   let depositorEmail = values[DEPOSITOR_EMAIL_KEY];
   delete values[DEPOSITOR_EMAIL_KEY];
 
-  if (deposit.get('form.isAdminForm')) {
-    depositorEmail = '';
-  }
-
-
   return {
     form: deposit.get('form.id'),
     destination: deposit.get('form.destination'),
     addAnother: deposit.get('form.addAnother'),
     addAnotherText: deposit.get('form.addAnotherText'),
+    isAdminForm: deposit.get('form.isAdminForm'),
     values,
     depositorEmail
   };

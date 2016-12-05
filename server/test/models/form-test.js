@@ -142,6 +142,12 @@ describe('Form', function() {
     });
   });
 
+  it('will ignore sending emails if the form is submitted from the cdr admin', function() {
+    return Form.findById('article').then(function(form) {
+      assert.deepEqual(form.isAdminForm, true);
+    });
+  });
+
   describe('#getResourceObject()', function() {
     it('converts object array vocabularies to options arrays', function() {
       return Form.findById('article')
