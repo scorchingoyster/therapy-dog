@@ -20,9 +20,13 @@ function deserializeChildren(value) {
 
 function buildPayload(deposit) {
   let values = deposit.get('entry').flatten();
-  
   let depositorEmail = values[DEPOSITOR_EMAIL_KEY];
   delete values[DEPOSITOR_EMAIL_KEY];
+
+  if (deposit.get('form.isAdminForm')) {
+    depositorEmail = '';
+  }
+
 
   return {
     form: deposit.get('form.id'),
@@ -62,30 +66,33 @@ export default Ember.Service.extend({
           title: response.data.attributes.title,
           addAnother: response.data.attributes.addAnother,
           addAnotherText: response.data.attributes.addAnotherText,
+          isAdminForm: response.data.attributes.isAdminForm,
           contact: response.data.attributes.contact,
           description: response.data.attributes.description,
           children: deserializeChildren(response.data.attributes.children)
         });
-        
-        let depositorEmailBlock = Ember.Object.create({
-          type: 'email',
-          key: DEPOSITOR_EMAIL_KEY,
-          label: 'Depositor\'s Email Address',
-          required: true
-        });
-        
-        if (response.meta.mail) {
-          depositorEmailBlock.set('defaultValue', response.meta.mail);
+
+        if (!response.data.attributes.isAdminForm) {
+          let depositorEmailBlock = Ember.Object.create({
+            type: 'email',
+            key: DEPOSITOR_EMAIL_KEY,
+            label: 'Depositor\'s Email Address',
+            required: true
+          });
+
+          if (response.meta.mail) {
+            depositorEmailBlock.set('defaultValue', response.meta.mail);
+          }
+
+          if (ENV.APP.spoofMail) {
+            depositorEmailBlock.set('defaultValue', ENV.APP.spoofMail);
+          }
+
+          if (Ember.isArray(form.get('children'))) {
+            form.get('children').push(depositorEmailBlock);
+          }
         }
-        
-        if (ENV.APP.spoofMail) {
-          depositorEmailBlock.set('defaultValue', ENV.APP.spoofMail);
-        }
-        
-        if (Ember.isArray(form.get('children'))) {
-          form.get('children').push(depositorEmailBlock);
-        }
-        
+
         let deposit = Ember.Object.create({
           authorized: response.meta.authorized,
           debug: response.meta.debug,
@@ -104,7 +111,7 @@ export default Ember.Service.extend({
   submit(deposit) {
     let payload = buildPayload(deposit);
     let depositCollection = location.href;
-    let isAdminForm = (formUtils.parameterValue('adminOnly') === 'true') ? true : false;
+    let isAdminForm = (payload.isAdminForm !== undefined) ? payload.isAdminForm : false;
     let addAnother = (payload.addAnother !== undefined) ? payload.addAnother : false;
     let addAnotherText = (payload.addAnotherText !== undefined) ? payload.addAnotherText : 'work';
 
@@ -112,7 +119,8 @@ export default Ember.Service.extend({
       path: depositCollection,
       admin: isAdminForm,
       addAnother: addAnother,
-      addAnotherText: addAnotherText
+      addAnotherText: addAnotherText,
+      isAdminForm: isAdminForm
     };
     
     return new Ember.RSVP.Promise(function(resolve) {
