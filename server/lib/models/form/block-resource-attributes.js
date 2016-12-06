@@ -26,6 +26,10 @@ exports.email = function(block) {
   return optionallyGetOptionsResourceAttributes(block);
 };
 
+exports.orcid = function(block) {
+  return optionallyGetOptionsResourceAttributes(block);
+};
+
 exports.date = function(block) {
   return optionallyGetOptionsResourceAttributes(block);
 };

@@ -44,6 +44,16 @@ exports.email = checker.shape({
   note: checker.optional(checker.string())
 });
 
+exports.orcid = checker.shape({
+  key: checker.string(),
+  label: checker.optional(checker.string()),
+  options: checker.optional(optionsChecker),
+  required: checker.optional(checker.boolean()),
+  defaultValue: checker.optional(checker.string()),
+  placeholder: checker.optional(checker.string()),
+  note: checker.optional(checker.string())
+});
+
 exports.file = checker.shape({
   key: checker.string(),
   label: checker.optional(checker.string()),
@@ -109,6 +119,7 @@ exports.block = checker.recordTypes({
   checkboxes: checker.lookup(exports, 'checkboxes'),
   date: checker.lookup(exports, 'date'),
   email: checker.lookup(exports, 'email'),
+  orcid: checker.lookup(exports, 'orcid'),
   file: checker.lookup(exports, 'file'),
   radio: checker.lookup(exports, 'radio'),
   section: checker.lookup(exports, 'section'),

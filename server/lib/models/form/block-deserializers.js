@@ -23,6 +23,10 @@ exports.email = function(block, value) {
   return String(value);
 };
 
+exports.orcid = function(block, value) {
+  return String(value);
+};
+
 exports.date = function(block, value) {
   if (DURATION_REGEXP.test(value)) {
     return moment().add(moment.duration(value)).format('YYYY-MM-DD');
