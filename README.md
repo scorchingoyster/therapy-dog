@@ -137,3 +137,7 @@ Add or remove dependencies separately from code changes. This makes reviewing a 
     echo "node_modules/xmldom" >> .gitignore
     git add package.json .gitignore
     git commit -m "Add 'xmldom' devDependency to server."
+
+### How to run test
+    make check (Runs server side unit tests)
+    ember test --server or in a browser go to http://localhost:4200/tests (Runs client side integration tests)

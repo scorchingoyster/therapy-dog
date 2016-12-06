@@ -64,6 +64,7 @@ One of the following:
 1. [checkboxes form block](#checkboxes-form-block)
 1. [date form block](#date-form-block)
 1. [email form block](#email-form-block)
+1. [orcid form block](#orcid-form-block)
 1. [file form block](#file-form-block)
 1. [radio form block](#radio-form-block)
 1. [section form block](#section-form-block)
@@ -156,6 +157,26 @@ note | optional string | --
       "key": "advisor-email",
       "label": "Advisor's Email Address",
       "placeholder": "advisor@email.unc.edu"
+    }
+    
+### *orcid* form block
+
+Property | Type | Notes
+-------- | ---- | -----
+type | `"orcid"` | --
+key | string | --
+label | optional string | --
+options | optional [options](#options) | --
+required | optional boolean | --
+defaultValue | optional string | --
+placeholder | optional string | --
+note | optional string | --
+
+    {
+      "type": "orcid",
+      "key": "orcid-id",
+      "label": "Orcid Id",
+      "placeholder": "http://orcid.org/0000-0000-0000-0000"
     }
 
 ### *file* form block
