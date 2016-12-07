@@ -10,26 +10,8 @@ export default Ember.Component.extend(FocusEntryAction, {
   didReceiveAttrs() {
     this._super(...arguments);
 
-    let receivedOrcidValue = this.get('entry.value');
-
-    if (Ember.isBlank(receivedOrcidValue)) {
+    if (Ember.isBlank(this.get('entry.value'))) {
       this.set('entry.value', this.get('entry.block.defaultValue') || '');
-    } else {
-      let protocolRegex = /^https?:\/\//;
-
-      if (!protocolRegex.test(receivedOrcidValue)) {
-        let urlPrefix = receivedOrcidValue.match(protocolRegex);
-        let isSslRegex = /s/;
-        let formattedOrcidValue;
-
-        if(urlPrefix === null) {
-          formattedOrcidValue = `http://${receivedOrcidValue}`;
-        } else {
-          formattedOrcidValue = (isSslRegex.test(urlPrefix[0])) ? urlPrefix[0].replace(isSslRegex, '') : receivedOrcidValue;
-        }
-
-        this.set('entry.value',  formattedOrcidValue);
-      }
     }
   },
 
