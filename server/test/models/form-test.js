@@ -142,9 +142,9 @@ describe('Form', function() {
     });
   });
 
-  it('will ignore sending emails if the form is submitted from the cdr admin', function() {
+  it('can optionally not send emails', function() {
     return Form.findById('article').then(function(form) {
-      assert.deepEqual(form.isAdminForm, true);
+      assert.deepEqual(form.sendEmailReceipt, false);
     });
   });
 

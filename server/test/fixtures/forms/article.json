@@ -6,7 +6,7 @@
   "addAnother": true,
   "addAnotherText": "image",
   "submitAsCurrentUser": true,
-  "isAdminForm": true,
+  "sendEmailReceipt": false,
   "contact": {
     "name": "Someone",
     "email": "someone@example.com"

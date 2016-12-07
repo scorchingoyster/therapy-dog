@@ -28,7 +28,7 @@ function buildPayload(deposit) {
     destination: deposit.get('form.destination'),
     addAnother: deposit.get('form.addAnother'),
     addAnotherText: deposit.get('form.addAnotherText'),
-    isAdminForm: deposit.get('form.isAdminForm'),
+    sendEmailReceipt: deposit.get('form.sendEmailReceipt'),
     values,
     depositorEmail
   };
@@ -62,13 +62,13 @@ export default Ember.Service.extend({
           title: response.data.attributes.title,
           addAnother: response.data.attributes.addAnother,
           addAnotherText: response.data.attributes.addAnotherText,
-          isAdminForm: response.data.attributes.isAdminForm,
+          sendEmailReceipt: response.data.attributes.sendEmailReceipt,
           contact: response.data.attributes.contact,
           description: response.data.attributes.description,
           children: deserializeChildren(response.data.attributes.children)
         });
 
-        if (!response.data.attributes.isAdminForm) {
+        if (!response.data.attributes.sendEmailReceipt) {
           let depositorEmailBlock = Ember.Object.create({
             type: 'email',
             key: DEPOSITOR_EMAIL_KEY,
@@ -107,16 +107,16 @@ export default Ember.Service.extend({
   submit(deposit) {
     let payload = buildPayload(deposit);
     let depositCollection = location.href;
-    let isAdminForm = (payload.isAdminForm !== undefined) ? payload.isAdminForm : false;
+    let sendEmailReceipt = (payload.sendEmailReceipt !== undefined) ? payload.sendEmailReceipt : true;
     let addAnother = (payload.addAnother !== undefined) ? payload.addAnother : false;
     let addAnotherText = (payload.addAnotherText !== undefined) ? payload.addAnotherText : 'work';
 
     let results = {
       path: depositCollection,
-      admin: isAdminForm,
+      admin: sendEmailReceipt,
       addAnother: addAnother,
       addAnotherText: addAnotherText,
-      isAdminForm: isAdminForm
+      sendEmailReceipt: sendEmailReceipt
     };
     
     return new Ember.RSVP.Promise(function(resolve) {
