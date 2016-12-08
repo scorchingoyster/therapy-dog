@@ -58,15 +58,22 @@ exports.create = function(req, res, next) {
   let submission = Promise.join(form, bundle, generateSubmission);
 
   // Collect notification recipients...
-  let notificationRecipientEmails = Promise.join(form, input, collectNotificationRecipientEmails);
+  let sendNotifications;
+  if (form.sendEmailReceipt) {
+    let notificationRecipientEmails = Promise.join(form, input, collectNotificationRecipientEmails);
+
+    sendNotifications = [
+      Promise.join(form, inputSummary, deposit.depositorEmail, mailer.sendDepositReceipt),
+      Promise.join(form, inputSummary, notificationRecipientEmails, mailer.sendDepositNotification)
+    ];
+  } else {
+    sendNotifications = Promise.reject();
+  }
 
   // Submit the deposit, send email notifications, send response.
   Promise.join(form, submission, deposit.depositorEmail, submitZip)
   .then(() => { res.status(204).end(); })
-  .then(() => Promise.all([
-    Promise.join(form, inputSummary, deposit.depositorEmail, mailer.sendDepositReceipt),
-    Promise.join(form, inputSummary, notificationRecipientEmails, mailer.sendDepositNotification)
-  ]))
+  .then(() => Promise.all(sendNotifications))
   .catch(function(err) {
     if (err instanceof SwordError) {
       logging.error('Received error response from SWORD endpoint: %s', err.extra.body);
