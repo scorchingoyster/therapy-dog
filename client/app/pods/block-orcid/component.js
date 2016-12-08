@@ -10,15 +10,8 @@ export default Ember.Component.extend(FocusEntryAction, {
   didReceiveAttrs() {
     this._super(...arguments);
 
-    let receivedOrcidValue = this.get('entry.value');
-
-    if (Ember.isBlank(receivedOrcidValue)) {
+    if (Ember.isBlank(this.get('entry.value'))) {
       this.set('entry.value', this.get('entry.block.defaultValue') || '');
-    } else {
-      if (!/^https:\/\//.test(receivedOrcidValue)) {
-        let formattedOrcidValue = `https://${receivedOrcidValue}`;
-        this.set('entry.value',  formattedOrcidValue);
-      }
     }
   },
 

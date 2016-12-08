@@ -488,7 +488,7 @@ p.note ~ select {
 }
 
 .section.repeat .block.text input,
-.section.repeat .block.orcid input { {
+.section.repeat .block.orcid input {
   width: 400px;
 }
 
