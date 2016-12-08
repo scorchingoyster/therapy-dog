@@ -20,7 +20,14 @@ function deserializeChildren(value) {
 
 function buildPayload(deposit) {
   let values = deposit.get('entry').flatten();
-  let depositorEmail = values[DEPOSITOR_EMAIL_KEY];
+  let emailReceipt = deposit.get('form.sendEmailReceipt');
+  let depositorEmail;
+
+  if (emailReceipt) {
+    depositorEmail = values[DEPOSITOR_EMAIL_KEY];
+  } else {
+    depositorEmail = null;
+  }
   delete values[DEPOSITOR_EMAIL_KEY];
 
   return {
@@ -28,7 +35,7 @@ function buildPayload(deposit) {
     destination: deposit.get('form.destination'),
     addAnother: deposit.get('form.addAnother'),
     addAnotherText: deposit.get('form.addAnotherText'),
-    sendEmailReceipt: deposit.get('form.sendEmailReceipt'),
+    sendEmailReceipt: emailReceipt,
     values,
     depositorEmail
   };
@@ -68,7 +75,7 @@ export default Ember.Service.extend({
           children: deserializeChildren(response.data.attributes.children)
         });
 
-        if (!response.data.attributes.sendEmailReceipt) {
+        if (response.data.attributes.sendEmailReceipt) {
           let depositorEmailBlock = Ember.Object.create({
             type: 'email',
             key: DEPOSITOR_EMAIL_KEY,
