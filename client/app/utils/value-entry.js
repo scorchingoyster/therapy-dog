@@ -6,6 +6,7 @@ const DATE_MONTH_REGEXP = /^[1-2]\d{3}-(0[1-9]|1[0-2])$/;
 const DATE_YEAR_REGEXP = /^[1-2]\d{3}$/;
 const DATE_ADMIN_REGEXP = /^([1-2]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2]\d|3[0-1])|[1-2]\d{3}-(0[1-9]|1[0-2])|^[1-2]\d{3}$)$/;
 const DURATION_REGEXP = /^P.+$/;
+const ORCID_REGEXP = /^((https?:\/\/)?orcid\.org\/)?\d{4}-\d{4}-\d{4}-\d{4}$/;
 
 export default Ember.Object.extend({
   required: Ember.computed('block.type', 'block.required', function() {
@@ -40,6 +41,8 @@ export default Ember.Object.extend({
       return [`This field is required.`];
     } else if (type === 'email' && !Ember.isEmpty(value) && !EMAIL_REGEXP.test(value)) {
       return [`The entered value is not a valid email address.`];
+    } else if (type === 'orcid' && !Ember.isEmpty(value) && !ORCID_REGEXP.test(value)) {
+      return [`The entered value is not a valid orcid id.`];
     } else if (type === 'date') {
       let precision = this.get('block.precision');
       

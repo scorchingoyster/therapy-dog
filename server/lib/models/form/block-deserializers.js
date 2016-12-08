@@ -23,6 +23,27 @@ exports.email = function(block, value) {
   return String(value);
 };
 
+exports.orcid = function(block, value) {
+  let formattedOrcidValue;
+
+  if (value === '') {
+    formattedOrcidValue = '';
+  } else {
+    let urlPrefix = value.match(/^https?/);
+    let isSslRegex = /^https/;
+
+    if (urlPrefix === null && !/orcid\.org/.test(value)) {
+      formattedOrcidValue = `http://orcid.org/${value}`;
+    } else if (urlPrefix === null) {
+      formattedOrcidValue = `http://${value}`;
+    } else {
+      formattedOrcidValue = (isSslRegex.test(urlPrefix[0])) ? value.replace(isSslRegex, 'http') : value;
+    }
+  }
+
+  return String(formattedOrcidValue);
+};
+
 exports.date = function(block, value) {
   if (DURATION_REGEXP.test(value)) {
     return moment().add(moment.duration(value)).format('YYYY-MM-DD');

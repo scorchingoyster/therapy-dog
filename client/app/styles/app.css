@@ -231,6 +231,7 @@ html, body {
 .block.date label,
 .block.select label,
 .block.email label,
+.block.orcid label,
 .block.file label,
 .block.checkboxes h2,
 .block.radio h2,
@@ -249,6 +250,7 @@ html, body {
 .block.date label ~ p.note,
 .block.select label ~ p.note,
 .block.email label ~ p.note,
+.block.orcid label ~ p.note,
 .block.file label ~ p.note,
 .block.checkboxes h2 ~ p.note,
 .block.radio h2 ~ p.note,
@@ -265,6 +267,7 @@ html, body {
 .block.select.required label:after,
 .block.file.required label:after,
 .block.email.required label:after,
+.block.orcid.required label:after,
 .block.checkboxes.required h2:after,
 .block.radio.required h2:after,
 .block.agreement.required h2:after {
@@ -284,6 +287,7 @@ html, body {
 
 .block.text input,
 .block.email input,
+.block.orcid input,
 .block.date input.admin-date-block {
   display: block;
   margin: 0 0 0 200px;
@@ -294,7 +298,8 @@ html, body {
 }
 
 #form.invalid .block.text.invalid > input,
-#form.invalid .block.email.invalid > input {
+#form.invalid .block.email.invalid > input,
+#form.invalid .block.orcid.invalid > input {
   border: 1px solid #c00;
 }
 
@@ -452,6 +457,7 @@ p.note ~ select {
 .section .block.select label,
 .section .block.file label,
 .section .block.email label,
+.section .block.orcid label,
 .section .block.checkboxes h2,
 .section .block.radio h2,
 .section .block.agreement h2 {
@@ -481,7 +487,8 @@ p.note ~ select {
   width: 600px;
 }
 
-.section.repeat .block.text input {
+.section.repeat .block.text input,
+.section.repeat .block.orcid input {
   width: 400px;
 }
 

@@ -35,6 +35,10 @@ exports.email = function(block, value) {
   return { label: block.label, value: String(value) };
 };
 
+exports.orcid = function(block, value) {
+  return { label: block.label, value: String(value) };
+};
+
 exports.date = function(block, value) {
   return { label: block.label, value: String(value) };
 };

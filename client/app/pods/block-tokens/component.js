@@ -35,7 +35,7 @@ export default Ember.Component.extend(FocusEntryAction, {
         });
       }
     });
-    
+
     this.$('ul.tagit input').on('focus', () => {
       this.$('ul.tagit').addClass('tagit-focus');
     });
@@ -47,12 +47,12 @@ export default Ember.Component.extend(FocusEntryAction, {
 
   willDestroyElement() {
     this._super(...arguments);
-    
+
     this.$('ul.tagit').tagit('destroy');
     this.$('ul.tagit input').off('focus');
     this.$('ul.tagit input').off('blur');
   },
-  
+
   actions: {
     focusEntry: function() {
       this.$('input').focus();
