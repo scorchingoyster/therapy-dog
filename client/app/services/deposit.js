@@ -20,10 +20,10 @@ function deserializeChildren(value) {
 
 function buildPayload(deposit) {
   let values = deposit.get('entry').flatten();
-  let emailReceipt = deposit.get('form.sendEmailReceipt');
+  let sendEmailReceipt = deposit.get('form.sendEmailReceipt');
   let depositorEmail;
 
-  if (emailReceipt) {
+  if (sendEmailReceipt) {
     depositorEmail = values[DEPOSITOR_EMAIL_KEY];
   } else {
     depositorEmail = null;
@@ -35,7 +35,7 @@ function buildPayload(deposit) {
     destination: deposit.get('form.destination'),
     addAnother: deposit.get('form.addAnother'),
     addAnotherText: deposit.get('form.addAnotherText'),
-    sendEmailReceipt: emailReceipt,
+    sendEmailReceipt: sendEmailReceipt,
     values,
     depositorEmail
   };
@@ -63,19 +63,20 @@ export default Ember.Service.extend({
         headers
       })
       .done(function(response) {
+          let sendEmailReceipt = (response.data.attributes.sendEmailReceipt !== undefined) ? response.data.attributes.sendEmailReceipt : true;
         let form = Ember.Object.create({
           id: response.data.id,
           destination: collection,
           title: response.data.attributes.title,
           addAnother: response.data.attributes.addAnother,
           addAnotherText: response.data.attributes.addAnotherText,
-          sendEmailReceipt: response.data.attributes.sendEmailReceipt,
+          sendEmailReceipt: sendEmailReceipt,
           contact: response.data.attributes.contact,
           description: response.data.attributes.description,
           children: deserializeChildren(response.data.attributes.children)
         });
 
-        if (response.data.attributes.sendEmailReceipt) {
+        if (sendEmailReceipt) {
           let depositorEmailBlock = Ember.Object.create({
             type: 'email',
             key: DEPOSITOR_EMAIL_KEY,
@@ -114,16 +115,15 @@ export default Ember.Service.extend({
   submit(deposit) {
     let payload = buildPayload(deposit);
     let depositCollection = location.href;
-    let sendEmailReceipt = (payload.sendEmailReceipt !== undefined) ? payload.sendEmailReceipt : true;
     let addAnother = (payload.addAnother !== undefined) ? payload.addAnother : false;
     let addAnotherText = (payload.addAnotherText !== undefined) ? payload.addAnotherText : 'work';
 
     let results = {
       path: depositCollection,
-      admin: sendEmailReceipt,
+      admin: payload.sendEmailReceipt,
       addAnother: addAnother,
       addAnotherText: addAnotherText,
-      sendEmailReceipt: sendEmailReceipt
+      sendEmailReceipt: payload.sendEmailReceipt
     };
     
     return new Ember.RSVP.Promise(function(resolve) {
