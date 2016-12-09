@@ -58,6 +58,7 @@ exports.create = function(req, res, next) {
   let submission = Promise.join(form, bundle, generateSubmission);
 
   // Collect notification recipients...
+  let depositor = (deposit.depositorEmail !== undefined) ? deposit.depositorEmail : req.headers['mail'];
   let notificationRecipientEmails = Promise.join(form, input, collectNotificationRecipientEmails);
   let sendNotifications = [,
       Promise.join(form, inputSummary, notificationRecipientEmails, mailer.sendDepositNotification)
@@ -65,12 +66,12 @@ exports.create = function(req, res, next) {
 
   if (deposit.sendEmailReceipt) {
     sendNotifications.push(
-      Promise.join(form, inputSummary, deposit.depositorEmail, mailer.sendDepositReceipt)
+      Promise.join(form, inputSummary, depositor, mailer.sendDepositReceipt)
     );
   }
 
   // Submit the deposit, send email notifications, send response.
-  Promise.join(form, submission, deposit.depositorEmail, submitZip)
+  Promise.join(form, submission, depositor, submitZip)
   .then(() => { res.status(204).end(); })
   .then(() => Promise.all(sendNotifications))
   .catch(function(err) {
