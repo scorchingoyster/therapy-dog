@@ -58,16 +58,15 @@ exports.create = function(req, res, next) {
   let submission = Promise.join(form, bundle, generateSubmission);
 
   // Collect notification recipients...
-  let sendNotifications;
-  if (form.sendEmailReceipt) {
-    let notificationRecipientEmails = Promise.join(form, input, collectNotificationRecipientEmails);
-
-    sendNotifications = [
-      Promise.join(form, inputSummary, deposit.depositorEmail, mailer.sendDepositReceipt),
+  let notificationRecipientEmails = Promise.join(form, input, collectNotificationRecipientEmails);
+  let sendNotifications = [,
       Promise.join(form, inputSummary, notificationRecipientEmails, mailer.sendDepositNotification)
-    ];
-  } else {
-    sendNotifications = Promise.reject();
+  ];
+
+  if (deposit.sendEmailReceipt) {
+    sendNotifications.push(
+      Promise.join(form, inputSummary, deposit.depositorEmail, mailer.sendDepositReceipt)
+    );
   }
 
   // Submit the deposit, send email notifications, send response.
