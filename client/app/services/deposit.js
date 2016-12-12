@@ -21,13 +21,9 @@ function deserializeChildren(value) {
 function buildPayload(deposit) {
   let values = deposit.get('entry').flatten();
   let sendEmailReceipt = deposit.get('form.sendEmailReceipt');
-  let depositorEmail;
 
-  if (sendEmailReceipt) {
-    depositorEmail = values[DEPOSITOR_EMAIL_KEY];
-  } else {
-    depositorEmail = null;
-  }
+
+  let depositorEmail = values[DEPOSITOR_EMAIL_KEY];
   delete values[DEPOSITOR_EMAIL_KEY];
 
   return {
@@ -64,24 +60,26 @@ export default Ember.Service.extend({
       })
       .done(function(response) {
           let sendEmailReceipt = (response.data.attributes.sendEmailReceipt !== undefined) ? response.data.attributes.sendEmailReceipt : true;
-        let form = Ember.Object.create({
-          id: response.data.id,
-          destination: collection,
-          title: response.data.attributes.title,
-          addAnother: response.data.attributes.addAnother,
-          addAnotherText: response.data.attributes.addAnotherText,
-          sendEmailReceipt: sendEmailReceipt,
-          contact: response.data.attributes.contact,
-          description: response.data.attributes.description,
-          children: deserializeChildren(response.data.attributes.children)
-        });
+          let form = Ember.Object.create({
+            id: response.data.id,
+            destination: collection,
+            title: response.data.attributes.title,
+            addAnother: response.data.attributes.addAnother,
+            addAnotherText: response.data.attributes.addAnotherText,
+            sendEmailReceipt: sendEmailReceipt,
+            contact: response.data.attributes.contact,
+            description: response.data.attributes.description,
+            children: deserializeChildren(response.data.attributes.children)
+          });
 
-        if (sendEmailReceipt) {
+          let depositor = null;
+
           let depositorEmailBlock = Ember.Object.create({
             type: 'email',
             key: DEPOSITOR_EMAIL_KEY,
             label: 'Depositor\'s Email Address',
-            required: true
+            required: true,
+            hide : (!sendEmailReceipt) ? true : false
           });
 
           if (response.meta.mail) {
@@ -95,13 +93,13 @@ export default Ember.Service.extend({
           if (Ember.isArray(form.get('children'))) {
             form.get('children').push(depositorEmailBlock);
           }
-        }
 
         let deposit = Ember.Object.create({
           authorized: response.meta.authorized,
           debug: response.meta.debug,
           form: form,
-          entry: ObjectEntry.create({ block: form })
+          entry: ObjectEntry.create({ block: form }),
+          depositor: depositor
         });
         
         resolve(deposit);

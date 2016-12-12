@@ -32,7 +32,7 @@ exports.text = function(block, value) {
 };
 
 exports.email = function(block, value) {
-  return { label: block.label, value: String(value) };
+  return { label: block.label, value: String(value), hide: (block.hide) ? block.hide : false };
 };
 
 exports.date = function(block, value) {
