@@ -113,12 +113,13 @@ export default Ember.Service.extend({
   submit(deposit) {
     let payload = buildPayload(deposit);
     let depositCollection = location.href;
+    let isAdminForm = (formUtils.parameterValue('adminOnly') === 'true') ? true : false;
     let addAnother = (payload.addAnother !== undefined) ? payload.addAnother : false;
     let addAnotherText = (payload.addAnotherText !== undefined) ? payload.addAnotherText : 'work';
 
     let results = {
       path: depositCollection,
-      admin: payload.sendEmailReceipt,
+      admin: isAdminForm,
       addAnother: addAnother,
       addAnotherText: addAnotherText,
       sendEmailReceipt: payload.sendEmailReceipt
