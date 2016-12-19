@@ -59,40 +59,40 @@ export default Ember.Service.extend({
         headers
       })
       .done(function(response) {
-          let sendEmailReceipt = (response.data.attributes.sendEmailReceipt !== undefined) ? response.data.attributes.sendEmailReceipt : true;
-          let form = Ember.Object.create({
-            id: response.data.id,
-            destination: collection,
-            title: response.data.attributes.title,
-            addAnother: response.data.attributes.addAnother,
-            addAnotherText: response.data.attributes.addAnotherText,
-            sendEmailReceipt: sendEmailReceipt,
-            contact: response.data.attributes.contact,
-            description: response.data.attributes.description,
-            children: deserializeChildren(response.data.attributes.children)
-          });
+        let sendEmailReceipt = (response.data.attributes.sendEmailReceipt !== undefined) ? response.data.attributes.sendEmailReceipt : true;
+        let form = Ember.Object.create({
+          id: response.data.id,
+          destination: collection,
+          title: response.data.attributes.title,
+          addAnother: response.data.attributes.addAnother,
+          addAnotherText: response.data.attributes.addAnotherText,
+          sendEmailReceipt: sendEmailReceipt,
+          contact: response.data.attributes.contact,
+          description: response.data.attributes.description,
+          children: deserializeChildren(response.data.attributes.children)
+        });
 
-          let depositor = null;
+        let depositor = null;
 
-          let depositorEmailBlock = Ember.Object.create({
-            type: 'email',
-            key: DEPOSITOR_EMAIL_KEY,
-            label: 'Depositor\'s Email Address',
-            required: true,
-            hide : (!sendEmailReceipt) ? true : false
-          });
+        let depositorEmailBlock = Ember.Object.create({
+          type: 'email',
+          key: DEPOSITOR_EMAIL_KEY,
+          label: 'Depositor\'s Email Address',
+          required: true,
+          hide : (!sendEmailReceipt) ? true : false
+        });
 
-          if (response.meta.mail) {
-            depositorEmailBlock.set('defaultValue', response.meta.mail);
-          }
+        if (response.meta.mail) {
+          depositorEmailBlock.set('defaultValue', response.meta.mail);
+        }
 
-          if (ENV.APP.spoofMail) {
-            depositorEmailBlock.set('defaultValue', ENV.APP.spoofMail);
-          }
+        if (ENV.APP.spoofMail) {
+          depositorEmailBlock.set('defaultValue', ENV.APP.spoofMail);
+        }
 
-          if (Ember.isArray(form.get('children'))) {
-            form.get('children').push(depositorEmailBlock);
-          }
+        if (Ember.isArray(form.get('children'))) {
+          form.get('children').push(depositorEmailBlock);
+        }
 
         let deposit = Ember.Object.create({
           authorized: response.meta.authorized,
