@@ -59,7 +59,7 @@ exports.create = function(req, res, next) {
 
   // Collect notification recipients...
   let notificationRecipientEmails = Promise.join(form, input, collectNotificationRecipientEmails);
-  let sendNotifications = [,
+  let sendNotifications = [
       Promise.join(form, inputSummary, notificationRecipientEmails, mailer.sendDepositNotification)
   ];
 
