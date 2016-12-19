@@ -13,6 +13,10 @@ export default Ember.Component.extend(FocusEntryAction, {
     if (Ember.isBlank(this.get('entry.value'))) {
       this.set('entry.value', this.get('entry.block.defaultValue') || '');
     }
+
+    if (this.get('entry.block.hide')) {
+      this.classNames.push('hide');
+    }
   },
 
   didInsertElement: function() {

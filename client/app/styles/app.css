@@ -631,6 +631,6 @@ p.note ~ select {
   display: inline;
 }
 
-.in-admin-iframe {
+.in-admin-iframe, .hide {
   display: none;
 }

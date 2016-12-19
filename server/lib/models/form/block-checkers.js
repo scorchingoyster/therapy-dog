@@ -31,6 +31,7 @@ exports.date = checker.shape({
     checker.literal('day')
   ])),
   required: checker.optional(checker.boolean()),
+  hide: checker.optional(checker.boolean()),
   note: checker.optional(checker.string())
 });
 

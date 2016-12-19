@@ -20,7 +20,9 @@ function deserializeChildren(value) {
 
 function buildPayload(deposit) {
   let values = deposit.get('entry').flatten();
-  
+  let sendEmailReceipt = deposit.get('form.sendEmailReceipt');
+
+
   let depositorEmail = values[DEPOSITOR_EMAIL_KEY];
   delete values[DEPOSITOR_EMAIL_KEY];
 
@@ -29,6 +31,7 @@ function buildPayload(deposit) {
     destination: deposit.get('form.destination'),
     addAnother: deposit.get('form.addAnother'),
     addAnotherText: deposit.get('form.addAnotherText'),
+    sendEmailReceipt: sendEmailReceipt,
     values,
     depositorEmail
   };
@@ -56,41 +59,47 @@ export default Ember.Service.extend({
         headers
       })
       .done(function(response) {
+        let sendEmailReceipt = (response.data.attributes.sendEmailReceipt !== undefined) ? response.data.attributes.sendEmailReceipt : true;
         let form = Ember.Object.create({
           id: response.data.id,
           destination: collection,
           title: response.data.attributes.title,
           addAnother: response.data.attributes.addAnother,
           addAnotherText: response.data.attributes.addAnotherText,
+          sendEmailReceipt: sendEmailReceipt,
           contact: response.data.attributes.contact,
           description: response.data.attributes.description,
           children: deserializeChildren(response.data.attributes.children)
         });
-        
+
+        let depositor = null;
+
         let depositorEmailBlock = Ember.Object.create({
           type: 'email',
           key: DEPOSITOR_EMAIL_KEY,
           label: 'Depositor\'s Email Address',
-          required: true
+          required: true,
+          hide : (!sendEmailReceipt) ? true : false
         });
-        
+
         if (response.meta.mail) {
           depositorEmailBlock.set('defaultValue', response.meta.mail);
         }
-        
+
         if (ENV.APP.spoofMail) {
           depositorEmailBlock.set('defaultValue', ENV.APP.spoofMail);
         }
-        
+
         if (Ember.isArray(form.get('children'))) {
           form.get('children').push(depositorEmailBlock);
         }
-        
+
         let deposit = Ember.Object.create({
           authorized: response.meta.authorized,
           debug: response.meta.debug,
           form: form,
-          entry: ObjectEntry.create({ block: form })
+          entry: ObjectEntry.create({ block: form }),
+          depositor: depositor
         });
         
         resolve(deposit);
@@ -112,7 +121,8 @@ export default Ember.Service.extend({
       path: depositCollection,
       admin: isAdminForm,
       addAnother: addAnother,
-      addAnotherText: addAnotherText
+      addAnotherText: addAnotherText,
+      sendEmailReceipt: payload.sendEmailReceipt
     };
     
     return new Ember.RSVP.Promise(function(resolve) {
