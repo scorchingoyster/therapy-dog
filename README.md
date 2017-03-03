@@ -54,7 +54,7 @@ In a separate terminal, start the client:
 
     make run-client
 
-Visit <http://localhost:4200/test-form> in your browser.
+Visit <http://localhost:4200/forms/test-form> in your browser.
 
 ## Documentation
 
