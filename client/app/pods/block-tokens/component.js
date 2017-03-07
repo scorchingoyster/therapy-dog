@@ -49,11 +49,15 @@ export default Ember.Component.extend(FocusEntryAction, {
       }
     });
 
-    this.$('ul.tagit input').on('focus', () => {
+    let tagitInput = this.$('ul.tagit input');
+    
+    tagitInput.attr('id', Ember.guidFor(this.get('entry')));
+    
+    tagitInput.on('focus', () => {
       this.$('ul.tagit').addClass('tagit-focus');
     });
     
-    this.$('ul.tagit input').on('blur', () => {
+    tagitInput.on('blur', () => {
       this.$('ul.tagit').removeClass('tagit-focus');
     });
   },
