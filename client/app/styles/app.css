@@ -568,6 +568,9 @@ p.note ~ select {
   right: 0;
 }
 
+.toggle-label {
+  display: none;
+}
 
 /* file blocks */
 
