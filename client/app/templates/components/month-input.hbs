@@ -1,4 +1,4 @@
-<select onchange={{action "setMonth" value="target.value"}} class="month">
+<select onchange={{action "setMonth" value="target.value"}} class="month" aria-label="Month">
   <option value="" selected={{if (eq month "") "selected" ""}}></option>
   <option value="01" selected={{if (eq month "01") "selected" ""}}>January</option>
   <option value="02" selected={{if (eq month "02") "selected" ""}}>February</option>
@@ -13,4 +13,4 @@
   <option value="11" selected={{if (eq month "11") "selected" ""}}>November</option>
   <option value="12" selected={{if (eq month "12") "selected" ""}}>December</option>
 </select>
-{{input class="year" type="text" value=year placeholder="YYYY"}}
+<input class="year" type="text" value={{year}} placeholder="YYYY" aria-label="Year">
