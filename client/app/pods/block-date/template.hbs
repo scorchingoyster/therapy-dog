@@ -1,4 +1,11 @@
-<label for={{object-guid entry}}>{{entry.block.label}}</label>
+<fieldset>
+<legend>
+  {{#if (eq entry.block.precision "month")}}
+  <h2>{{entry.block.label}}</h2>
+  {{else}}
+  <label for={{object-guid entry}}>{{entry.block.label}}</label>
+  {{/if}}
+</legend>
 
 {{#if entry.block.note}}
   <p class="note">{{sanitize-html entry.block.note}}</p>
@@ -28,5 +35,6 @@
     {{input value=entry.value placeholder="YYYY" id=(object-guid entry)}}
   {{/if}}
 {{/if}}
+</fieldset>
 
 {{entry-error-messages entry=entry}}

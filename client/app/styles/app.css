@@ -241,6 +241,7 @@ html, body {
 .block.text label,
 .block.tokens label,
 .block.date label,
+.block.date h2,
 .block.select label,
 .block.email label,
 .block.orcid label,
@@ -249,7 +250,7 @@ html, body {
 .block.radio h2,
 .block.agreement h2 {
   display: block;
-  margin: 8px 0;
+  margin: 0;
   font-size: 16px;
   line-height: 20px;
   font-weight: bold;
@@ -282,7 +283,8 @@ html, body {
 .block.orcid.required label:after,
 .block.checkboxes.required h2:after,
 .block.radio.required h2:after,
-.block.agreement.required h2:after {
+.block.agreement.required h2:after,
+.block.section fieldset legend h2:after {
   color: red;
   content: " *";
 }
@@ -292,6 +294,10 @@ html, body {
   margin: 4px 0;
   line-height: 18px;
   color: #6E6E6E;
+}
+
+.section .block p.note {
+  margin-left: 200px;
 }
 
 
@@ -408,12 +414,11 @@ html, body {
   margin-top: 3px;
 }
 
-
 /* date blocks */
 
 .block.date input {
   display: block;
-  margin: 0;
+  margin: 0 0 0 200px;
   font-size: 16px;
   padding: 4px;
   width: 160px;
@@ -437,7 +442,7 @@ html, body {
 
 .block.select select {
   max-width: 500px;
-  margin: 8px 0;
+  margin: 4px 0;
 }
 
 p.note ~ select {
@@ -465,6 +470,21 @@ p.note ~ select {
   overflow: hidden;
 }
 
+fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+fieldset legend {
+  height: 28px;
+/*  float: left;*/
+}
+
+.section fieldset legend {
+  float: left;
+}
+
 .section .block.text label,
 .section .block.tokens label,
 .section .block.date label,
@@ -474,14 +494,15 @@ p.note ~ select {
 .section .block.orcid label,
 .section .block.checkboxes h2,
 .section .block.radio h2,
-.section .block.agreement h2 {
+.section .block.agreement h2,
+.block.section fieldset legend h2 {
   margin: 4px 0;
   font-size: 14px;
-  line-height: 18px;
+  line-height: 20px;
   float: left;
   width: 200px;
+  color: #000;
 }
-
 
 /* repeating section blocks */
 
@@ -646,6 +667,10 @@ p.note ~ select {
 .block.date .month-input select,
 .block.date .month-input input {
   display: inline;
+}
+
+.block.date .month-input input {
+  margin-left: 0;
 }
 
 .in-admin-iframe, .hide {

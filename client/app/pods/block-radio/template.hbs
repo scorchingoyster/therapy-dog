@@ -1,4 +1,5 @@
-<h2>{{entry.block.label}}</h2>
+<fieldset>
+<legend><h2>{{entry.block.label}}</h2></legend>
 
 {{#if entry.block.note}}
   <p class="note">{{sanitize-html entry.block.note}}</p>
@@ -11,5 +12,6 @@
     {{#if option.note}}&mdash; {{sanitize-html option.note}}{{/if}}
   </label>
 {{/each}}
+</fieldset>
 
 {{entry-error-messages entry=entry}}
