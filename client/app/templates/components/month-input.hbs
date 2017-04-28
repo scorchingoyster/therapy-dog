@@ -13,4 +13,4 @@
   <option value="11" selected={{if (eq month "11") "selected" ""}}>November</option>
   <option value="12" selected={{if (eq month "12") "selected" ""}}>December</option>
 </select>
-<input class="year" type="text" value={{year}} placeholder="YYYY" aria-label="Year">
+<input class="year" type="text" onchange={{action "setYear" value="target.value"}} value={{year}} placeholder="YYYY" aria-label="Year">

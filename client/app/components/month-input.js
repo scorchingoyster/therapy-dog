@@ -42,6 +42,9 @@ export default Ember.Component.extend({
   actions: {
     setMonth: function(month) {
       this.set('month', month);
-    }
+    },
+    setYear: function(year) {
+      this.set('year', year);
+    },
   }
 });

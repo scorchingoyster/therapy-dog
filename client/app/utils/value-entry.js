@@ -70,7 +70,7 @@ export default Ember.Object.extend({
       } else if (precision === 'year' && !Ember.isEmpty(value) && !DATE_YEAR_REGEXP.test(value)) {
         return [`Please enter a valid year.`];
       } else if (precision === 'month' && !Ember.isEmpty(value) && !DATE_MONTH_REGEXP.test(value)) {
-        return [`Please enter a valid month.`];
+        return [`Please enter a valid month and year.`];
       } else if ((precision === 'day' || Ember.isEmpty(precision)) && !Ember.isEmpty(value) && !DATE_DAY_REGEXP.test(value)) {
         return [`Please enter a valid date.`];
       }
