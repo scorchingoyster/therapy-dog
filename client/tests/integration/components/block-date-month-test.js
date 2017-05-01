@@ -33,7 +33,7 @@ test('it renders', function(assert) {
   
   this.render(hbs`{{block-date entry=entry}}`);
 
-  assert.equal(this.$('label').text().trim(), 'Month');
+  assert.equal(this.$('legend').text().trim(), 'Month');
   assert.equal(this.$('select.month').val(), '');
   assert.equal(this.$('input.year').val(), '');
 });

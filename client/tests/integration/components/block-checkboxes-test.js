@@ -35,7 +35,11 @@ let requiredCheckboxesBlock = Ember.Object.create({
   type: 'checkboxes',
   key: 'colors',
   label: 'Primary Colors',
-  options: ['Red', 'Blue', 'Yellow'],
+  options: [
+    { label: 'Red', value: 'Red' },
+    { label: 'Blue', value: 'Blue' },
+    { label: 'Yellow', value: 'Yellow' }
+  ],
   required: true
 });
 
@@ -43,7 +47,11 @@ let defaultValueCheckboxesBlock = Ember.Object.create({
   type: 'checkboxes',
   key: 'colors',
   label: 'Primary Colors',
-  options: ['Red', 'Blue', 'Yellow'],
+  options: [
+    { label: 'Red', value: 'Red' },
+    { label: 'Blue', value: 'Blue' },
+    { label: 'Yellow', value: 'Yellow' }
+  ],
   defaultValue: ['Red', 'Blue']
 });
 

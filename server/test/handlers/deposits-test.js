@@ -41,6 +41,7 @@ function createTestDeposit() {
         article: article.id,
         supplemental: []
       },
+      sendEmailReceipt: true,
       depositorEmail: 'depositor@example.com'
     };
   });
