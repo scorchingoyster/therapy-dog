@@ -37,12 +37,12 @@ export default Ember.Component.extend(FocusEntryAction, {
       removeConfirmation: true,
       allowSpaces: true,
       availableTags: this.get('entry.block.options'),
-      afterTagAdded: (event, ui) => {
+      afterTagAdded: () => {
         Ember.run.scheduleOnce('afterRender', this, function() {
           this.set('entry.value', this.$('ul.tagit').tagit('assignedTags'));
         });
       },
-      afterTagRemoved: (event, ui) => {
+      afterTagRemoved: () => {
         Ember.run.scheduleOnce('afterRender', this, function() {
           this.set('entry.value', this.$('ul.tagit').tagit('assignedTags'));
         });
