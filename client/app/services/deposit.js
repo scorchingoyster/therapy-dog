@@ -80,7 +80,6 @@ export default Ember.Service.extend({
           addAnother: response.data.attributes.addAnother,
           addAnotherText: response.data.attributes.addAnotherText,
           sendEmailReceipt: sendEmailReceipt,
-          contact: response.data.attributes.contact,
           description: response.data.attributes.description,
           children: deserializeChildren(response.data.attributes.children)
         });
@@ -114,7 +113,7 @@ export default Ember.Service.extend({
           entry: ObjectEntry.create({ block: form }),
           depositor: depositor
         });
-        
+
         resolve(deposit);
       })
       .fail(function(jqXHR, textStatus, errorThrown) {
@@ -122,7 +121,7 @@ export default Ember.Service.extend({
       });
     });
   },
-  
+
   submit(deposit) {
     let payload = buildPayload(deposit);
     let depositCollection = location.href;
@@ -137,13 +136,13 @@ export default Ember.Service.extend({
       addAnotherText: addAnotherText,
       sendEmailReceipt: payload.sendEmailReceipt
     };
-    
+
     return new Ember.RSVP.Promise(function(resolve) {
       let headers = {};
       if (ENV.APP.spoofRemoteUser) {
         headers['remote_user'] = ENV.APP.spoofRemoteUser;
       }
-    
+
       $.ajax('/' + ENV.APP.apiNamespace + '/deposits', {
         method: 'POST',
         contentType: 'application/json',
@@ -160,16 +159,16 @@ export default Ember.Service.extend({
       });
     });
   },
-  
+
   debug(deposit) {
     let payload = buildPayload(deposit);
-    
+
     return new Ember.RSVP.Promise(function(resolve, reject) {
       let headers = {};
       if (ENV.APP.spoofRemoteUser) {
         headers['remote_user'] = ENV.APP.spoofRemoteUser;
       }
-    
+
       $.ajax('/' + ENV.APP.apiNamespace + '/deposits/debug', {
         method: 'POST',
         contentType: 'application/json',
