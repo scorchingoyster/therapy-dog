@@ -254,25 +254,38 @@ describe('Form', function() {
   });
 
   describe('It deals correctly with special characters', function() {
-      it('transforms values to the correct shape, with correct vocabulary terms and upload instances', function() {
-          let form = Form.findById('article');
-          let uploads = Promise.props({
-              article: createTestUpload('article.pdf', 'application/pdf', new Buffer('lorem ipsum')),
-              supplemental: createTestUpload('data.csv', 'application/csv', new Buffer('lorem ipsum'))
-          });
-           return Promise.all([form, uploads]).spread((form) => form.deserializeInput({
-              authors: [
-                  { first: 'Some1', last: 'Author' },
-                  { first: 'Another', last: 'Author' }
-              ]
-          }))
-      .then(function(values) {
-              assert.deepEqual(values.authors, [
-                  { first: 'Some', last: 'Author' },
-                  { first: 'Another', last: 'Author' }
-              ]);
-          });
+    it('transforms values to the correct shape, with correct vocabulary terms and upload instances', function() {
+      let form = Form.findById('article');
+      let uploads = Promise.props({
+        article: createTestUpload('article.pdf', 'application/pdf', new Buffer('lorem ipsum')),
+        supplemental: createTestUpload('data.csv', 'application/csv', new Buffer('lorem ipsum'))
       });
+
+      return Promise.all([form, uploads]).spread((form, uploads) => form.deserializeInput({
+        authors: [
+          { first: 'Some', last: 'Author' },
+          { first: 'Another', last: 'Author' }
+        ],
+        info: {
+          title: 'My Article',
+          language: 'eng'
+        },
+        embargo: 'P1Y',
+        roles: ['Staff', 'Faculty'],
+        review: 'no',
+        article: uploads.article.id,
+        supplemental: [
+          uploads.supplemental.id
+        ],
+        agreement: true
+      }))
+      .then(function(values) {
+        assert.deepEqual(values.authors, [
+          { first: 'Some', last: 'Author' },
+          { first: 'Another', last: 'Author' }
+        ]);
+      });
+    });
   });
 
   describe('#summarizeInput()', function() {
