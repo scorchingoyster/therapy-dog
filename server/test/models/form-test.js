@@ -264,7 +264,17 @@ describe('Form', function() {
       return Promise.all([form, uploads]).spread((form, uploads) => form.deserializeInput({
         authors: [
           { first: 'Some', last: 'Author' },
-          { first: 'Another', last: 'Author' }
+          { first: 't​C', last: 'Author' },
+          { first: '-$1.00', last: 'Author' },
+          { first: '-9223372036854775808/-1', last: 'Author' },
+          { first: '<script>alert(123)</script>', last: 'Author' },
+          { first: '𠲖', last: 'Author' },
+          { first: '﷽', last: 'Author' },
+          { first: 'ȺȾ', last: 'Author' },
+          { first: '🐵 🙈 🙉 🙊', last: 'Author' },
+          { first: 'Powerلُلُصّبُلُلصّبُررً ॣ ॣh ॣ ॣ冗', last: 'Author' },
+          { first: '\' OR 1=1 -- 1', last: 'Author' }
+
         ],
         info: {
           title: 'My Article',
@@ -282,7 +292,16 @@ describe('Form', function() {
       .then(function(values) {
         assert.deepEqual(values.authors, [
           { first: 'Some', last: 'Author' },
-          { first: 'Another', last: 'Author' }
+          { first: 'tC', last: 'Author' }, // Should strip the zero-width character between t & C above
+          { first: '-$1.00', last: 'Author' },
+          { first: '-9223372036854775808/-1', last: 'Author' },
+          { first: '&lt;script&gt;alert(123)&lt;&#x2F;script&gt;', last: 'Author' }, // Should sanitize HTML tags or strip them
+          { first: '𠲖', last: 'Author' }, // Somehow, this one fails in the deposit form, but would pass the unit test
+          { first: '﷽', last: 'Author' },
+          { first: 'ȺȾ', last: 'Author' },
+          { first: '🐵 🙈 🙉 🙊', last: 'Author' },
+          { first: 'Powerلُلُصّبُلُلصّبُررً ॣ ॣh ॣ ॣ冗', last: 'Author' },
+          { first: '\'\' OR 1=1 -- 1', last: 'Author' } // Should escape/sanitize certain characters to prevent SQL injection
         ]);
       });
     });
