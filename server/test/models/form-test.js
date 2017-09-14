@@ -260,41 +260,17 @@ describe('Form', function() {
               article: createTestUpload('article.pdf', 'application/pdf', new Buffer('lorem ipsum')),
               supplemental: createTestUpload('data.csv', 'application/csv', new Buffer('lorem ipsum'))
           });
-           return Promise.all([form, uploads]).spread((form, uploads) => form.deserializeInput({
+           return Promise.all([form, uploads]).spread((form) => form.deserializeInput({
               authors: [
-                  { first: 'Some', last: 'Author' },
+                  { first: 'Some1', last: 'Author' },
                   { first: 'Another', last: 'Author' }
-              ],
-              info: {
-                  title: 'My Article',
-                  language: 'eng'
-              },
-              embargo: 'P1Y',
-              roles: ['Staff', 'Faculty'],
-              review: 'no',
-              article: uploads.article.id,
-              supplemental: [
-                  uploads.supplemental.id
-              ],
-              agreement: true
+              ]
           }))
       .then(function(values) {
               assert.deepEqual(values.authors, [
                   { first: 'Some', last: 'Author' },
                   { first: 'Another', last: 'Author' }
               ]);
-              assert.equal(values.info.title, 'My Article');
-              assert.deepEqual(values.info.language, { code: 'eng', name: 'English' });
-              assert.equal(values.embargo, moment().add(1, 'year').format('YYYY-MM-DD'));
-              assert.deepEqual(values.roles, ['Staff', 'Faculty']);
-              assert.equal(values.review, 'no');
-              assert.equal(values.article.name, 'article.pdf');
-              assert.deepEqual(values.supplemental.map(u => u.name), ['data.csv']);
-              assert.deepEqual(values.agreement, {
-                  name: 'Deposit Agreement',
-                  uri: 'http://example.com/agreement',
-                  prompt: 'I agree to the terms in the agreement.'
-              });
           });
       });
   });
