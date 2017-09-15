@@ -273,8 +273,8 @@ describe('Form', function() {
           { first: 'ȺȾ', last: 'Author' },
           { first: '🐵 🙈 🙉 🙊', last: 'Author' },
           { first: 'Powerلُلُصّبُلُلصّبُررً ॣ ॣh ॣ ॣ冗', last: 'Author' },
-          { first: '\' OR 1=1 -- 1', last: 'Author' }
-
+          { first: '\' OR 1=1 -- 1', last: 'Author' },
+          { first: 'Iñtërnâtiônàlizætiøn💩☃', last: 'Author' }
         ],
         info: {
           title: 'My Article',
@@ -301,7 +301,8 @@ describe('Form', function() {
           { first: 'ȺȾ', last: 'Author' },
           { first: '🐵 🙈 🙉 🙊', last: 'Author' },
           { first: 'Powerلُلُصّبُلُلصّبُررً ॣ ॣh ॣ ॣ冗', last: 'Author' },
-          { first: '\'\' OR 1=1 -- 1', last: 'Author' } // Should escape/sanitize certain characters to prevent SQL injection
+          { first: '\'\' OR 1=1 -- 1', last: 'Author' }, // Should escape/sanitize certain characters to prevent SQL injection
+          { first: 'Iñtërnâtiônàlizætiøn💩☃', last: 'Author' }
         ]);
       });
     });
